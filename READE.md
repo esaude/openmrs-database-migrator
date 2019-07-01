@@ -6,7 +6,7 @@ A growing requirement in countries across the world that implement OpenMRS is to
 
 ## Dependencies
 
-* Java 8
+* Java 8 needs to be installed for this application to run
 
 ## Usage
 
@@ -24,6 +24,7 @@ A growing requirement in countries across the world that implement OpenMRS is to
 * Gradle (build tool)
 * SpringBoot
 * SpringMVC Web technologies
+* Thymeleaf Page Layouts
 * Pentaho Data Integration (PDI)
 
 ### Folder Structure
