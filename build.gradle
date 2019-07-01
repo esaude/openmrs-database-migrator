@@ -1,6 +1,7 @@
 plugins {
 	id 'org.springframework.boot' version '2.1.6.RELEASE'
 	id 'java'
+	id "com.diffplug.gradle.spotless" version "3.23.1"
 }
 
 apply plugin: 'io.spring.dependency-management'
@@ -25,7 +26,14 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	compile 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
+	compile 'com.google.googlejavaformat:google-java-format:1.7'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'com.h2database:h2'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+spotless {
+  java {
+    googleJavaFormat()
+  }
 }
