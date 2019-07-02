@@ -31,6 +31,13 @@ gradle-app.setting
 # Cache of project
 .gradletasknamecache
 
+# IntelliJ
+.idea
+.classpath
+.project
+.settings/
+bin/
+
 # # Work around https://youtrack.jetbrains.com/issue/IDEA-116898
 # gradle/wrapper/gradle-wrapper.properties
 
