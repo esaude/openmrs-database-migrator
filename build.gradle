@@ -2,6 +2,7 @@ plugins {
 	id 'org.springframework.boot' version '2.1.6.RELEASE'
 	id 'java'
 	id "com.diffplug.gradle.spotless" version "3.23.1"
+	id "jacoco"
 }
 
 apply plugin: 'io.spring.dependency-management'
@@ -36,4 +37,15 @@ spotless {
   java {
     googleJavaFormat()
   }
+}
+
+jacoco {
+    reportsDir = file("${buildDir}/jacoco/reports")
+}
+
+jacocoTestReport {
+    reports {
+		xml.enabled = true
+		html.enabled = true
+	}
 }
