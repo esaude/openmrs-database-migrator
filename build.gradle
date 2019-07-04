@@ -15,16 +15,25 @@ configurations {
 	runtimeClasspath {
 		extendsFrom developmentOnly
 	}
+	implementation {
+		exclude group: 'org.slf4j', module: 'slf4j-log4j12'
+	}
 }
 
 repositories {
 	mavenCentral()
+	maven {
+		url 'http://nexus.pentaho.org/content/groups/omni'
+	}
 }
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'pentaho-kettle:kettle-core:8.2.0.7-719'
+	implementation 'pentaho-kettle:kettle-engine:8.2.0.7-719'
+	implementation 'mysql:mysql-connector-java:5.1.28'
 	compile 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
 	compile 'com.google.googlejavaformat:google-java-format:1.7'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
