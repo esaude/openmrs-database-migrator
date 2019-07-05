@@ -8,10 +8,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.openmrs.migrator.core.exception.CommandExecutionException;
 import com.openmrs.migrator.core.services.CommandService;
 
-import exception.CommandExecutionException;
-
+/**
+ * Helps issuing operating system commands
+ */
 @Service
 public class ComandServiceImpl implements CommandService {
 	
@@ -40,5 +42,4 @@ public class ComandServiceImpl implements CommandService {
 		Arrays.asList(args).forEach(s -> sb.append(s + " "));
 		LOG.info(String.format("Running command: %s", sb.toString()));
 	}
-	
 }
