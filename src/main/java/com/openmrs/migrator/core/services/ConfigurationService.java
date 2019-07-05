@@ -2,8 +2,9 @@ package com.openmrs.migrator.core.services;
 
 public interface ConfigurationService {
 
-	String getDatabaseUser();
+  String getDatabaseUser();
 
-	String getDatabasePassword();
+  String getDatabasePassword();
 
-	String getDatabaseHost();}
+  String getDatabaseHost();
+}
