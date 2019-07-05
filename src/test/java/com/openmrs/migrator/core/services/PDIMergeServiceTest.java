@@ -7,10 +7,12 @@ import static org.mockito.Mockito.verify;
 
 import com.openmrs.migrator.core.services.impl.PDIMergeService;
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.pentaho.di.core.exception.KettleException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -27,20 +29,20 @@ public class PDIMergeServiceTest {
   @MockBean ResourceLoader resourceLoader;
 
   @Before
-  public void setUp() {
+  public void setUp() throws Exception {
     doNothing().when(pdiService).runTransformation(any(InputStream.class));
     InputStream stream = new ByteArrayInputStream("".getBytes());
     doReturn(stream).when(resourceLoader).getResourceAsStream(any(String.class));
   }
 
   @Test
-  public void mergeOpenMRSShouldRunTransformations() {
+  public void mergeOpenMRSShouldRunTransformations() throws KettleException {
     pdiMergeService.mergeOpenMRS();
     verify(pdiService).runTransformation(any(InputStream.class));
   }
 
   @Test
-  public void mergeOpenMRSShouldLoadTransformations() {
+  public void mergeOpenMRSShouldLoadTransformations() throws IOException {
     pdiMergeService.mergeOpenMRS();
     verify(resourceLoader).getResourceAsStream(any(String.class));
   }
