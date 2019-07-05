@@ -1,6 +1,6 @@
 package com.openmrs.migrator.core.services;
 
-public interface DBService {
+public interface DataBaseService {
 
   void importDatabaseFile(String databaseName, String fileName);
 

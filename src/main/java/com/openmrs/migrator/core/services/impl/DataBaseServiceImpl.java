@@ -5,13 +5,13 @@ import org.springframework.stereotype.Service;
 
 import com.openmrs.migrator.core.services.CommandService;
 import com.openmrs.migrator.core.services.ConfigurationService;
-import com.openmrs.migrator.core.services.DBService;
+import com.openmrs.migrator.core.services.DataBaseService;
 
 /**
  * Database operations
  */
 @Service
-public class DataBaseServiceImpl implements DBService {
+public class DataBaseServiceImpl implements DataBaseService {
 	
 	@Autowired
 	private CommandService commandService;
