@@ -10,9 +10,11 @@ import org.springframework.stereotype.Service;
 
 import com.openmrs.migrator.core.services.CommandService;
 
+import exception.CommandExecutionException;
+
 @Service
 public class ComandServiceImpl implements CommandService {
-
+	
 	private static Logger LOG = LoggerFactory.getLogger(ComandServiceImpl.class);
 	
 	@Override
@@ -25,11 +27,11 @@ public class ComandServiceImpl implements CommandService {
 			Process process = pb.start();
 			int executionResult = process.waitFor();
 			if (executionResult != 0) {
-				throw new RuntimeException(String.format("Command terminated with errors: %s", executionResult));
+				throw new CommandExecutionException(String.format("Command terminated with errors: %s", executionResult));
 			}
 		}
 		catch (IOException | InterruptedException e) {
-			throw new RuntimeException(e);
+			throw new CommandExecutionException(e);
 		}
 	}
 	
