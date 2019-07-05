@@ -22,11 +22,11 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest
 public class PDIMergeServiceTest {
 
-  @Autowired PDIMergeService pdiMergeService;
+  @Autowired private PDIMergeService pdiMergeService;
 
-  @MockBean PDIService pdiService;
+  @MockBean private PDIService pdiService;
 
-  @MockBean ResourceLoader resourceLoader;
+  @MockBean private ResourceLoader resourceLoader;
 
   @Before
   public void setUp() throws Exception {
