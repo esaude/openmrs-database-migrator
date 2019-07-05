@@ -3,7 +3,6 @@ package com.openmrs.migrator.core.services.impl;
 import com.openmrs.migrator.core.exception.CommandExecutionException;
 import com.openmrs.migrator.core.services.CommandService;
 import java.io.IOException;
-import java.lang.ProcessBuilder.Redirect;
 import java.util.Arrays;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,8 +19,6 @@ public class ComandServiceImpl implements CommandService {
     logCommand(args);
     try {
       ProcessBuilder pb = new ProcessBuilder(args);
-      pb.redirectOutput(Redirect.INHERIT);
-      pb.redirectError(Redirect.INHERIT);
       Process process = pb.start();
       int executionResult = process.waitFor();
       if (executionResult != 0) {
