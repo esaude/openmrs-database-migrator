@@ -6,6 +6,7 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 
 import com.openmrs.migrator.core.services.impl.PDIMergeService;
+import com.openmrs.migrator.core.utilities.FileIOUtilities;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,13 +27,13 @@ public class PDIMergeServiceTest {
 
   @MockBean private PDIService pdiService;
 
-  @MockBean private ResourceLoader resourceLoader;
+  @MockBean private FileIOUtilities fileIOUtilities;
 
   @Before
   public void setUp() throws Exception {
     doNothing().when(pdiService).runTransformation(any(InputStream.class));
     InputStream stream = new ByteArrayInputStream("".getBytes());
-    doReturn(stream).when(resourceLoader).getResourceAsStream(any(String.class));
+    doReturn(stream).when(fileIOUtilities).getResourceAsStream(any(String.class));
   }
 
   @Test
@@ -44,6 +45,6 @@ public class PDIMergeServiceTest {
   @Test
   public void mergeOpenMRSShouldLoadTransformations() throws IOException {
     pdiMergeService.mergeOpenMRS();
-    verify(resourceLoader).getResourceAsStream(any(String.class));
+    verify(fileIOUtilities).getResourceAsStream(any(String.class));
   }
 }

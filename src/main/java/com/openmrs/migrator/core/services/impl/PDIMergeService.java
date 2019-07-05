@@ -2,7 +2,7 @@ package com.openmrs.migrator.core.services.impl;
 
 import com.openmrs.migrator.core.services.MergeService;
 import com.openmrs.migrator.core.services.PDIService;
-import com.openmrs.migrator.core.services.ResourceLoader;
+import com.openmrs.migrator.core.utilities.FileIOUtilities;
 import java.io.IOException;
 import java.io.InputStream;
 import org.pentaho.di.core.exception.KettleException;
@@ -15,21 +15,21 @@ public class PDIMergeService implements MergeService {
 
   private final PDIService pdiService;
 
-  private final ResourceLoader resourceLoader;
+  private final FileIOUtilities fileIOUtilities;
 
   private final String[] transformations = {"merge-patient.ktr"};
 
   @Autowired
-  public PDIMergeService(PDIService pdiService, ResourceLoader resourceLoader) {
+  public PDIMergeService(PDIService pdiService, FileIOUtilities fileIOUtilities) {
     this.pdiService = pdiService;
-    this.resourceLoader = resourceLoader;
+    this.fileIOUtilities = fileIOUtilities;
   }
 
   @Override
   public void mergeOpenMRS() {
     try {
       for (String t : transformations) {
-        InputStream xml = resourceLoader.getResourceAsStream(t);
+        InputStream xml = fileIOUtilities.getResourceAsStream(t);
         pdiService.runTransformation(xml);
       }
     } catch (IOException e) {
