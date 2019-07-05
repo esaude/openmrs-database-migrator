@@ -1,5 +1,6 @@
 package com.openmrs.migrator.core.services;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,12 @@ public class CommandServiceTest {
 	
 	@Test
 	public void shouldExecuteLsCommand() {
-		commandService.runCommand("ls", "-ltr");
+		try {
+			commandService.runCommand("ls", "-ltr");
+		}
+		catch (CommandExecutionException e) {
+			Assert.fail("Should execute successfully");
+		}
 	}
 	
 	@Test(expected = CommandExecutionException.class)
