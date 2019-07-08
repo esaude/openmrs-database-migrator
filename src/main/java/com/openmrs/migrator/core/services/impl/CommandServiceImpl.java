@@ -1,6 +1,6 @@
 package com.openmrs.migrator.core.services.impl;
 
-import com.openmrs.migrator.core.exception.CommandExecutionException;
+import com.openmrs.migrator.core.exceptions.CommandExecutionException;
 import com.openmrs.migrator.core.services.CommandService;
 import java.io.IOException;
 import java.util.Arrays;
@@ -10,9 +10,9 @@ import org.springframework.stereotype.Service;
 
 /** Helps issuing operating system commands */
 @Service
-public class ComandServiceImpl implements CommandService {
+public class CommandServiceImpl implements CommandService {
 
-  private static Logger LOG = LoggerFactory.getLogger(ComandServiceImpl.class);
+  private static Logger LOG = LoggerFactory.getLogger(CommandServiceImpl.class);
 
   @Override
   public void runCommand(String... args) {
