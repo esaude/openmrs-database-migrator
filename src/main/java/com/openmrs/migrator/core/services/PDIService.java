@@ -1,6 +1,7 @@
 package com.openmrs.migrator.core.services;
 
 import java.io.InputStream;
+import org.pentaho.di.core.exception.KettleException;
 
 public interface PDIService {
 
@@ -9,5 +10,5 @@ public interface PDIService {
    *
    * @param xmlStream An input stream of the transformation file
    */
-  void runTransformation(InputStream xmlStream);
+  void runTransformation(InputStream xmlStream) throws KettleException;
 }

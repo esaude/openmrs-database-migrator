@@ -6,11 +6,14 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 
 import com.openmrs.migrator.core.services.impl.PDIMergeService;
+import com.openmrs.migrator.core.utilities.FileIOUtilities;
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.pentaho.di.core.exception.KettleException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -20,28 +23,28 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest
 public class PDIMergeServiceTest {
 
-  @Autowired PDIMergeService pdiMergeService;
+  @Autowired private PDIMergeService pdiMergeService;
 
-  @MockBean PDIService pdiService;
+  @MockBean private PDIService pdiService;
 
-  @MockBean ResourceLoader resourceLoader;
+  @MockBean private FileIOUtilities fileIOUtilities;
 
   @Before
-  public void setUp() {
+  public void setUp() throws Exception {
     doNothing().when(pdiService).runTransformation(any(InputStream.class));
     InputStream stream = new ByteArrayInputStream("".getBytes());
-    doReturn(stream).when(resourceLoader).getResourceAsStream(any(String.class));
+    doReturn(stream).when(fileIOUtilities).getResourceAsStream(any(String.class));
   }
 
   @Test
-  public void mergeOpenMRSShouldRunTransformations() {
+  public void mergeOpenMRSShouldRunTransformations() throws KettleException {
     pdiMergeService.mergeOpenMRS();
     verify(pdiService).runTransformation(any(InputStream.class));
   }
 
   @Test
-  public void mergeOpenMRSShouldLoadTransformations() {
+  public void mergeOpenMRSShouldLoadTransformations() throws IOException {
     pdiMergeService.mergeOpenMRS();
-    verify(resourceLoader).getResourceAsStream(any(String.class));
+    verify(fileIOUtilities).getResourceAsStream(any(String.class));
   }
 }
