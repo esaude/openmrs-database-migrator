@@ -23,14 +23,14 @@ public class PDIServiceImpl implements PDIService {
 
   private final String[] transformations = {"structure/merge-patient.ktr"};
 
-  @Autowired private KettleUtils kp;
-  
+  @Autowired private KettleUtils kettleUtils;
+
   @Autowired private FileIOUtilities fileIOUtilities;
 
   @Override
   public void runTransformation(InputStream xmlStream) throws KettleException {
 
-    kp.loadProperties();
+    kettleUtils.loadProperties();
 
     KettleEnvironment.init();
 

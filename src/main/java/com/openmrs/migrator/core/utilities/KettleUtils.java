@@ -18,19 +18,30 @@ public class KettleUtils {
 
   private static Logger log = LoggerFactory.getLogger(KettleUtils.class);
 
+  private final String KETTLE_PROPERTIES = "kettle.properties";
+
+  private final String KETTLE_DIR = ".kettle";
+
   public void loadProperties() {
 
-    try (InputStream input = getClass().getResourceAsStream("/structure/kettle.properties")) {
+    try (InputStream input = getClass().getResourceAsStream("/structure/" + KETTLE_PROPERTIES)) {
 
       Properties prop = new Properties();
 
       log.info(
-          "Loading connection details from kettle.properties file in the classpath to system properties");
+          "Loading connection details from "
+              + KETTLE_PROPERTIES
+              + " file in the classpath to system properties");
 
       prop.load(input);
 
-      log.info("Writing properties to <user home directory>/.kettle/kettle.properties  file");
-      writePropertiesToKettlePropertiesOutter(getKettlePropertiesLocation(), prop);
+      log.info(
+          "Writing properties to <user home directory>/"
+              + KETTLE_DIR
+              + "/"
+              + KETTLE_PROPERTIES
+              + " file");
+      writePropertiesToKettlePropertiesOutter(this.getKettlePropertiesLocation(), prop);
 
     } catch (IOException e) {
       e.printStackTrace();
@@ -56,8 +67,8 @@ public class KettleUtils {
   private File getKettlePropertiesLocation() throws IOException {
     String homeDirectory = System.getProperty("user.home");
 
-    Path kettleDir = Paths.get(homeDirectory + "/.kettle");
-    Path kettleFile = Paths.get(kettleDir + "/kettle.properties");
+    Path kettleDir = Paths.get(homeDirectory + "/" + KETTLE_DIR);
+    Path kettleFile = Paths.get(kettleDir + "/" + KETTLE_PROPERTIES);
 
     if (!Files.exists(kettleDir)) {
       Files.createDirectories(kettleDir);
@@ -67,7 +78,7 @@ public class KettleUtils {
       Files.createFile(kettleFile);
     }
 
-    File file = new File(homeDirectory + "/.kettle/kettle.properties");
+    File file = new File(homeDirectory + "/" + KETTLE_DIR + "/" + KETTLE_PROPERTIES);
     return file;
   }
 }
