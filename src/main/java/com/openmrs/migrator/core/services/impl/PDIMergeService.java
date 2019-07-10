@@ -17,7 +17,7 @@ public class PDIMergeService implements MergeService {
 
   private final FileIOUtilities fileIOUtilities;
 
-  private final String[] transformations = {"merge-patient.ktr"};
+  private final String[] transformations = {"structure/merge-patient.ktr"};
 
   @Autowired
   public PDIMergeService(PDIService pdiService, FileIOUtilities fileIOUtilities) {
@@ -28,6 +28,7 @@ public class PDIMergeService implements MergeService {
   @Override
   public void mergeOpenMRS() {
     try {
+
       for (String t : transformations) {
         InputStream xml = fileIOUtilities.getResourceAsStream(t);
         pdiService.runTransformation(xml);

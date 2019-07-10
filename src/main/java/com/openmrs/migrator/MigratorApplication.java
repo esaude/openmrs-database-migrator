@@ -1,6 +1,7 @@
 package com.openmrs.migrator;
 
-import com.openmrs.migrator.core.services.MergeService;
+// import com.openmrs.migrator.core.services.MergeService;
+import com.openmrs.migrator.core.services.PDIService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,11 +14,11 @@ public class MigratorApplication implements CommandLineRunner {
 
   private static Logger LOG = LoggerFactory.getLogger(MigratorApplication.class);
 
-  private final MergeService mergeService;
+  private final PDIService pdiService;
 
   @Autowired
-  public MigratorApplication(MergeService mergeService) {
-    this.mergeService = mergeService;
+  public MigratorApplication(PDIService pdiService) {
+    this.pdiService = pdiService;
   }
 
   public static void main(String[] args) {
@@ -33,7 +34,7 @@ public class MigratorApplication implements CommandLineRunner {
     }
 
     if (args.length > 0 && "run".equals(args[0])) {
-      mergeService.mergeOpenMRS();
+      pdiService.mergeOpenMRS();
     } else {
       System.out.println("Usage: migrator run");
     }
