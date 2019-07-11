@@ -21,7 +21,7 @@ public class PDIServiceImpl implements PDIService {
 
   private static Logger LOG = LoggerFactory.getLogger(PDIServiceImpl.class);
 
-  private final String[] transformations = {"structure/merge-patient.ktr"};
+  private final String[] transformations = {"pdiresources/merge-patient.ktr"};
 
   @Autowired private KettleUtils kettleUtils;
 

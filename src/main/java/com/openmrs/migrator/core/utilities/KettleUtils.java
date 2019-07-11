@@ -24,7 +24,7 @@ public class KettleUtils {
 
   public void loadProperties() {
 
-    try (InputStream input = getClass().getResourceAsStream("/structure/" + KETTLE_PROPERTIES)) {
+    try (InputStream input = getClass().getResourceAsStream("/pdiresources/" + KETTLE_PROPERTIES)) {
 
       Properties prop = new Properties();
 

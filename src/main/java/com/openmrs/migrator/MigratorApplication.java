@@ -1,6 +1,5 @@
 package com.openmrs.migrator;
 
-// import com.openmrs.migrator.core.services.MergeService;
 import com.openmrs.migrator.core.services.PDIService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
