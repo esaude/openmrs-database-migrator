@@ -10,7 +10,7 @@ public interface PDIService {
    *
    * @param xmlStream An input stream of the transformation file
    */
-  void runTransformation(InputStream xmlStream) throws KettleException;
+  void runJob(InputStream xmlStream) throws KettleException;
 
   /** Merges OpenMRS databases */
   void mergeOpenMRS();

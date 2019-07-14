@@ -2,16 +2,14 @@ package com.openmrs.migrator.core.services.impl;
 
 import com.openmrs.migrator.core.services.PDIService;
 import com.openmrs.migrator.core.utilities.FileIOUtilities;
- 
 import java.io.IOException;
 import java.io.InputStream;
- 
 import org.pentaho.di.core.KettleEnvironment;
 import org.pentaho.di.core.Result;
 import org.pentaho.di.core.exception.KettleException;
 import org.pentaho.di.core.logging.LogLevel;
-import org.pentaho.di.trans.Trans;
-import org.pentaho.di.trans.TransMeta;
+import org.pentaho.di.job.Job;
+import org.pentaho.di.job.JobMeta;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,33 +20,32 @@ public class PDIServiceImpl implements PDIService {
 
   private static Logger LOG = LoggerFactory.getLogger(PDIServiceImpl.class);
 
-  private final String[] transformations = {"pdiresources/transformations/merge-patient.ktr"};
+  private final String JOB_FOLDER = "pdiresources/jobs/";
+
+  private String[] jobs = {"pdiresources/jobs/merge-patient-job.kjb"};
 
   @Autowired private FileIOUtilities fileIOUtilities;
 
   @Override
-  public void runTransformation(InputStream xmlStream) throws KettleException {
-
-  
+  public void runJob(InputStream xmlStream) throws KettleException {
 
     KettleEnvironment.init();
 
-    TransMeta transMeta = new TransMeta(xmlStream, null, true, null, null);
+    JobMeta jobMeta = new JobMeta(xmlStream, null, null);
 
-    Trans transformation = new Trans(transMeta);
-    transformation.setLogLevel(LogLevel.BASIC);
+    Job job = new Job(null, jobMeta);
+    job.setLogLevel(LogLevel.BASIC);
 
-    String name = transformation.getName();
-    LOG.info("Starting transformation " + name);
+    String name = job.getName();
+    LOG.info("Starting Job " + name);
 
-    transformation.execute(new String[0]);
-    transformation.waitUntilFinished();
+    Result result = job.execute(1, null);
 
-    Result result = transformation.getResult();
+    job.waitUntilFinished();
 
     String outcome =
         String.format(
-            "Transformation %s executed %s",
+            "Job %s executed %s",
             name,
             (result.getNrErrors() == 0
                 ? "successfully"
@@ -61,9 +58,10 @@ public class PDIServiceImpl implements PDIService {
   public void mergeOpenMRS() {
     try {
 
-      for (String t : transformations) {
+      for (String t : jobs) {
+
         InputStream xml = fileIOUtilities.getResourceAsStream(t);
-        runTransformation(xml);
+        runJob(xml);
       }
     } catch (IOException e) {
       e.printStackTrace();
@@ -71,10 +69,4 @@ public class PDIServiceImpl implements PDIService {
       // Do nothing kettle prints stack trace
     }
   }
-  
-  private void readJobsInPDIResources() {
-	  
-  }
-
- 
 }

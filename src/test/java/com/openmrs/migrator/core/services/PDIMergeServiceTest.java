@@ -28,15 +28,15 @@ public class PDIMergeServiceTest {
 
   @Before
   public void setUp() throws Exception {
-    doNothing().when(pdiService).runTransformation(any(InputStream.class));
+    doNothing().when(pdiService).runJob(any(InputStream.class));
     doReturn(stream).when(fileIOUtilities).getResourceAsStream(any(String.class));
   }
 
   @Test
-  public void testRunTransformation() throws KettleException {
+  public void testRunJob() throws KettleException {
 
     InputStream stream = new ByteArrayInputStream(" ".getBytes());
-    pdiService.runTransformation(stream);
-    verify(pdiService).runTransformation(any(InputStream.class));
+    pdiService.runJob(stream);
+    verify(pdiService).runJob(any(InputStream.class));
   }
 }
