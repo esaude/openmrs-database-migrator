@@ -20,8 +20,6 @@ public class PDIServiceImpl implements PDIService {
 
   private static Logger LOG = LoggerFactory.getLogger(PDIServiceImpl.class);
 
-  private final String JOB_FOLDER = "pdiresources/jobs/";
-
   private String[] jobs = {"pdiresources/jobs/merge-patient-job.kjb"};
 
   @Autowired private FileIOUtilities fileIOUtilities;
