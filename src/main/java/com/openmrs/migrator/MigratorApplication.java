@@ -2,10 +2,8 @@ package com.openmrs.migrator;
 
 import com.openmrs.migrator.core.services.PDIService;
 import com.openmrs.migrator.core.utilities.FileIOUtilities;
-
 import java.io.IOException;
 import java.io.InputStream;
-
 import org.pentaho.di.core.exception.KettleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,14 +18,15 @@ public class MigratorApplication implements CommandLineRunner {
   private static Logger LOG = LoggerFactory.getLogger(MigratorApplication.class);
 
   private final PDIService pdiService;
-  
+
   private FileIOUtilities fileIOUtilities;
 
   private String[] jobs = {"pdiresources/jobs/merge-patient-job.kjb"};
 
   @Autowired
-  public MigratorApplication(PDIService pdiService) {
+  public MigratorApplication(PDIService pdiService, FileIOUtilities fileIOUtilities) {
     this.pdiService = pdiService;
+    this.fileIOUtilities = fileIOUtilities;
   }
 
   public static void main(String[] args) {
@@ -43,14 +42,13 @@ public class MigratorApplication implements CommandLineRunner {
     }
 
     if (args.length > 0 && "run".equals(args[0])) {
-    	runAllJobs(jobs);
+      runAllJobs();
     } else {
       System.out.println("Usage: migrator run");
     }
   }
-  
-   
-  private void runAllJobs(String[] jobs) throws IOException {
+
+  private void runAllJobs() throws IOException {
     try {
       for (String t : jobs) {
 

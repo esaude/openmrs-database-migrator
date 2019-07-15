@@ -3,7 +3,6 @@ package com.openmrs.migrator.core.services;
 import static org.junit.Assert.assertTrue;
 
 import com.openmrs.migrator.core.utilities.FileIOUtilities;
-import java.io.IOException;
 import java.io.InputStream;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,16 +20,17 @@ public class PDIServiceTest {
 
   @Autowired private FileIOUtilities fileIOUtilities;
 
-  private String[] jobs = {"pdiresources/jobs/merge-patient-job.kjb","pdiresources/jobs/merge-patient-invalid-job.kjb"};
+  private String[] jobs = {
+    "pdiresources/jobs/merge-patient-job.kjb", "pdiresources/jobs/merge-patient-invalid-job.kjb"
+  };
 
   InputStream streamWithValidJob;
   InputStream streamWithInValidJob;
 
   @Before
   public void setUp() throws Exception {
-	  streamWithValidJob = fileIOUtilities.getResourceAsStream(jobs[0]);
-	  streamWithInValidJob = fileIOUtilities.getResourceAsStream(jobs[1]);
-    
+    streamWithValidJob = fileIOUtilities.getResourceAsStream(jobs[0]);
+    streamWithInValidJob = fileIOUtilities.getResourceAsStream(jobs[1]);
   }
 
   @Test
@@ -38,13 +38,10 @@ public class PDIServiceTest {
     boolean runnedCorrectly = pdiService.runJob(streamWithValidJob);
     assertTrue(runnedCorrectly);
   }
-  
-  @Test
-  public void runJobFail() throws KettleException{
-	  boolean runnedCorrectly = pdiService.runJob(streamWithInValidJob);
-	  assertTrue(!runnedCorrectly);
-	  
-  }
 
-  
+  @Test
+  public void runJobFail() throws KettleException {
+    boolean runnedCorrectly = pdiService.runJob(streamWithInValidJob);
+    assertTrue(!runnedCorrectly);
+  }
 }

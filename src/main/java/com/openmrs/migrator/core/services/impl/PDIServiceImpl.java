@@ -17,7 +17,6 @@ public class PDIServiceImpl implements PDIService {
 
   private static Logger LOG = LoggerFactory.getLogger(PDIServiceImpl.class);
 
- 
   @Override
   public boolean runJob(InputStream xmlStream) throws KettleException {
 
@@ -52,6 +51,4 @@ public class PDIServiceImpl implements PDIService {
 
     return executedSucessfully;
   }
-
-  
 }
