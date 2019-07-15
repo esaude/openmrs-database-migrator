@@ -1,6 +1,9 @@
 package com.openmrs.migrator.utilities;
 
+import static org.junit.Assert.*;
+
 import java.io.IOException;
+import java.io.InputStream;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,9 +19,18 @@ public class FileIOUtilitiesTest {
 	
 	  @Autowired private FileIOUtilities fileIOUtilities;
 	  
+	  private String stream = "pdiresources/jobs/merge-patient-job.kjb";
+	  
+	  
+	  @Test 
+	  public void getValidResourceAsStream() throws IOException {
+
+		  InputStream inputStream =  fileIOUtilities.getResourceAsStream(stream);
+		  assertNotNull(inputStream);
+	  }
 	  
 	  @Test(expected = IOException.class)
-	  public void getResourceAsStream() throws IOException {
+	  public void getInvalidResourceAsStream() throws IOException {
 
 		  fileIOUtilities.getResourceAsStream("fake/path");
 	  }
