@@ -36,7 +36,48 @@ If you find yourself with linting exceptions, to automatically resolve all issue
 
 ### How to run the tool
 
+First create the merge database:
+
+```
+CREATE DATABASE merge_db CHAR SET uf8;
+```
+
+Then load one of the dumps into `merge_db`. After that run the following script:
+```
+use merge_db;
+
+insert into person_attribute_type
+    (name, description, searchable, creator, date_created, retired, uuid) values
+    ('Source DB ID', 'ID from source database', false, 1, curdate(), false, '8d793bee-c2cc-11de-8d13-0010c6dffd23');
+```
+
+To merge OpenMRS databases run:
+
+```
+java -jar migrator.jar run
+```
+
+This will run PDI transformations using `ETL_SOURCE_DATABASE` as the input database. The output will be saved in a database called `merge_db`.
+
 ### Configuration
+
+The tool uses the following variables that can be configured either through system properties or the PDI `kettle.properties` file:
+
+```
+ETL_SOURCE_DATABASE=egpaf
+ETL_DATABASE_HOST=127.0.0.1
+ETL_DATABASE_PORT=3306
+ETL_DATABASE_USER=migrator
+ETL_DATABASE_PASSWORD=
+```
+
+To specify one of the variables as a system property use the following syntax:
+
+```
+java -DETL_DATABASE_USER=otheruser -jar migrator.jar run
+```
+
+Note that system properties take precedence over `kettle.properties`.
 
 ### Tips to keep in mind
 
