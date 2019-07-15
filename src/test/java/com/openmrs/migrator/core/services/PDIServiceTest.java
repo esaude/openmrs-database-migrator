@@ -21,24 +21,30 @@ public class PDIServiceTest {
 
   @Autowired private FileIOUtilities fileIOUtilities;
 
-  private String[] jobs = {"pdiresources/jobs/merge-patient-job.kjb"};
+  private String[] jobs = {"pdiresources/jobs/merge-patient-job.kjb","pdiresources/jobs/merge-patient-invalid-job.kjb"};
 
-  InputStream stream;
+  InputStream streamWithValidJob;
+  InputStream streamWithInValidJob;
 
   @Before
   public void setUp() throws Exception {
-    stream = fileIOUtilities.getResourceAsStream(jobs[0]);
+	  streamWithValidJob = fileIOUtilities.getResourceAsStream(jobs[0]);
+	  streamWithInValidJob = fileIOUtilities.getResourceAsStream(jobs[1]);
+    
   }
 
   @Test
-  public void testRunJob() throws KettleException {
-    boolean runnedCorrectly = pdiService.runJob(stream);
+  public void runJobSuccess() throws KettleException {
+    boolean runnedCorrectly = pdiService.runJob(streamWithValidJob);
     assertTrue(runnedCorrectly);
   }
-
-  @Test(expected = IOException.class)
-  public void testMergeOpenMRS() throws IOException {
-
-    pdiService.mergeOpenMRS(new String[] {"fake/path"});
+  
+  @Test
+  public void runJobFail() throws KettleException{
+	  boolean runnedCorrectly = pdiService.runJob(streamWithInValidJob);
+	  assertTrue(!runnedCorrectly);
+	  
   }
+
+  
 }

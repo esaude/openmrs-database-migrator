@@ -1,6 +1,6 @@
 package com.openmrs.migrator.core.services;
 
-import java.io.IOException;
+ 
 import java.io.InputStream;
 import org.pentaho.di.core.exception.KettleException;
 
@@ -15,6 +15,5 @@ public interface PDIService {
    */
   boolean runJob(InputStream xmlStream) throws KettleException;
 
-  /** Merges OpenMRS databases */
-  void mergeOpenMRS(String[] jobs) throws IOException;
+ 
 }
