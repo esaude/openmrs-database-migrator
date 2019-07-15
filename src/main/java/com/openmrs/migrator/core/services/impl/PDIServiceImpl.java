@@ -47,7 +47,7 @@ public class PDIServiceImpl implements PDIService {
     }
 
     outcome = String.format("Job %s executed %s", name, "with " + result.getNrErrors() + " errors");
-    LOG.info(outcome);
+    LOG.error(outcome);
 
     return executedSucessfully;
   }
