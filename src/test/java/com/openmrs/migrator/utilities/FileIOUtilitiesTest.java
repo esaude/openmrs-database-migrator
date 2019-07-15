@@ -17,7 +17,7 @@ public class FileIOUtilitiesTest {
 
   @Autowired private FileIOUtilities fileIOUtilities;
 
-  private String stream = "pdiresources/jobs/merge-patient-job.kjb";
+  private String stream = "pdiresources/jobs/job.kjb";
 
   @Test
   public void getValidResourceAsStream() throws IOException {

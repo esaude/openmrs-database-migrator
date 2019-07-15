@@ -21,9 +21,7 @@ public class PDIServiceTest {
 
   @Autowired private FileIOUtilities fileIOUtilities;
 
-  private String[] jobs = {
-    "pdiresources/jobs/merge-patient-job.kjb", "pdiresources/jobs/merge-patient-invalid-job.kjb"
-  };
+  private String[] jobs = {"pdiresources/jobs/job.kjb", "pdiresources/jobs/job-invalid.kjb"};
 
   private InputStream streamWithValidJob, streamWithInValidJob;
 
