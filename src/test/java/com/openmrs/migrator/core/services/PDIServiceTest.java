@@ -1,5 +1,6 @@
 package com.openmrs.migrator.core.services;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import com.openmrs.migrator.core.utilities.FileIOUtilities;
@@ -24,8 +25,7 @@ public class PDIServiceTest {
     "pdiresources/jobs/merge-patient-job.kjb", "pdiresources/jobs/merge-patient-invalid-job.kjb"
   };
 
-  InputStream streamWithValidJob;
-  InputStream streamWithInValidJob;
+  private InputStream streamWithValidJob, streamWithInValidJob;
 
   @Before
   public void setUp() throws Exception {
@@ -42,6 +42,6 @@ public class PDIServiceTest {
   @Test
   public void runJobFail() throws KettleException {
     boolean runnedCorrectly = pdiService.runJob(streamWithInValidJob);
-    assertTrue(!runnedCorrectly);
+    assertFalse(runnedCorrectly);
   }
 }
