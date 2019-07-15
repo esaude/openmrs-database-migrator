@@ -18,11 +18,11 @@ public class PDIServiceImpl implements PDIService {
   private static Logger LOG = LoggerFactory.getLogger(PDIServiceImpl.class);
 
   @Override
-  public boolean runJob(InputStream xmlStream) throws KettleException {
+  public boolean runJob(InputStream pdiJobFileStream) throws KettleException {
 
     KettleEnvironment.init();
 
-    JobMeta jobMeta = new JobMeta(xmlStream, null, null);
+    JobMeta jobMeta = new JobMeta(pdiJobFileStream, null, null);
 
     Job job = new Job(null, jobMeta);
     job.setLogLevel(LogLevel.BASIC);
