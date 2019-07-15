@@ -20,12 +20,10 @@ public class PDIServiceImpl implements PDIService {
 
   private static Logger LOG = LoggerFactory.getLogger(PDIServiceImpl.class);
 
-  private String[] jobs = {"pdiresources/jobs/merge-patient-job.kjb"};
-
   @Autowired private FileIOUtilities fileIOUtilities;
 
   @Override
-  public void runJob(InputStream xmlStream) throws KettleException {
+  public boolean runJob(InputStream xmlStream) throws KettleException {
 
     KettleEnvironment.init();
 
@@ -41,6 +39,8 @@ public class PDIServiceImpl implements PDIService {
 
     job.waitUntilFinished();
 
+    boolean executedSucessfully = false;
+
     String outcome =
         String.format(
             "Job %s executed %s",
@@ -49,20 +49,28 @@ public class PDIServiceImpl implements PDIService {
                 ? "successfully"
                 : "with " + result.getNrErrors() + " errors"));
 
+    if (result.getNrErrors() == 0) {
+      outcome = String.format("Job %s executed %s", name, "successfully");
+
+      executedSucessfully = true;
+      LOG.info(outcome);
+      return executedSucessfully;
+    }
+
+    outcome = String.format("Job %s executed %s", name, "with " + result.getNrErrors() + " errors");
     LOG.info(outcome);
+
+    return executedSucessfully;
   }
 
   @Override
-  public void mergeOpenMRS() {
+  public void mergeOpenMRS(String[] jobs) throws IOException {
     try {
-
       for (String t : jobs) {
 
         InputStream xml = fileIOUtilities.getResourceAsStream(t);
         runJob(xml);
       }
-    } catch (IOException e) {
-      e.printStackTrace();
     } catch (KettleException e) {
       // Do nothing kettle prints stack trace
     }

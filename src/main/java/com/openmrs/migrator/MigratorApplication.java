@@ -1,6 +1,7 @@
 package com.openmrs.migrator;
 
 import com.openmrs.migrator.core.services.PDIService;
+import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,8 @@ public class MigratorApplication implements CommandLineRunner {
 
   private final PDIService pdiService;
 
+  private String[] jobs = {"pdiresources/jobs/merge-patient-job.kjb"};
+
   @Autowired
   public MigratorApplication(PDIService pdiService) {
     this.pdiService = pdiService;
@@ -25,7 +28,7 @@ public class MigratorApplication implements CommandLineRunner {
   }
 
   @Override
-  public void run(String... args) {
+  public void run(String... args) throws IOException {
     LOG.info("EXECUTING : command line runner");
 
     for (int i = 0; i < args.length; ++i) {
@@ -33,7 +36,7 @@ public class MigratorApplication implements CommandLineRunner {
     }
 
     if (args.length > 0 && "run".equals(args[0])) {
-      pdiService.mergeOpenMRS();
+      pdiService.mergeOpenMRS(jobs);
     } else {
       System.out.println("Usage: migrator run");
     }
