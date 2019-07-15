@@ -41,13 +41,7 @@ public class PDIServiceImpl implements PDIService {
 
     boolean executedSucessfully = false;
 
-    String outcome =
-        String.format(
-            "Job %s executed %s",
-            name,
-            (result.getNrErrors() == 0
-                ? "successfully"
-                : "with " + result.getNrErrors() + " errors"));
+    String outcome;
 
     if (result.getNrErrors() == 0) {
       outcome = String.format("Job %s executed %s", name, "successfully");
