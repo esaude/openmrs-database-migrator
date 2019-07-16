@@ -4,6 +4,10 @@ import com.openmrs.migrator.core.services.PDIService;
 import com.openmrs.migrator.core.utilities.FileIOUtilities;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.stream.Stream;
 import org.pentaho.di.core.exception.KettleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +26,8 @@ public class MigratorApplication implements CommandLineRunner {
   private FileIOUtilities fileIOUtilities;
 
   private String[] jobs = {"pdiresources/jobs/merge-patient-job.kjb"};
+
+  private int index = 0;
 
   @Autowired
   public MigratorApplication(PDIService pdiService, FileIOUtilities fileIOUtilities) {
