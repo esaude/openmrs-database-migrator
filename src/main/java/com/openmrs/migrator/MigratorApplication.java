@@ -7,6 +7,8 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Stream;
 import org.pentaho.di.core.exception.KettleException;
 import org.slf4j.Logger;
@@ -26,6 +28,11 @@ public class MigratorApplication implements CommandLineRunner {
   private FileIOUtilities fileIOUtilities;
 
   private String[] jobs = {"pdiresources/jobs/merge-patient-job.kjb"};
+  
+  private List<String> dirList = Arrays.asList("input/", "output/", "config/", "pdiresources/");
+  
+  private Path settingsProperties = Paths.get("settings.properties");
+
 
   private int index = 0;
 
