@@ -8,7 +8,9 @@ import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import org.pentaho.di.core.exception.KettleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -80,7 +82,15 @@ public class MigratorApplication implements CommandLineRunner {
 
   private void executeSetupCommand() throws IOException {
 
+    final String JOB_FOLDER = "pdiresources/jobs/";
+    final String TRANSFORMATION_FOLDER = "pdiresources/transformations/";
+
+    Set<String> pdiFiles = new HashSet<>();
+
+    pdiFiles.add(JOB_FOLDER + "merge-patient-job.kjb");
+    pdiFiles.add(TRANSFORMATION_FOLDER + "merge-patient.ktr");
+
     bootstrapService.createDirectoryStructure(dirList, settingsProperties);
-    bootstrapService.populateDefaultResouce();
+    bootstrapService.populateDefaultResource(pdiFiles);
   }
 }

@@ -23,13 +23,11 @@ public class BootstrapServiceImpl implements BootstrapService {
 
   private final Path TARGET_TRANSFORMATION_FOLDER = Paths.get("pdiresources/transformations/");
 
-  private final String JOB_FOLDER = "pdiresources/jobs/";
-
-  private final String TRANSFORMATION_FOLDER = "pdiresources/transformations/";
-
   /**
    * Creates folders structure, if a one of the folder exists a warn log is raised informing that
    * the folder or won't be created because it already exists
+   *
+   * @return number of created files
    */
   @Override
   public int createDirectoryStructure(List<String> dirList, Path settingsProperties)
@@ -72,33 +70,35 @@ public class BootstrapServiceImpl implements BootstrapService {
     return Files.exists(path);
   }
 
-  /** this method copies resources of the app to folder where the app is running */
+  /**
+   * this method copies resources of the app to folder where the app is running
+   *
+   * @return Set of created files
+   */
   @Override
-  public void populateDefaultResouce() throws IOException {
+  public Set<String> populateDefaultResource(Set<String> sourceFiles) throws IOException {
+
+    Set<String> createdFiles = new HashSet<>();
 
     log.info("Starting populating PDi folders  ");
 
-    Set<String> pdiFiles = new HashSet<>();
-
-    pdiFiles.add(JOB_FOLDER + "merge-patient-job.kjb");
-    pdiFiles.add(TRANSFORMATION_FOLDER + "merge-patient.ktr");
-
-    pdiFiles.forEach(
+    sourceFiles.forEach(
         pdiFile -> {
           Path pdiPath = Paths.get(pdiFile);
           if (Files.notExists(Paths.get(pdiFile))) {
 
             try {
               Files.createFile(pdiPath);
+              log.info("File:" + pdiPath.getFileName() + " copied to " + pdiPath.getParent());
+              createdFiles.add(pdiFile);
             } catch (IOException e) {
-
               e.printStackTrace();
             }
-            log.info("File:" + pdiPath.getFileName() + " copied to " + pdiPath.getParent());
           } else {
             log.warn("File:" + pdiPath.getFileName() + " already exist in " + pdiPath.getParent());
           }
         });
 
+    return createdFiles;
   }
 }
