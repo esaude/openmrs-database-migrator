@@ -7,4 +7,6 @@ import java.util.List;
 public interface BootstrapService {
 
   int createDirectoryStructure(List<String> dirList, Path settingsProperties) throws IOException;
+
+  void populateDefaultResouce() throws IOException;
 }

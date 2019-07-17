@@ -38,6 +38,9 @@ public class BootstrapServiceTest {
     assertTrue(Files.notExists(file));
   }
 
+  @Test
+  public void populateDefaultResoucesSuccess() {}
+
   private void removeFolders() throws IOException {
     folders.forEach(
         x -> {

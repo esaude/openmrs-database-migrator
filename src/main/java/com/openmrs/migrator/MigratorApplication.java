@@ -1,7 +1,7 @@
 package com.openmrs.migrator;
 
-import com.openmrs.migrator.core.services.PDIService;
 import com.openmrs.migrator.core.services.BootstrapService;
+import com.openmrs.migrator.core.services.PDIService;
 import com.openmrs.migrator.core.utilities.FileIOUtilities;
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,8 +34,6 @@ public class MigratorApplication implements CommandLineRunner {
 
   private BootstrapService bootstrapService;
 
-  private int index = 0;
-
   @Autowired
   public MigratorApplication(
       PDIService pdiService, FileIOUtilities fileIOUtilities, BootstrapService bootstrapService) {
@@ -57,7 +55,8 @@ public class MigratorApplication implements CommandLineRunner {
     }
 
     if (args.length > 0 && "setup".equals(args[0])) {
-      bootstrapService.createDirectoryStructure(dirList, settingsProperties);
+
+      executeSetupCommand();
     }
 
     if (args.length > 0 && "run".equals(args[0])) {
@@ -77,5 +76,11 @@ public class MigratorApplication implements CommandLineRunner {
     } catch (KettleException e) {
       // Do nothing kettle prints stack trace
     }
+  }
+
+  private void executeSetupCommand() throws IOException {
+
+    bootstrapService.createDirectoryStructure(dirList, settingsProperties);
+    bootstrapService.populateDefaultResouce();
   }
 }
