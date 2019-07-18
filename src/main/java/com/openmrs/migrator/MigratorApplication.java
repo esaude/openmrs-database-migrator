@@ -1,20 +1,16 @@
 package com.openmrs.migrator;
 
-
 import com.openmrs.migrator.core.services.BootstrapService;
-
 import com.openmrs.migrator.core.services.PDIService;
 import com.openmrs.migrator.core.utilities.FileIOUtilities;
 import java.io.IOException;
 import java.io.InputStream;
-
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 import org.pentaho.di.core.exception.KettleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,7 +42,6 @@ public class MigratorApplication implements CommandLineRunner {
     this.pdiService = pdiService;
     this.fileIOUtilities = fileIOUtilities;
     this.bootstrapService = bootstrapService;
-
   }
 
   public static void main(String[] args) {

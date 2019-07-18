@@ -5,9 +5,11 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -16,8 +18,6 @@ import org.springframework.stereotype.Service;
 public class BootstrapServiceImpl implements BootstrapService {
 
   private static Logger log = LoggerFactory.getLogger(BootstrapServiceImpl.class);
-
-  int numberOfCreatedFiles = 0;
 
   private final Path TARGET_JOB_FOLDER = Paths.get("pdiresources/jobs/");
 
@@ -30,39 +30,40 @@ public class BootstrapServiceImpl implements BootstrapService {
    * @return number of created files
    */
   @Override
-  public int createDirectoryStructure(List<String> dirList, Path settingsProperties)
+  public Stream<String> createDirectoryStructure(List<String> dirList, Path settingsProperties)
       throws IOException {
+    List<String> directoryStream = new ArrayList<>();
 
     log.info("Starting creating folder structure");
 
     dirList.forEach(
-        x -> {
-          if (!checkIfPathExist(Paths.get(x))) {
+        dir -> {
+          if (!checkIfPathExist(Paths.get(dir))) {
             try {
-              Files.createDirectory(Paths.get(x));
-              log.info("Folder: " + x + " created sucessfully");
-              if (x.equals("pdiresources/")) {
+              Files.createDirectory(Paths.get(dir));
+              log.info("Folder: " + dir + " created sucessfully");
+              if (dir.equals("pdiresources/")) {
                 Files.createDirectory(TARGET_JOB_FOLDER);
                 Files.createDirectory(TARGET_TRANSFORMATION_FOLDER);
               }
-              numberOfCreatedFiles++;
+              directoryStream.add(dir);
             } catch (IOException e) {
               e.printStackTrace();
             }
           } else {
-            log.warn("Folder: " + x + " will not be created, folder already exists");
+            log.warn("Folder: " + dir + " will not be created, folder already exists");
           }
         });
 
     if (!checkIfPathExist(settingsProperties)) {
       Files.createFile(settingsProperties);
-      numberOfCreatedFiles++;
       log.info("File: settings.properties created sucessfully");
+      directoryStream.add(settingsProperties.getFileName().toString());
     } else {
       log.warn("File: settings.properties will not be created file already exists");
     }
 
-    return numberOfCreatedFiles;
+    return directoryStream.stream();
   }
 
   private boolean checkIfPathExist(Path path) {

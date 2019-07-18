@@ -35,13 +35,11 @@ public class PDIServiceTest {
   public void runJobSuccess() throws KettleException {
     boolean ranCorrectly = pdiService.runJob(streamWithValidJob);
     assertTrue(ranCorrectly);
-
   }
 
   @Test
   public void runJobFail() throws KettleException {
     boolean ranCorrectly = pdiService.runJob(streamWithInValidJob);
     assertFalse(ranCorrectly);
-
   }
 }

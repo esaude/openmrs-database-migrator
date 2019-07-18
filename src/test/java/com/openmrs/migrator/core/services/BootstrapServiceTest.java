@@ -10,6 +10,9 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,12 +34,16 @@ public class BootstrapServiceTest {
 
     removeFolders();
 
-    int numberOfCreatrions = bootstrapService.createDirectoryStructure(folders, file);
-    assertEquals(4, numberOfCreatrions);
+    Stream<String> strutureStream = bootstrapService.createDirectoryStructure(folders, file);
+
+    Predicate<Stream<String>> p = x -> x.collect(Collectors.toList()).containsAll(folders);
+
+    assertTrue(p.test(strutureStream));
+
     removeFolders();
-    assertTrue(Files.notExists(Paths.get("folder0")));
-    assertTrue(Files.notExists(Paths.get("folder1")));
-    assertTrue(Files.notExists(Paths.get("folder2")));
+    assertTrue(Files.notExists(Paths.get(folders.get(0))));
+    assertTrue(Files.notExists(Paths.get(folders.get(1))));
+    assertTrue(Files.notExists(Paths.get(folders.get(2))));
     assertTrue(Files.notExists(file));
   }
 
