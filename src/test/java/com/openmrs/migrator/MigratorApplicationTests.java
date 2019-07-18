@@ -9,9 +9,12 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -20,7 +23,12 @@ import org.springframework.test.context.junit4.SpringRunner;
 public class MigratorApplicationTests {
 
   private static List<Path> structurePaths;
+  
+  @Autowired private MigratorApplication migratorApplication;
 
+  
+  private CommandLineRunner commandLineRunner;
+  
   @BeforeClass
   public static void initClass() {
     structurePaths =
@@ -28,22 +36,26 @@ public class MigratorApplicationTests {
             Paths.get("input"),
             Paths.get("output"),
             Paths.get("config"),
-            Paths.get("input"),
+            Paths.get("pdiresources"),
             Paths.get("settings.properties"));
+  }
+  @Before 
+  public void  init() {
+	  commandLineRunner =  command ->  migratorApplication.run(command);
   }
 
   @Test
-  public void executeSetupCommandSucessfully() throws IOException {
+  public void executeSetupCommandSucessfully() throws Exception {
 
-    MigratorApplication.main(new String[] {"setup"});
+ 	commandLineRunner.run("setup");
 
     structurePaths.forEach(path -> assertTrue(Files.exists(path)));
   }
 
   @Test
-  public void executeRunCommandSucessfully() {
+  public void executeRunCommandSucessfully() throws Exception {
 
-    MigratorApplication.main(new String[] {"run"});
+	  commandLineRunner.run("run");
   }
 
   @AfterClass

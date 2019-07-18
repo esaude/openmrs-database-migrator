@@ -51,14 +51,10 @@ insert into person_attribute_type
     ('Source DB ID', 'ID from source database', false, 1, curdate(), false, '8d793bee-c2cc-11de-8d13-0010c6dffd23');
 ```
 
- 
-
 To execute the setup run:
 ```
 java  -jar migrator.jar setup
 ```
-
-
  
 To merge OpenMRS databases run:
 ```
