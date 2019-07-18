@@ -24,10 +24,10 @@ public class BootstrapServiceImpl implements BootstrapService {
   private final Path TARGET_TRANSFORMATION_FOLDER = Paths.get("pdiresources/transformations/");
 
   /**
-   * Creates folders structure, if a one of the folder exists a warn log is raised informing that
-   * the folder or won't be created because it already exists
+   * Creates folders structure. If one of the folders exists, a warn log is raised informing the
+   * folder won't be created because it already exists
    *
-   * @return number of created files
+   * @return Stream of created files
    */
   @Override
   public Stream<String> createDirectoryStructure(List<String> dirList, Path settingsProperties)
@@ -42,7 +42,7 @@ public class BootstrapServiceImpl implements BootstrapService {
             try {
               Files.createDirectory(Paths.get(dir));
               log.info("Folder: " + dir + " created sucessfully");
-              if (dir.equals("pdiresources/")) {
+              if ("pdiresources/".equals(dir)) {
                 Files.createDirectory(TARGET_JOB_FOLDER);
                 Files.createDirectory(TARGET_TRANSFORMATION_FOLDER);
               }

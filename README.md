@@ -54,7 +54,6 @@ insert into person_attribute_type
  
 
 To execute the setup run:
-
 ```
 java  -jar migrator.jar setup
 ```
@@ -62,7 +61,6 @@ java  -jar migrator.jar setup
 
  
 To merge OpenMRS databases run:
-
 ```
 java -jar migrator.jar run
 ```

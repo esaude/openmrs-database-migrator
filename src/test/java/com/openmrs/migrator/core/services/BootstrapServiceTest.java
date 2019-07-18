@@ -58,7 +58,6 @@ public class BootstrapServiceTest {
 
     Set<String> createdFiles = bootstrapService.populateDefaultResource(fileNames);
     assertTrue(createdFiles.contains("populatedFile.c"));
-    ;
 
     Files.deleteIfExists(Paths.get("populatedFile.c"));
   }
