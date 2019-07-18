@@ -23,12 +23,11 @@ import org.springframework.test.context.junit4.SpringRunner;
 public class MigratorApplicationTests {
 
   private static List<Path> structurePaths;
-  
+
   @Autowired private MigratorApplication migratorApplication;
 
-  
   private CommandLineRunner commandLineRunner;
-  
+
   @BeforeClass
   public static void initClass() {
     structurePaths =
@@ -39,15 +38,16 @@ public class MigratorApplicationTests {
             Paths.get("pdiresources"),
             Paths.get("settings.properties"));
   }
-  @Before 
-  public void  init() {
-	  commandLineRunner =  command ->  migratorApplication.run(command);
+
+  @Before
+  public void init() {
+    commandLineRunner = command -> migratorApplication.run(command);
   }
 
   @Test
   public void executeSetupCommandSucessfully() throws Exception {
 
- 	commandLineRunner.run("setup");
+    commandLineRunner.run("setup");
 
     structurePaths.forEach(path -> assertTrue(Files.exists(path)));
   }
@@ -55,7 +55,7 @@ public class MigratorApplicationTests {
   @Test
   public void executeRunCommandSucessfully() throws Exception {
 
-	  commandLineRunner.run("run");
+    commandLineRunner.run("run");
   }
 
   @AfterClass
