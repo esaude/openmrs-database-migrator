@@ -1,4 +1,4 @@
-package com.openmrs.migrator.utilities;
+package com.openmrs.migrator.unit.utilities;
 
 import static org.junit.Assert.*;
 

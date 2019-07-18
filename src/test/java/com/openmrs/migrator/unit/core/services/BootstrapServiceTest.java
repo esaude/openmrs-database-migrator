@@ -1,7 +1,8 @@
-package com.openmrs.migrator.core.services;
+package com.openmrs.migrator.unit.core.services;
 
 import static org.junit.Assert.*;
 
+import com.openmrs.migrator.core.services.BootstrapService;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;

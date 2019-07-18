@@ -1,7 +1,8 @@
-package com.openmrs.migrator;
+package com.openmrs.migrator.integration;
 
 import static org.junit.Assert.*;
 
+import com.openmrs.migrator.MigratorApplication;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;

@@ -1,8 +1,9 @@
-package com.openmrs.migrator.core.services;
+package com.openmrs.migrator.unit.core.services;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import com.openmrs.migrator.core.services.PDIService;
 import com.openmrs.migrator.core.utilities.FileIOUtilities;
 import java.io.InputStream;
 import org.junit.Before;
