@@ -36,7 +36,90 @@ public class FileIOUtilitiesTest {
   public void getInvalidResourceAsStream() throws IOException {
 
     fileIOUtilities.getResourceAsStream("fake/path");
-  } 
+  }
+
+  @Test
+  public void createDirectory_shouldSucceed() throws IOException {
+    Path newDirectory = Paths.get("temp");
+    boolean result = fileIOUtilities.createDirectory(newDirectory);
+
+    assertTrue(result);
+    assertTrue(Files.exists(newDirectory));
+
+    // cleanup
+    fileIOUtilities.removeDirectory(newDirectory.toFile());
+    assertFalse(Files.exists(newDirectory));
+  }
+
+  @Test
+  public void createDirectory_shouldFail_givenDirAlreadyExists() throws IOException {
+    Path newDirectory = Paths.get("temp");
+    fileIOUtilities.createDirectory(newDirectory);
+
+    boolean result = fileIOUtilities.createDirectory(newDirectory);
+
+    assertFalse(result);
+
+    // cleanup
+    fileIOUtilities.removeDirectory(newDirectory.toFile());
+    assertFalse(Files.exists(newDirectory));
+  }
+
+  @Test
+  public void createFile_shouldSucceed() throws IOException {
+    Path newDirectory = Paths.get("temp.txt");
+    boolean result = fileIOUtilities.createFile(newDirectory);
+
+    assertTrue(result);
+    assertTrue(Files.exists(newDirectory));
+
+    // cleanup
+    fileIOUtilities.removeDirectory(newDirectory.toFile());
+    assertFalse(Files.exists(newDirectory));
+  }
+
+  @Test
+  public void createFile_shouldFail_givenFileAlreadyExists() throws IOException {
+    Path newDirectory = Paths.get("temp.txt");
+    fileIOUtilities.createFile(newDirectory);
+
+    boolean result = fileIOUtilities.createFile(newDirectory);
+
+    assertFalse(result);
+
+    // cleanup
+    fileIOUtilities.removeDirectory(newDirectory.toFile());
+    assertFalse(Files.exists(newDirectory));
+  }
+
+  @Test(expected = IOException.class)
+  public void createFile_shouldFail_givenFolderDoesNotExists() throws IOException {
+    Path newDirectory = Paths.get("temp/temp.txt");
+
+    fileIOUtilities.createFile(newDirectory);
+  }
+
+  @Test
+  public void copyFileFromResources_shouldSucceed() throws IOException {
+    Path file = Paths.get("settings.properties");
+    fileIOUtilities.copyFileFromResources(file.toFile().getName());
+
+    assertTrue(Files.exists(file));
+
+    // cleanup
+    fileIOUtilities.removeDirectory(file.toFile());
+    assertFalse(Files.exists(file));
+  }
+
+  @Test(expected = RuntimeException.class)
+  public void copyFileFromResources_shouldFail_givenFileUndefined() throws IOException {
+    fileIOUtilities.copyFileFromResources(null);
+  }
+
+  @Test(expected = IOException.class)
+  public void copyFileFromResources_shouldFail_givenFileNotExist() throws IOException {
+    fileIOUtilities.copyFileFromResources("unknownFile");
+  }
 
   @Test(expected = RuntimeException.class)
   public void removeAllDirectories_shouldFail_givenEmptyList() throws IOException {
@@ -55,7 +138,11 @@ public class FileIOUtilitiesTest {
 
     folders.forEach(
         f -> {
-          fileIOUtilities.createDirectory(Paths.get(f));
+          try {
+            fileIOUtilities.createDirectory(Paths.get(f));
+          } catch (IOException ex) {
+            throw new RuntimeException(ex);
+          }
         });
 
     fileIOUtilities.removeAllDirectories(folders);
