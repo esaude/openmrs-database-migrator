@@ -5,6 +5,8 @@ import static org.junit.Assert.*;
 import com.openmrs.migrator.core.utilities.FileIOUtilities;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,4 +33,40 @@ public class FileIOUtilitiesTest {
 
     fileIOUtilities.getResourceAsStream("fake/path");
   }
+
+  @Test(expected = IOException.class)
+  public void removeAllDirectories_shouldFail_givenEmptyList() throws IOException {
+    List<String> folders = new ArrayList<>();
+    fileIOUtilities.removeAllDirectories(folders);
+  }
+
+  @Test(expected = IOException.class)
+  public void removeAllDirectories_shouldFail_givenUndefined() throws IOException {
+    fileIOUtilities.removeAllDirectories(null);
+  }
+
+  // @Test()
+  // public void removeAllDirectories_shouldSucceed() throws IOException{
+
+  //   fileIOUtilities.removeAllDirectories();
+  // }
+
+  @Test(expected = IOException.class)
+  public void removeDirectory_shouldFail_givenUndefinedObj() throws IOException {
+    fileIOUtilities.removeAllDirectories(null);
+  }
+
+  // @Test
+  // public void givenDirectory_whenDeletedWithRecursion_thenIsGone()
+  //   throws IOException {
+
+  //     Path pathToBeDeleted = Paths.get("temp");
+
+  //     boolean result = fileIOUtilities.removeDirectory(pathToBeDeleted.toFile());
+
+  //     assertTrue(result);
+  //     assertFalse(
+  //       "Directory still exists",
+  //       Files.deleteIfExists(pathToBeDeleted));
+  // }
 }

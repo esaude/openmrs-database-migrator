@@ -3,17 +3,15 @@ package com.openmrs.migrator.unit.core.services;
 import static org.junit.Assert.*;
 
 import com.openmrs.migrator.core.services.BootstrapService;
+import com.openmrs.migrator.core.utilities.FileIOUtilities;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,52 +24,61 @@ public class BootstrapServiceTest {
 
   @Autowired private BootstrapService bootstrapService;
 
-  private List<String> folders = Arrays.asList("folder0", "folder1", "folder2");
+  @Autowired private FileIOUtilities fileIOUtils;
 
-  private Path file = Paths.get("file.unknown");
+  private List<String> folders =
+      Arrays.asList(
+          "input", "output", "pdiresources", "pdiresources/transformations", "pdiresources/jobs");
+
+  private String settingsFile = "settings.properties";
+
+  @Before
+  public void setUp() throws IOException {
+    fileIOUtils.removeAllDirectories(folders);
+    fileIOUtils.removeDirectory(Paths.get(settingsFile).toFile());
+  }
 
   @Test
   public void createDirectoryStructureSuccess() throws IOException {
+    bootstrapService.createDirectoryStructure(folders);
 
-    removeFolders();
-
-    Stream<String> strutureStream = bootstrapService.createDirectoryStructure(folders, file);
-
-    Predicate<Stream<String>> p = x -> x.collect(Collectors.toList()).containsAll(folders);
-
-    assertTrue(p.test(strutureStream));
-
-    removeFolders();
-    assertTrue(Files.notExists(Paths.get(folders.get(0))));
-    assertTrue(Files.notExists(Paths.get(folders.get(1))));
-    assertTrue(Files.notExists(Paths.get(folders.get(2))));
-    assertTrue(Files.notExists(file));
+    assertTrue(Files.exists(Paths.get(folders.get(0))));
+    assertTrue(Files.exists(Paths.get(folders.get(1))));
+    assertTrue(Files.exists(Paths.get(folders.get(2))));
   }
 
   @Test
   public void populateDefaultResoucesSuccess() throws IOException {
+    bootstrapService.createDirectoryStructure(folders);
 
-    Files.deleteIfExists(Paths.get("populatedFile.c"));
+    List<String> pdiFiles = new ArrayList<>();
+    pdiFiles.add("pdiresources/jobs/job.kjb");
+    pdiFiles.add("pdiresources/transformations/transformation.ktr");
+    pdiFiles.add(settingsFile);
 
-    Set<String> fileNames = new HashSet<>();
+    bootstrapService.populateDefaultResources(pdiFiles);
 
-    fileNames.add("populatedFile.c");
-
-    Set<String> createdFiles = bootstrapService.populateDefaultResource(fileNames);
-    assertTrue(createdFiles.contains("populatedFile.c"));
-
-    Files.deleteIfExists(Paths.get("populatedFile.c"));
+    assertTrue(Files.exists(Paths.get(pdiFiles.get(0))));
+    assertTrue(Files.exists(Paths.get(pdiFiles.get(1))));
+    assertTrue(Files.exists(Paths.get(pdiFiles.get(2))));
   }
 
-  private void removeFolders() throws IOException {
-    folders.forEach(
-        x -> {
-          try {
-            Files.deleteIfExists(Paths.get(x));
-          } catch (IOException e) {
+  @Test(expected = NullPointerException.class)
+  public void populateDefaultResoucesFail_givenFoldersUndefined() throws IOException {
+    bootstrapService.populateDefaultResources(null);
+  }
 
-          }
-        });
-    Files.deleteIfExists(file);
+  @Test(expected = RuntimeException.class)
+  public void populateDefaultResoucesFail_givenFolderStructureDoesntExist() throws IOException {
+    List<String> pdiFiles = new ArrayList<>();
+    pdiFiles.add("pdiresources/jobs/job.kjb");
+
+    bootstrapService.populateDefaultResources(pdiFiles);
+  }
+
+  @After
+  public void cleanUp() throws IOException {
+    fileIOUtils.removeAllDirectories(folders);
+    fileIOUtils.removeDirectory(Paths.get(settingsFile).toFile());
   }
 }
