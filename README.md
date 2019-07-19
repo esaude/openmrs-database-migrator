@@ -4,7 +4,14 @@
 
 
 
-A growing requirement in countries across the world that implement OpenMRS is to 
+A growing requirement in countries across the world that implement OpenMRS is the need to migrate OpenMRS databases. There are usually a number of different reasons for this, whether it be:
+* Upgrading version of OpenMRS
+* Migrating to an OpenMRS distro such as Bahmni or RefApp
+* Harmonizing metadata across a region
+
+Usually implementers rely on OpenMRS's built in migration scripts for the first one, but the other two usually require custom scripts be implemented for the specific project or region.
+
+The aim of this tool is to fill that gap by being a configurable tool that will allow implementers to easily migrate their OpenMRS databases in whichever way is needed.
 
 ## Overview
 
