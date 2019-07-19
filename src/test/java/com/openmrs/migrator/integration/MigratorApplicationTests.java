@@ -3,15 +3,15 @@ package com.openmrs.migrator.integration;
 import static org.junit.Assert.*;
 
 import com.openmrs.migrator.MigratorApplication;
+import com.openmrs.migrator.core.exceptions.InvalidParameterException;
+import com.openmrs.migrator.core.utilities.FileIOUtilities;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
-import org.junit.AfterClass;
+import org.junit.After;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,26 +23,20 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest(classes = MigratorApplication.class)
 public class MigratorApplicationTests {
 
-  private static List<Path> structurePaths;
-
   @Autowired private MigratorApplication migratorApplication;
+
+  @Autowired private FileIOUtilities fileIOUtils;
 
   private CommandLineRunner commandLineRunner;
 
-  @BeforeClass
-  public static void initClass() {
-    structurePaths =
-        Arrays.asList(
-            Paths.get("input"),
-            Paths.get("output"),
-            Paths.get("config"),
-            Paths.get("pdiresources"),
-            Paths.get("settings.properties"));
-  }
+  private static List<String> structurePaths =
+      Arrays.asList("input", "output", "config", "pdiresources", "settings.properties");;
 
   @Before
-  public void init() {
+  public void init() throws IOException, InvalidParameterException {
     commandLineRunner = command -> migratorApplication.run(command);
+
+    fileIOUtils.removeAllDirectories(structurePaths);
   }
 
   @Test
@@ -51,7 +45,7 @@ public class MigratorApplicationTests {
     commandLineRunner.run("setup");
     assertNotNull(commandLineRunner);
 
-    structurePaths.forEach(path -> assertTrue(Files.exists(path)));
+    structurePaths.forEach(path -> assertTrue(Files.exists(Paths.get(path))));
   }
 
   @Test
@@ -61,16 +55,9 @@ public class MigratorApplicationTests {
     assertNotNull(commandLineRunner);
   }
 
-  @AfterClass
-  public static void cleanUp() throws IOException {
+  @After
+  public void cleanUp() throws IOException, InvalidParameterException {
 
-    structurePaths.forEach(
-        path -> {
-          try {
-            Files.deleteIfExists(path);
-          } catch (IOException e) {
-            e.printStackTrace();
-          }
-        });
+    fileIOUtils.removeAllDirectories(structurePaths);
   }
 }
