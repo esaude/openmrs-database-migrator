@@ -49,6 +49,7 @@ public class MigratorApplicationTests {
   public void executeSetupCommandSucessfully() throws Exception {
 
     commandLineRunner.run("setup");
+    assertNotNull(commandLineRunner);
 
     structurePaths.forEach(path -> assertTrue(Files.exists(path)));
   }
@@ -57,6 +58,7 @@ public class MigratorApplicationTests {
   public void executeRunCommandSucessfully() throws Exception {
 
     commandLineRunner.run("run");
+    assertNotNull(commandLineRunner);
   }
 
   @AfterClass
