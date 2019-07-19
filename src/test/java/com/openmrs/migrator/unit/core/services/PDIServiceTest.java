@@ -1,8 +1,9 @@
-package com.openmrs.migrator.core.services;
+package com.openmrs.migrator.unit.core.services;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import com.openmrs.migrator.core.services.PDIService;
 import com.openmrs.migrator.core.utilities.FileIOUtilities;
 import java.io.InputStream;
 import org.junit.Before;
@@ -33,13 +34,13 @@ public class PDIServiceTest {
 
   @Test
   public void runJobSuccess() throws KettleException {
-    boolean runnedCorrectly = pdiService.runJob(streamWithValidJob);
-    assertTrue(runnedCorrectly);
+    boolean ranCorrectly = pdiService.runJob(streamWithValidJob);
+    assertTrue(ranCorrectly);
   }
 
   @Test
   public void runJobFail() throws KettleException {
-    boolean runnedCorrectly = pdiService.runJob(streamWithInValidJob);
-    assertFalse(runnedCorrectly);
+    boolean ranCorrectly = pdiService.runJob(streamWithInValidJob);
+    assertFalse(ranCorrectly);
   }
 }
