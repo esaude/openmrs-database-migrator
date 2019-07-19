@@ -1,26 +1,29 @@
 package com.openmrs.migrator.core.services.impl;
 
 import com.openmrs.migrator.core.services.PDIService;
-import java.io.InputStream;
-import org.pentaho.di.core.KettleEnvironment;
+import com.openmrs.migrator.core.services.SettingsService;
 import org.pentaho.di.core.Result;
-import org.pentaho.di.core.exception.KettleException;
 import org.pentaho.di.core.logging.LogLevel;
 import org.pentaho.di.job.Job;
 import org.pentaho.di.job.JobMeta;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.io.InputStream;
 
 @Component
 public class PDIServiceImpl implements PDIService {
+  @Autowired
+  private SettingsService settingsService;
 
   private static Logger LOG = LoggerFactory.getLogger(PDIServiceImpl.class);
 
   @Override
-  public boolean runJob(InputStream pdiJobFileStream) throws KettleException {
-
-    KettleEnvironment.init();
+  public boolean runJob(InputStream pdiJobFileStream) throws Exception {
+    // TODO somehow i think this is better in MigratorApplication run
+    settingsService.initializeKettleEnvironment(true);
 
     JobMeta jobMeta = new JobMeta(pdiJobFileStream, null, null);
 

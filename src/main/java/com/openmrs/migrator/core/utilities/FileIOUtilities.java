@@ -1,12 +1,14 @@
 package com.openmrs.migrator.core.utilities;
 
+import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import org.springframework.stereotype.Component;
-import org.springframework.web.multipart.MultipartFile;
 
 @Component
 public class FileIOUtilities {
@@ -35,7 +37,7 @@ public class FileIOUtilities {
    * @throws IOException if the resource could not be found
    */
   public InputStream getResourceAsStream(String resource) throws IOException {
-    InputStream resourceAsStream = getClass().getResourceAsStream("/" + resource);
+    InputStream resourceAsStream = getClass().getResourceAsStream(File.separator + resource);
     if (resourceAsStream == null) {
       throw new IOException("Could not load resource " + resource);
     }
