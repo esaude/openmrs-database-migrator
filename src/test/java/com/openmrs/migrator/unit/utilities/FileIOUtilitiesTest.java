@@ -2,6 +2,7 @@ package com.openmrs.migrator.unit.utilities;
 
 import static org.junit.Assert.*;
 
+import com.openmrs.migrator.core.exceptions.InvalidParameterException;
 import com.openmrs.migrator.core.utilities.FileIOUtilities;
 import java.io.IOException;
 import java.io.InputStream;
@@ -39,7 +40,7 @@ public class FileIOUtilitiesTest {
   }
 
   @Test
-  public void createDirectory_shouldSucceed() throws IOException {
+  public void createDirectoryShouldSucceed() throws IOException, InvalidParameterException {
     Path newDirectory = Paths.get("temp");
     boolean result = fileIOUtilities.createDirectory(newDirectory);
 
@@ -52,7 +53,8 @@ public class FileIOUtilitiesTest {
   }
 
   @Test
-  public void createDirectory_shouldFail_givenDirAlreadyExists() throws IOException {
+  public void createDirectoryShouldFailGivenDirAlreadyExists()
+      throws IOException, InvalidParameterException {
     Path newDirectory = Paths.get("temp");
     fileIOUtilities.createDirectory(newDirectory);
 
@@ -66,7 +68,7 @@ public class FileIOUtilitiesTest {
   }
 
   @Test
-  public void createFile_shouldSucceed() throws IOException {
+  public void createFileShouldSucceed() throws IOException, InvalidParameterException {
     Path newDirectory = Paths.get("temp.txt");
     boolean result = fileIOUtilities.createFile(newDirectory);
 
@@ -79,7 +81,8 @@ public class FileIOUtilitiesTest {
   }
 
   @Test
-  public void createFile_shouldFail_givenFileAlreadyExists() throws IOException {
+  public void createFileShouldFailGivenFileAlreadyExists()
+      throws IOException, InvalidParameterException {
     Path newDirectory = Paths.get("temp.txt");
     fileIOUtilities.createFile(newDirectory);
 
@@ -93,14 +96,14 @@ public class FileIOUtilitiesTest {
   }
 
   @Test(expected = IOException.class)
-  public void createFile_shouldFail_givenFolderDoesNotExists() throws IOException {
+  public void createFileShouldFailGivenFolderDoesNotExists() throws IOException {
     Path newDirectory = Paths.get("temp/temp.txt");
 
     fileIOUtilities.createFile(newDirectory);
   }
 
   @Test
-  public void copyFileFromResources_shouldSucceed() throws IOException {
+  public void copyFileFromResourcesShouldSucceed() throws IOException, InvalidParameterException {
     Path file = Paths.get("settings.properties");
     fileIOUtilities.copyFileFromResources(file.toFile().getName());
 
@@ -111,29 +114,33 @@ public class FileIOUtilitiesTest {
     assertFalse(Files.exists(file));
   }
 
-  @Test(expected = RuntimeException.class)
-  public void copyFileFromResources_shouldFail_givenFileUndefined() throws IOException {
+  @Test(expected = InvalidParameterException.class)
+  public void copyFileFromResourcesShouldFailGivenFileUndefined()
+      throws IOException, InvalidParameterException {
     fileIOUtilities.copyFileFromResources(null);
   }
 
   @Test(expected = IOException.class)
-  public void copyFileFromResources_shouldFail_givenFileNotExist() throws IOException {
+  public void copyFileFromResourcesShouldFailGivenFileNotExist()
+      throws IOException, InvalidParameterException {
     fileIOUtilities.copyFileFromResources("unknownFile");
   }
 
-  @Test(expected = RuntimeException.class)
-  public void removeAllDirectories_shouldFail_givenEmptyList() throws IOException {
+  @Test(expected = InvalidParameterException.class)
+  public void removeAllDirectoriesShouldFailGivenEmptyList()
+      throws IOException, InvalidParameterException {
     List<String> folders = new ArrayList<>();
     fileIOUtilities.removeAllDirectories(folders);
   }
 
-  @Test(expected = RuntimeException.class)
-  public void removeAllDirectories_shouldFail_givenUndefined() throws IOException {
+  @Test(expected = InvalidParameterException.class)
+  public void removeAllDirectoriesShouldFailGivenUndefined()
+      throws IOException, InvalidParameterException {
     fileIOUtilities.removeAllDirectories(null);
   }
 
   @Test()
-  public void removeAllDirectories_shouldSucceed() throws IOException {
+  public void removeAllDirectoriesShouldSucceed() throws IOException, InvalidParameterException {
     List<String> folders = Arrays.asList("folder1", "folder0");
 
     folders.forEach(
@@ -152,7 +159,8 @@ public class FileIOUtilitiesTest {
   }
 
   @Test
-  public void removeDirectory_shouldSucceed_givenFileExists() throws IOException {
+  public void removeDirectoryShouldSucceedGivenFileExists()
+      throws IOException, InvalidParameterException {
     Path pathToBeDeleted = Paths.get("temp");
     fileIOUtilities.createFile(pathToBeDeleted);
 
@@ -163,15 +171,17 @@ public class FileIOUtilitiesTest {
   }
 
   @Test
-  public void removeDirectory_shouldFail_givenFileDoesNotExists() throws IOException {
+  public void removeDirectoryShouldFailGivenFileDoesNotExists()
+      throws IOException, InvalidParameterException {
     Path pathToBeDeleted = Paths.get("temp");
     boolean result = fileIOUtilities.removeDirectory(pathToBeDeleted.toFile());
 
     assertFalse(result);
   }
 
-  @Test(expected = RuntimeException.class)
-  public void removeDirectory_shouldFail_givenUndefined() throws IOException {
+  @Test(expected = InvalidParameterException.class)
+  public void removeDirectoryShouldFailGivenUndefined()
+      throws IOException, InvalidParameterException {
     fileIOUtilities.removeDirectory(null);
   }
 }

@@ -5,7 +5,7 @@ import java.util.List;
 
 public interface BootstrapService {
 
-  void createDirectoryStructure(List<String> dirList) throws IOException;
+  boolean createDirectoryStructure(List<String> dirList) throws IOException;
 
-  void populateDefaultResources(List<String> sourceFiles) throws IOException;
+  boolean populateDefaultResources(List<String> sourceFiles) throws IOException;
 }

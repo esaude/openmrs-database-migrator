@@ -5,7 +5,7 @@ public class EmptyFileException extends Exception {
 
   private static final long serialVersionUID = 1L;
 
-  public EmptyFileException() {
-    super("File is empty");
+  public EmptyFileException(String fileName) {
+    super("File is empty: " + fileName);
   }
 }

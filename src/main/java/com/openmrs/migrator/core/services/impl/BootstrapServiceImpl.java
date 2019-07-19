@@ -1,5 +1,6 @@
 package com.openmrs.migrator.core.services.impl;
 
+import com.openmrs.migrator.core.exceptions.InvalidParameterException;
 import com.openmrs.migrator.core.services.BootstrapService;
 import com.openmrs.migrator.core.utilities.FileIOUtilities;
 import java.io.IOException;
@@ -26,46 +27,53 @@ public class BootstrapServiceImpl implements BootstrapService {
    * Creates folders structure. If one of the folders exists, a warn log is raised informing the
    * folder won't be created because it already exists
    *
-   * @return Stream of created files
+   * @return boolean indicating success or failure
    */
   @Override
-  public void createDirectoryStructure(List<String> dirList) throws IOException {
+  public boolean createDirectoryStructure(List<String> dirList) throws IOException {
     log.info("Creating folder structure");
 
-    dirList.forEach(
-        dir -> {
-          // Not the cleanest approach
-          // TODO: we should write a wrapper class that will handle this for us
-          // An option is to use a functional interface for this:
-          // https://www.baeldung.com/java-lambda-exceptions
-          try {
-            fileIOUtilities.createDirectory(Paths.get(dir));
-          } catch (IOException ex) {
-            throw new RuntimeException(ex);
-          }
-        });
+    for (String dir : dirList) {
+      // Not the cleanest approach
+      // TODO: we should write a wrapper class that will handle this for us
+      // An option is to use a functional interface for this:
+      // https://www.baeldung.com/java-lambda-exceptions
+      try {
+        fileIOUtilities.createDirectory(Paths.get(dir));
+      } catch (IOException ex) {
+        log.error("An IO exception occurred while creating directories", ex);
+        return false;
+      }
+    }
+
+    return true;
   }
 
   /**
    * this method copies resources of the app to folder where the app is running
    *
-   * @return Set of created files
+   * @return boolean indicating success or failure
    */
   @Override
-  public void populateDefaultResources(List<String> sourceFiles) throws IOException {
+  public boolean populateDefaultResources(List<String> sourceFiles) throws IOException {
     log.info("Populating PDI folders with default resources");
 
-    sourceFiles.forEach(
-        pdiFile -> {
-          // Not the cleanest approach
-          // TODO: we should write a wrapper class that will handle this for us
-          // An option is to use a functional interface for this:
-          // https://www.baeldung.com/java-lambda-exceptions
-          try {
-            fileIOUtilities.copyFileFromResources(pdiFile);
-          } catch (IOException ex) {
-            throw new RuntimeException(ex);
-          }
-        });
+    for (String pdiFile : sourceFiles) {
+      // Not the cleanest approach
+      // TODO: we should write a wrapper class that will handle this for us
+      // An option is to use a functional interface for this:
+      // https://www.baeldung.com/java-lambda-exceptions
+      try {
+        fileIOUtilities.copyFileFromResources(pdiFile);
+      } catch (IOException ex) {
+        log.error("An IOException occurred while copying resource files", ex);
+        return false;
+      } catch (InvalidParameterException paramEx) {
+        log.error("An Invalid Parameter Exception occurred while copying resource files", paramEx);
+        return false;
+      }
+    }
+
+    return true;
   }
 }

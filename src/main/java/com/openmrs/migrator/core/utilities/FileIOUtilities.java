@@ -1,6 +1,7 @@
 package com.openmrs.migrator.core.utilities;
 
 import com.openmrs.migrator.core.exceptions.EmptyFileException;
+import com.openmrs.migrator.core.exceptions.InvalidParameterException;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,7 +23,7 @@ public class FileIOUtilities {
 
   public void UploadFile(MultipartFile file) throws EmptyFileException {
     if (file.isEmpty()) {
-      throw new EmptyFileException();
+      throw new EmptyFileException(file.getOriginalFilename());
     }
 
     try {
@@ -102,10 +103,12 @@ public class FileIOUtilities {
    *
    * @param resourceFile
    * @throws IOException
+   * @throws InvalidParameterException
    */
-  public void copyFileFromResources(String resourceFile) throws IOException {
+  public void copyFileFromResources(String resourceFile)
+      throws IOException, InvalidParameterException {
     if (resourceFile == null || resourceFile.isEmpty()) {
-      throw new RuntimeException("No file specified");
+      throw new InvalidParameterException(resourceFile);
     }
 
     // read the files form the resources folder in the jar application
@@ -122,15 +125,15 @@ public class FileIOUtilities {
    * @param directories
    * @throws IOException
    */
-  public void removeAllDirectories(List<String> directories) throws IOException {
+  public void removeAllDirectories(List<String> directories)
+      throws IOException, InvalidParameterException {
     if (directories == null || directories.size() == 0) {
-      throw new RuntimeException("List of directories is empty or undefined");
+      throw new InvalidParameterException(directories);
     }
 
-    directories.forEach(
-        directory -> {
-          removeDirectory(new File(directory));
-        });
+    for (String dir : directories) {
+      removeDirectory(new File(dir));
+    }
   }
 
   /**
@@ -138,10 +141,11 @@ public class FileIOUtilities {
    *
    * @param directoryToBeDeleted
    * @return boolean value indicating success or failure
+   * @throws InvalidParameterException
    */
-  public boolean removeDirectory(File directoryToBeDeleted) {
+  public boolean removeDirectory(File directoryToBeDeleted) throws InvalidParameterException {
     if (directoryToBeDeleted == null) {
-      throw new RuntimeException("Directory to be removed parameter is undefined");
+      throw new InvalidParameterException(directoryToBeDeleted);
     }
 
     File[] allContents = directoryToBeDeleted.listFiles();

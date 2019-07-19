@@ -2,6 +2,7 @@ package com.openmrs.migrator.unit.core.services;
 
 import static org.junit.Assert.*;
 
+import com.openmrs.migrator.core.exceptions.InvalidParameterException;
 import com.openmrs.migrator.core.services.BootstrapService;
 import com.openmrs.migrator.core.utilities.FileIOUtilities;
 import java.io.IOException;
@@ -33,15 +34,16 @@ public class BootstrapServiceTest {
   private String settingsFile = "settings.properties";
 
   @Before
-  public void setUp() throws IOException {
+  public void setUp() throws IOException, InvalidParameterException {
     fileIOUtils.removeAllDirectories(folders);
     fileIOUtils.removeDirectory(Paths.get(settingsFile).toFile());
   }
 
   @Test
   public void createDirectoryStructureSuccess() throws IOException {
-    bootstrapService.createDirectoryStructure(folders);
+    boolean result = bootstrapService.createDirectoryStructure(folders);
 
+    assertTrue(result);
     assertTrue(Files.exists(Paths.get(folders.get(0))));
     assertTrue(Files.exists(Paths.get(folders.get(1))));
     assertTrue(Files.exists(Paths.get(folders.get(2))));
@@ -56,28 +58,31 @@ public class BootstrapServiceTest {
     pdiFiles.add("pdiresources/transformations/transformation.ktr");
     pdiFiles.add(settingsFile);
 
-    bootstrapService.populateDefaultResources(pdiFiles);
+    boolean result = bootstrapService.populateDefaultResources(pdiFiles);
 
+    assertTrue(result);
     assertTrue(Files.exists(Paths.get(pdiFiles.get(0))));
     assertTrue(Files.exists(Paths.get(pdiFiles.get(1))));
     assertTrue(Files.exists(Paths.get(pdiFiles.get(2))));
   }
 
   @Test(expected = NullPointerException.class)
-  public void populateDefaultResoucesFail_givenFoldersUndefined() throws IOException {
+  public void populateDefaultResoucesFailGivenFoldersUndefined() throws IOException {
     bootstrapService.populateDefaultResources(null);
   }
 
-  @Test(expected = RuntimeException.class)
-  public void populateDefaultResoucesFail_givenFolderStructureDoesntExist() throws IOException {
+  @Test
+  public void populateDefaultResoucesFailGivenFolderStructureDoesntExist() throws IOException {
     List<String> pdiFiles = new ArrayList<>();
     pdiFiles.add("pdiresources/jobs/job.kjb");
 
-    bootstrapService.populateDefaultResources(pdiFiles);
+    boolean result = bootstrapService.populateDefaultResources(pdiFiles);
+
+    assertFalse(result);
   }
 
   @After
-  public void cleanUp() throws IOException {
+  public void cleanUp() throws IOException, InvalidParameterException {
     fileIOUtils.removeAllDirectories(folders);
     fileIOUtils.removeDirectory(Paths.get(settingsFile).toFile());
   }
