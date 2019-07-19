@@ -133,7 +133,7 @@ public class FileIOUtilities {
    */
   public void removeAllDirectories(List<String> directories) throws IOException {
     if (directories == null || directories.size() == 0) {
-      throw new IOException("List of directories is empty or undefined");
+      throw new RuntimeException("List of directories is empty or undefined");
     }
 
     directories.forEach(
@@ -150,7 +150,7 @@ public class FileIOUtilities {
    */
   public boolean removeDirectory(File directoryToBeDeleted) {
     if (directoryToBeDeleted == null) {
-      return false;
+      throw new RuntimeException("Directory to be removed parameter is undefined");
     }
 
     File[] allContents = directoryToBeDeleted.listFiles();

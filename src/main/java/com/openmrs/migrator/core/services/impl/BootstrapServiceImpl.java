@@ -51,7 +51,8 @@ public class BootstrapServiceImpl implements BootstrapService {
         pdiFile -> {
           // Not the cleanest approach
           // TODO: we should write a wrapper class that will handle this for us
-          // An option is to use a functional interface for this: https://www.baeldung.com/java-lambda-exceptions
+          // An option is to use a functional interface for this:
+          // https://www.baeldung.com/java-lambda-exceptions
           try {
             fileIOUtilities.copyFileFromResources(pdiFile);
           } catch (IOException ex) {
