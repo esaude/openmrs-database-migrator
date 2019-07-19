@@ -7,12 +7,17 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 @Component
 public class FileIOUtilities {
+
+  private static Logger logger = LoggerFactory.getLogger(FileIOUtilities.class);
   private static final String UPLOADED_FOLDER = "~";
 
   public void UploadFile(MultipartFile file) throws EmptyFileException {
@@ -43,6 +48,80 @@ public class FileIOUtilities {
       throw new IOException("Could not load resource " + resource);
     }
     return resourceAsStream;
+  }
+
+  /**
+   * Check if a path exists
+   *
+   * @param path
+   * @return
+   */
+  public boolean checkIfPathExist(Path path) {
+    return Files.exists(path);
+  }
+
+  /**
+   * Create a directory
+   *
+   * @param directoryToCreate
+   * @return boolean indicating if directory has been created successfully or not
+   */
+  public boolean createDirectory(Path directoryToCreate) {
+    if (!checkIfPathExist(directoryToCreate)) {
+      try {
+        Files.createDirectory(directoryToCreate);
+        logger.info("Folder: " + directoryToCreate + " created sucessfully");
+
+        return true;
+      } catch (IOException e) {
+        e.printStackTrace();
+        return false;
+      }
+    } else {
+      logger.warn("Folder: " + directoryToCreate + " will not be created, folder already exists");
+      return false;
+    }
+  }
+
+  /**
+   * Create a new file by passing in a Path Object
+   *
+   * @param fileName
+   * @return boolean indicating if file has been created successfully or not
+   * @throws IOException
+   */
+  public boolean createFile(Path fileName) {
+    if (!checkIfPathExist(fileName)) {
+      try {
+        Files.createFile(fileName);
+        logger.info("File: " + fileName + " created successfully");
+      } catch (IOException e) {
+        e.printStackTrace();
+        return false;
+      }
+      return true;
+    } else {
+      logger.warn("File: " + fileName + " will not be created since file already exists");
+      return false;
+    }
+  }
+
+  /**
+   * Copy a file from local resources folder to same directory that the app is running in
+   *
+   * @param resourceFile
+   * @throws IOException
+   */
+  public void copyFileFromResources(String resourceFile) throws IOException {
+    if (resourceFile == null || resourceFile.isEmpty()) {
+      throw new RuntimeException("No file specified");
+    }
+
+    // read the files form the resources folder in the jar application
+    InputStream resourceStream = getResourceAsStream(resourceFile);
+
+    // copy files from resources to home directory
+    Files.copy(resourceStream, Paths.get(resourceFile), StandardCopyOption.REPLACE_EXISTING);
   }
 
   /**
