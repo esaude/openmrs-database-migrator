@@ -1,4 +1,4 @@
-package com.openmrs.migrator.utilities;
+package com.openmrs.migrator.unit.utilities;
 
 import com.openmrs.migrator.core.services.SettingsService;
 import com.openmrs.migrator.core.utilities.FileIOUtilities;

@@ -1,6 +1,7 @@
-package com.openmrs.migrator.core.services;
+package com.openmrs.migrator.unit.core.services;
 
 import com.openmrs.migrator.core.exceptions.CommandExecutionException;
+import com.openmrs.migrator.core.services.CommandService;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;

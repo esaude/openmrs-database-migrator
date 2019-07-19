@@ -44,5 +44,12 @@ public class FileIOUtilities {
     return resourceAsStream;
   }
 
-  private class EmptyFileException extends Throwable {}
+  private class EmptyFileException extends Exception {
+
+    private static final long serialVersionUID = 1L;
+
+    EmptyFileException() {
+      super("File is empty");
+    }
+  }
 }
