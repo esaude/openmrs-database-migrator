@@ -34,7 +34,15 @@ public class BootstrapServiceImpl implements BootstrapService {
 
     dirList.forEach(
         dir -> {
-          fileIOUtilities.createDirectory(Paths.get(dir));
+          // Not the cleanest approach
+          // TODO: we should write a wrapper class that will handle this for us
+          // An option is to use a functional interface for this:
+          // https://www.baeldung.com/java-lambda-exceptions
+          try {
+            fileIOUtilities.createDirectory(Paths.get(dir));
+          } catch (IOException ex) {
+            throw new RuntimeException(ex);
+          }
         });
   }
 

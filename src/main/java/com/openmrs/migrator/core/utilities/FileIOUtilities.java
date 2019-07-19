@@ -65,18 +65,14 @@ public class FileIOUtilities {
    *
    * @param directoryToCreate
    * @return boolean indicating if directory has been created successfully or not
+   * @throws IOException
    */
-  public boolean createDirectory(Path directoryToCreate) {
+  public boolean createDirectory(Path directoryToCreate) throws IOException {
     if (!checkIfPathExist(directoryToCreate)) {
-      try {
-        Files.createDirectory(directoryToCreate);
-        logger.info("Folder: " + directoryToCreate + " created sucessfully");
+      Files.createDirectory(directoryToCreate);
+      logger.info("Folder: " + directoryToCreate + " created sucessfully");
 
-        return true;
-      } catch (IOException e) {
-        e.printStackTrace();
-        return false;
-      }
+      return true;
     } else {
       logger.warn("Folder: " + directoryToCreate + " will not be created, folder already exists");
       return false;
@@ -90,15 +86,10 @@ public class FileIOUtilities {
    * @return boolean indicating if file has been created successfully or not
    * @throws IOException
    */
-  public boolean createFile(Path fileName) {
+  public boolean createFile(Path fileName) throws IOException {
     if (!checkIfPathExist(fileName)) {
-      try {
-        Files.createFile(fileName);
-        logger.info("File: " + fileName + " created successfully");
-      } catch (IOException e) {
-        e.printStackTrace();
-        return false;
-      }
+      Files.createFile(fileName);
+      logger.info("File: " + fileName + " created successfully");
       return true;
     } else {
       logger.warn("File: " + fileName + " will not be created since file already exists");
@@ -143,7 +134,7 @@ public class FileIOUtilities {
   }
 
   /**
-   * Recursively delete a directory and all its contents
+   * Recursively delete a directory or file and all its contents
    *
    * @param directoryToBeDeleted
    * @return boolean value indicating success or failure
