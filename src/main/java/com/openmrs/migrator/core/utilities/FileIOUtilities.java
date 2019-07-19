@@ -1,10 +1,13 @@
 package com.openmrs.migrator.core.utilities;
 
+import com.openmrs.migrator.core.exceptions.EmptyFileException;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -42,12 +45,41 @@ public class FileIOUtilities {
     return resourceAsStream;
   }
 
-  private class EmptyFileException extends Exception {
-
-    private static final long serialVersionUID = 1L;
-
-    EmptyFileException() {
-      super("File is empty");
+  /**
+   * Takes in list of directory paths as strings and removes each directory even when they are
+   * empty.
+   *
+   * @param directories
+   * @throws IOException
+   */
+  public void removeAllDirectories(List<String> directories) throws IOException {
+    if (directories == null || directories.size() == 0) {
+      throw new IOException("List of directories is empty or undefined");
     }
+
+    directories.forEach(
+        directory -> {
+          removeDirectory(new File(directory));
+        });
+  }
+
+  /**
+   * Recursively delete a directory and all its contents
+   *
+   * @param directoryToBeDeleted
+   * @return boolean value indicating success or failure
+   */
+  public boolean removeDirectory(File directoryToBeDeleted) {
+    if (directoryToBeDeleted == null) {
+      return false;
+    }
+
+    File[] allContents = directoryToBeDeleted.listFiles();
+    if (allContents != null) {
+      for (File file : allContents) {
+        removeDirectory(file);
+      }
+    }
+    return directoryToBeDeleted.delete();
   }
 }
