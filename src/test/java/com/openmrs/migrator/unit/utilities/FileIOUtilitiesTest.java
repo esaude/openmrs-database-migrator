@@ -143,14 +143,9 @@ public class FileIOUtilitiesTest {
   public void removeAllDirectoriesShouldSucceed() throws IOException, InvalidParameterException {
     List<String> folders = Arrays.asList("folder1", "folder0");
 
-    folders.forEach(
-        f -> {
-          try {
-            fileIOUtilities.createDirectory(Paths.get(f));
-          } catch (IOException ex) {
-            throw new RuntimeException(ex);
-          }
-        });
+    for (String folder : folders) {
+      fileIOUtilities.createDirectory(Paths.get(folder));
+    }
 
     fileIOUtilities.removeAllDirectories(folders);
 
