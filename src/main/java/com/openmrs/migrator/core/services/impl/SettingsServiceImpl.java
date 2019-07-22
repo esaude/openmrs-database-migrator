@@ -2,11 +2,9 @@ package com.openmrs.migrator.core.services.impl;
 
 import com.ibatis.common.jdbc.ScriptRunner;
 import com.openmrs.migrator.core.services.SettingsService;
-import com.openmrs.migrator.core.utilities.FileIOUtilities;
 import org.apache.commons.lang.StringUtils;
 import org.pentaho.di.core.KettleEnvironment;
 import org.pentaho.di.core.util.EnvUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
@@ -24,9 +22,7 @@ import java.util.Properties;
 
 @Component
 public class SettingsServiceImpl implements SettingsService {
-  @Autowired
-  private FileIOUtilities fileIOUtilities;
-
+  
   public void initializeKettleEnvironment(boolean testDbConnection) throws Exception {
     Properties props = new Properties();
     String settingsFile = SettingsService.PDI_RESOURCES_DIR + File.separator + SettingsService.KETTLE_PROPERTIES;
@@ -49,7 +45,7 @@ public class SettingsServiceImpl implements SettingsService {
         loadEPTSDatabaseBackups(host, port, dbsBackups.split(","), backupsFolder, user, pass);
         // TODO fix these 2 lines below
         props.setProperty(SettingsService.DBS_ALREADY_LOADED, "true");
-        props.store(new FileOutputStream(settingsFile), "MySQL backups loaded!");;
+        props.store(new FileOutputStream(settingsFile), "MySQL backups loaded!");
       }
 
       // initialize kettle environment
