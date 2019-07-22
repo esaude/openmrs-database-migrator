@@ -19,5 +19,9 @@ public interface SettingsService {
 
   public static String DBS_ALREADY_LOADED = "EPTS_DATABASES_ALREADY_LOADED";
 
+  public static String DBS_BACKUPS = "EPTS_DATABASES";
+
+  public static String DBS_BACKUPS_DIRECTORY = "EPTS_DATABASES_DIRECTORY";
+
   public void initializeKettleEnvironment(boolean testDbConnection) throws Exception;
 }
