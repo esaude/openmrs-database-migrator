@@ -7,12 +7,9 @@ import com.openmrs.migrator.core.utilities.FileIOUtilities;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import org.pentaho.di.core.exception.KettleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,9 +29,14 @@ public class MigratorApplication implements CommandLineRunner {
 
   private String[] jobs = {SettingsService.PDI_RESOURCES_DIR + "/jobs/merge-patient-job.kjb"};
 
-  private List<String> dirList = Arrays.asList("input/", "output/", "config/", "pdiresources/");
-
-  private Path settingsProperties = Paths.get("settings.properties");
+  private List<String> dirList =
+      Arrays.asList(
+          "input/",
+          "output/",
+          "config/",
+          "pdiresources/",
+          "pdiresources/transformations/",
+          "pdiresources/jobs/");
 
   private BootstrapService bootstrapService;
 
@@ -50,6 +52,7 @@ public class MigratorApplication implements CommandLineRunner {
     SpringApplication.run(MigratorApplication.class, args);
   }
 
+  // TODO: to be replaced with PICOCLI
   @Override
   public void run(String... args) throws Exception {
     LOG.info("EXECUTING : command line runner");
@@ -83,16 +86,13 @@ public class MigratorApplication implements CommandLineRunner {
   }
 
   private void executeSetupCommand() throws IOException {
+    List<String> pdiFiles = new ArrayList<>();
 
-    final String JOB_FOLDER = "pdiresources/jobs/";
-    final String TRANSFORMATION_FOLDER = "pdiresources/transformations/";
+    pdiFiles.add("pdiresources/jobs/merge-patient-job.kjb");
+    pdiFiles.add("pdiresources/transformations/merge-patient.ktr");
+    pdiFiles.add("settings.properties");
 
-    Set<String> pdiFiles = new HashSet<>();
-
-    pdiFiles.add(JOB_FOLDER + "merge-patient-job.kjb");
-    pdiFiles.add(TRANSFORMATION_FOLDER + "merge-patient.ktr");
-
-    bootstrapService.createDirectoryStructure(dirList, settingsProperties);
-    bootstrapService.populateDefaultResource(pdiFiles);
+    bootstrapService.createDirectoryStructure(dirList);
+    bootstrapService.populateDefaultResources(pdiFiles);
   }
 }
