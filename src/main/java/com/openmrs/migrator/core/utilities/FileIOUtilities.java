@@ -2,7 +2,10 @@ package com.openmrs.migrator.core.utilities;
 
 import com.openmrs.migrator.core.exceptions.EmptyFileException;
 import com.openmrs.migrator.core.exceptions.InvalidParameterException;
+import com.openmrs.migrator.model.DataBaseDetail;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -10,6 +13,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -155,5 +159,44 @@ public class FileIOUtilities {
       }
     }
     return directoryToBeDeleted.delete();
+  }
+
+  /**
+   * Reads setting.properties and loads the data to DataBaseDetail
+   *
+   * @return DataBaseDetail
+   * @throws IOException
+   */
+  public Optional<DataBaseDetail> readSettingFiles() throws IOException {
+
+    DataBaseDetail baseDetail = new DataBaseDetail();
+    Path settingProperties = Paths.get("settings.properties");
+    try (BufferedReader br = new BufferedReader(new FileReader(settingProperties.toFile()))) {
+      String line;
+      while ((line = br.readLine()) != null) {
+        String[] entry = line.split("=");
+        if ("name".equals(entry[0])) {
+          baseDetail.setName(entry[1]);
+        }
+        if ("username".equals(entry[0])) {
+          baseDetail.setUsername(entry[1]);
+        }
+        if ("password".equals(entry[0])) {
+          baseDetail.setPassword(entry[1]);
+        }
+      }
+    }
+
+    return Optional.of(baseDetail);
+  }
+
+  public boolean isSettingFound() {
+
+    Path settingProperties = Paths.get("settings.properties");
+
+    if (settingProperties.toFile().length() == 0) {
+      return true;
+    }
+    return false;
   }
 }
