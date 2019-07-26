@@ -26,7 +26,7 @@ public class DataBaseServiceImpl implements DataBaseService {
         "mysql",
         "-u" + configurationStore.getDatabaseUser(),
         "-p" + configurationStore.getDatabasePassword(),
-        "-h" + configurationStore.getDatabasePassword(),
+        "-h" + configurationStore.getDatabaseHost(),
         "-e",
         String.format("use %s; source %s;", databaseName, fileName));
   }

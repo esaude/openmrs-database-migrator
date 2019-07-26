@@ -22,7 +22,7 @@ import java.util.Properties;
 
 @Component
 public class SettingsServiceImpl implements SettingsService {
-  
+
   public void initializeKettleEnvironment(boolean testDbConnection) throws Exception {
     Properties props = new Properties();
     String settingsFile = SettingsService.PDI_RESOURCES_DIR + File.separator + SettingsService.KETTLE_PROPERTIES;
