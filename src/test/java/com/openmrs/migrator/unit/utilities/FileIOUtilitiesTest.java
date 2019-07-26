@@ -1,10 +1,10 @@
 package com.openmrs.migrator.unit.utilities;
 
-import com.openmrs.migrator.core.services.SettingsService;
-import com.openmrs.migrator.core.utilities.FileIOUtilities;
 import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
 
 import com.openmrs.migrator.core.exceptions.InvalidParameterException;
+import com.openmrs.migrator.core.services.SettingsService;
 import com.openmrs.migrator.core.utilities.FileIOUtilities;
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,11 +19,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import java.io.IOException;
-import java.io.InputStream;
-
-import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest

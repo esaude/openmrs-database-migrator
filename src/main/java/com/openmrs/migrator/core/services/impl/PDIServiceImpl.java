@@ -2,6 +2,7 @@ package com.openmrs.migrator.core.services.impl;
 
 import com.openmrs.migrator.core.services.PDIService;
 import com.openmrs.migrator.core.services.SettingsService;
+import java.io.InputStream;
 import org.pentaho.di.core.Result;
 import org.pentaho.di.core.logging.LogLevel;
 import org.pentaho.di.job.Job;
@@ -11,12 +12,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.io.InputStream;
-
 @Component
 public class PDIServiceImpl implements PDIService {
-  @Autowired
-  private SettingsService settingsService;
+  @Autowired private SettingsService settingsService;
 
   private static Logger LOG = LoggerFactory.getLogger(PDIServiceImpl.class);
 

@@ -1,8 +1,5 @@
 package com.openmrs.migrator.core.utilities;
 
-import org.springframework.stereotype.Component;
-import org.springframework.web.multipart.MultipartFile;
-
 import com.openmrs.migrator.core.exceptions.EmptyFileException;
 import com.openmrs.migrator.core.exceptions.InvalidParameterException;
 import java.io.File;
@@ -11,7 +8,6 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-
 import java.nio.file.StandardCopyOption;
 import java.util.List;
 import org.slf4j.Logger;

@@ -16,7 +16,8 @@ public class SettingsServiceTest {
   @Autowired private SettingsService settingsService;
 
   @Test(expected = CommunicationsException.class)
-  public void initializeKettleEnvironmentShouldThrowExceptionWithNonExistingConnection() throws Exception {
+  public void initializeKettleEnvironmentShouldThrowExceptionWithNonExistingConnection()
+      throws Exception {
     settingsService.initializeKettleEnvironment(true);
   }
 
@@ -40,6 +41,7 @@ public class SettingsServiceTest {
     Assert.assertEquals("codecode", EnvUtil.getSystemProperty(SettingsService.DB_PASS));
     Assert.assertEquals("false", EnvUtil.getSystemProperty(SettingsService.DBS_ALREADY_LOADED));
     Assert.assertEquals("", EnvUtil.getSystemProperty(SettingsService.DBS_BACKUPS));
-    Assert.assertEquals("./input", EnvUtil.getSystemProperty(SettingsService.DBS_BACKUPS_DIRECTORY));
+    Assert.assertEquals(
+        "./input", EnvUtil.getSystemProperty(SettingsService.DBS_BACKUPS_DIRECTORY));
   }
 }

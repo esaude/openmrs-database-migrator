@@ -4,7 +4,6 @@ import com.openmrs.migrator.core.services.BootstrapService;
 import com.openmrs.migrator.core.services.PDIService;
 import com.openmrs.migrator.core.services.SettingsService;
 import com.openmrs.migrator.core.utilities.FileIOUtilities;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
