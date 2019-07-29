@@ -2,10 +2,12 @@ package com.openmrs.migrator.core.utilities;
 
 import com.openmrs.migrator.core.exceptions.EmptyFileException;
 import com.openmrs.migrator.core.exceptions.InvalidParameterException;
-import com.openmrs.migrator.model.DataBaseDetail;
+import com.openmrs.migrator.model.DataBaseConnectionDetail;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -162,21 +164,21 @@ public class FileIOUtilities {
   }
 
   /**
-   * Reads setting.properties and loads the data to DataBaseDetail
+   * Reads setting.properties and loads the data to DataBaseConnectionDetail
    *
-   * @return DataBaseDetail
+   * @return DataBaseConnectionDetail
    * @throws IOException
    */
-  public Optional<DataBaseDetail> readSettingFiles() throws IOException {
+  public Optional<DataBaseConnectionDetail> readSettingFiles() throws IOException {
 
-    DataBaseDetail baseDetail = new DataBaseDetail();
+    DataBaseConnectionDetail baseDetail = new DataBaseConnectionDetail();
     Path settingProperties = Paths.get("settings.properties");
     try (BufferedReader br = new BufferedReader(new FileReader(settingProperties.toFile()))) {
       String line;
       while ((line = br.readLine()) != null) {
         String[] entry = line.split("=");
         if ("name".equals(entry[0])) {
-          baseDetail.setName(entry[1]);
+          baseDetail.setDataBaseName(entry[1]);
         }
         if ("username".equals(entry[0])) {
           baseDetail.setUsername(entry[1]);
@@ -198,5 +200,21 @@ public class FileIOUtilities {
       return true;
     }
     return false;
+  }
+
+  public void addSettingToConfigFile(DataBaseConnectionDetail dataBaseConnectionDetail)
+      throws IOException {
+    Path settingProperties = Paths.get("settings.properties");
+    try (BufferedWriter bw = new BufferedWriter(new FileWriter(settingProperties.toFile()))) {
+
+      bw.write(dataBaseConnectionDetail.getDataBaseName());
+      bw.newLine();
+      bw.write(dataBaseConnectionDetail.getUsername());
+      bw.newLine();
+      bw.write(dataBaseConnectionDetail.getPassword());
+      bw.newLine();
+
+      bw.flush();
+    }
   }
 }

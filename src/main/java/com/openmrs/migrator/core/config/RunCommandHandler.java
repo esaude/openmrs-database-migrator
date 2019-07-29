@@ -1,6 +1,6 @@
 package com.openmrs.migrator.core.config;
 
-import com.openmrs.migrator.model.DataBaseDetail;
+import com.openmrs.migrator.model.DataBaseConnectionDetail;
 import java.io.Console;
 import java.util.Optional;
 import picocli.CommandLine.Command;
@@ -11,9 +11,9 @@ public class RunCommandHandler {
   private Console console = System.console();
 
   @Command(name = "")
-  Optional<DataBaseDetail> getDatabaseDetail() {
+  Optional<DataBaseConnectionDetail> getDatabaseDetail() {
 
-    Optional<DataBaseDetail> wrappedDatabaseDetail = Optional.empty();
+    Optional<DataBaseConnectionDetail> wrappedDatabaseDetail = Optional.empty();
     if (console == null) {
       throw new NullPointerException("System.console() is null");
     }
@@ -27,7 +27,8 @@ public class RunCommandHandler {
     console.writer().println("Database password:");
     char[] password = console.readPassword();
 
-    wrappedDatabaseDetail = Optional.of(new DataBaseDetail(name, username, password.toString()));
+    wrappedDatabaseDetail =
+        Optional.of(new DataBaseConnectionDetail(name, username, password.toString()));
 
     return wrappedDatabaseDetail;
   }
