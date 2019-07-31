@@ -2,7 +2,9 @@ package com.openmrs.migrator;
 
 import com.openmrs.migrator.core.services.BootstrapService;
 import com.openmrs.migrator.core.services.PDIService;
+import com.openmrs.migrator.core.utilities.ConsoleUtils;
 import com.openmrs.migrator.core.utilities.FileIOUtilities;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -36,13 +38,13 @@ public class Migrator implements Callable<Optional<Void>> {
           "pdiresources/jobs/");
 
   @Option(
-      names = {"-r", "--run"},
-      description = "runs the migrator  job(s)")
+      names = {"run"},
+      description = "runs the migrator job(s)")
   private boolean run;
 
   @Option(
-      names = {"-s", "--setup"},
-      description = "setups migrator tool")
+      names = {"setup"},
+      description = "setups the migrator tool")
   private boolean setup;
 
   @Autowired
@@ -61,7 +63,7 @@ public class Migrator implements Callable<Optional<Void>> {
     }
 
     if (run) {
-      runAllJobs();
+      executeRunCommandLogic();
     }
     return Optional.empty();
   }
@@ -87,5 +89,19 @@ public class Migrator implements Callable<Optional<Void>> {
 
     bootstrapService.createDirectoryStructure(dirList);
     bootstrapService.populateDefaultResources(pdiFiles);
+  }
+
+  private void executeRunCommandLogic() throws FileNotFoundException, IOException {
+    Optional<String> providedDataBaseName = ConsoleUtils.getDatabaseDetaName();
+    Optional<String> storedDataBaseName =
+        fileIOUtilities.searchForDataBaseNameInSettingsFile(providedDataBaseName.get());
+
+    if (!storedDataBaseName.isPresent()) {
+      if (ConsoleUtils.isConnectionIsToBeStored()) {
+        fileIOUtilities.addSettingToConfigFile(providedDataBaseName.get());
+      }
+      fileIOUtilities.setDataBaseNameToKettleFile(providedDataBaseName.get());
+    }
+    runAllJobs();
   }
 }

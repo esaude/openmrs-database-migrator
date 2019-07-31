@@ -2,14 +2,13 @@ package com.openmrs.migrator.core.utilities;
 
 import com.openmrs.migrator.core.exceptions.EmptyFileException;
 import com.openmrs.migrator.core.exceptions.InvalidParameterException;
-import com.openmrs.migrator.model.DataBaseConnectionDetail;
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -26,6 +25,9 @@ public class FileIOUtilities {
 
   private static Logger logger = LoggerFactory.getLogger(FileIOUtilities.class);
   private static final String UPLOADED_FOLDER = "~";
+  private Path settingProperties = Paths.get("settings.properties");
+  private final String KETTLE_PROPERTIES = "kettle.properties";
+  private final String KETTLE_DIR = ".kettle";
 
   public void UploadFile(MultipartFile file) throws EmptyFileException {
     if (file.isEmpty()) {
@@ -163,58 +165,65 @@ public class FileIOUtilities {
     return directoryToBeDeleted.delete();
   }
 
-  /**
-   * Reads setting.properties and loads the data to DataBaseConnectionDetail
-   *
-   * @return DataBaseConnectionDetail
-   * @throws IOException
-   */
-  public Optional<DataBaseConnectionDetail> readSettingFiles() throws IOException {
+  public void addSettingToConfigFile(String dataBaseName) throws IOException {
+    logger.info("Adding database name:"+dataBaseName+" in config file");
 
-    DataBaseConnectionDetail baseDetail = new DataBaseConnectionDetail();
-    Path settingProperties = Paths.get("settings.properties");
+    List<String> lines = Files.readAllLines(settingProperties);
+    lines.add("database_name=" + dataBaseName);
+    Files.write(settingProperties, lines, StandardCharsets.UTF_8);
+  }
+
+  public Optional<String> searchForDataBaseNameInSettingsFile(String databaseName)
+      throws FileNotFoundException, IOException {
+    logger.info("Searching database " + databaseName + " in config file");
     try (BufferedReader br = new BufferedReader(new FileReader(settingProperties.toFile()))) {
       String line;
       while ((line = br.readLine()) != null) {
-        String[] entry = line.split("=");
-        if ("name".equals(entry[0])) {
-          baseDetail.setDataBaseName(entry[1]);
-        }
-        if ("username".equals(entry[0])) {
-          baseDetail.setUsername(entry[1]);
-        }
-        if ("password".equals(entry[0])) {
-          baseDetail.setPassword(entry[1]);
+        String[] keyValue = line.split("=");
+        if ("database_name".equals(keyValue[0])) {
+
+          if (databaseName.equals(keyValue[1])) {
+            logger.info("database name '" + databaseName + "' found in config file");
+            return Optional.of(keyValue[1]);
+          }
         }
       }
+      return Optional.empty();
     }
-
-    return Optional.of(baseDetail);
   }
 
-  public boolean isSettingFound() {
+  public void setDataBaseNameToKettleFile(String dataBaseName) throws IOException {
+    logger.info("Adding the  provided database name to the kettle.properties file");
+    int lineNumber = 0;
+    Path path = getKettlePropertiesLocation().toPath();
+    List<String> lines = Files.readAllLines(path, StandardCharsets.UTF_8);
 
-    Path settingProperties = Paths.get("settings.properties");
-
-    if (settingProperties.toFile().length() == 0) {
-      return true;
+    for (String line : lines) {
+      lineNumber++;
+      if (line.contains("ETL_SOURCE_DATABASE=")) {
+        break;
+      }
     }
-    return false;
+    lines.set(lineNumber - 1, "ETL_SOURCE_DATABASE=" + dataBaseName);
+    Files.write(path, lines, StandardCharsets.UTF_8);
   }
 
-  public void addSettingToConfigFile(DataBaseConnectionDetail dataBaseConnectionDetail)
-      throws IOException {
-    Path settingProperties = Paths.get("settings.properties");
-    try (BufferedWriter bw = new BufferedWriter(new FileWriter(settingProperties.toFile()))) {
+  private File getKettlePropertiesLocation() throws IOException {
+    logger.info("Getting the default location of kettle.properties");
+    String homeDirectory = System.getProperty("user.home");
 
-      bw.write(dataBaseConnectionDetail.getDataBaseName());
-      bw.newLine();
-      bw.write(dataBaseConnectionDetail.getUsername());
-      bw.newLine();
-      bw.write(dataBaseConnectionDetail.getPassword());
-      bw.newLine();
+    Path kettleDir = Paths.get(homeDirectory + "/" + KETTLE_DIR);
+    Path kettleFile = Paths.get(kettleDir + "/" + KETTLE_PROPERTIES);
 
-      bw.flush();
+    if (!Files.exists(kettleDir)) {
+      Files.createDirectories(kettleDir);
+      Files.createFile(kettleFile);
     }
+    if (!Files.exists(kettleFile)) {
+      Files.createFile(kettleFile);
+    }
+
+    File file = new File(homeDirectory + "/" + KETTLE_DIR + "/" + KETTLE_PROPERTIES);
+    return file;
   }
 }
