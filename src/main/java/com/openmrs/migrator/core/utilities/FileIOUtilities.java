@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -223,18 +224,16 @@ public class FileIOUtilities {
                 port = configLine.split("=")[1];
               }
             });
-    if (kettlePath.toFile().length() != 0) {
 
-      new PrintWriter(kettlePath.toFile()).close();
+    new PrintWriter(kettlePath.toFile()).close();
 
-      writeToFile(
-          kettlePath.toFile(),
-          "ETL_SOURCE_DATABASE=" + dataBaseName,
-          "ETL_DATABASE_HOST=" + host,
-          "ETL_DATABASE_PORT=" + port,
-          "ETL_DATABASE_USER=" + username,
-          "ETL_DATABASE_PASSWORD=" + password);
-    }
+    writeToFile(
+        kettlePath.toFile(),
+        "ETL_SOURCE_DATABASE=" + dataBaseName,
+        "ETL_DATABASE_HOST=" + host,
+        "ETL_DATABASE_PORT=" + port,
+        "ETL_DATABASE_USER=" + username,
+        "ETL_DATABASE_PASSWORD=" + password);
   }
 
   private File getKettlePropertiesLocation() throws IOException {
@@ -271,24 +270,6 @@ public class FileIOUtilities {
     return names;
   }
 
-  public void setDafaultStrutureForConfigFile() throws IOException {
-
-    try (BufferedWriter bw = new BufferedWriter(new FileWriter(settingProperties.toFile()))) {
-
-      //      logger.info("Writting 'username' label for:" + settingProperties + " file");
-      //      writeToFile("username=", settingProperties.toFile());
-      //
-      //      logger.info("Writting 'password' label for:" + settingProperties + " file");
-      //      writeToFile("password=", settingProperties.toFile());
-      //
-      //      logger.info("Writting 'host' label for:" + settingProperties + " file");
-      //      writeToFile("host=", settingProperties.toFile());
-      //
-      //      logger.info("Writting 'port' label for:" + settingProperties + " file");
-      //      writeToFile("port=", settingProperties.toFile());
-    }
-  }
-
   private void writeToFile(File file, String... contents) throws IOException {
     try (BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
       for (String content : contents) {
@@ -297,20 +278,6 @@ public class FileIOUtilities {
       }
       bw.flush();
     }
-  }
-
-  public String getUserPassword() throws IOException {
-    String line;
-    String password = null;
-    try (BufferedReader bw = new BufferedReader(new FileReader(settingProperties.toFile()))) {
-
-      while ((line = bw.readLine()) != null) {
-        if (line.contains("password=")) {
-          password = line.split("=")[1];
-        }
-      }
-    }
-    return password;
   }
 
   public void fillConfigFile() throws IOException {
@@ -323,5 +290,24 @@ public class FileIOUtilities {
         "password=" + connDB.get("password="),
         "host=" + connDB.get("host="),
         "port=" + connDB.get("port="));
+  }
+
+  public List<Path> listFiles(Path path) throws IOException {
+
+    return Files.list(path).collect(Collectors.toList());
+  }
+
+  public String getValueFromConfig(String key, String separator) throws IOException {
+    String line;
+    String value = null;
+    try (BufferedReader bw = new BufferedReader(new FileReader(settingProperties.toFile()))) {
+
+      while ((line = bw.readLine()) != null) {
+        if (line.contains(key)) {
+          value = line.split(separator)[1];
+        }
+      }
+    }
+    return value;
   }
 }

@@ -5,7 +5,7 @@ import java.util.List;
 
 public interface DataBaseService {
 
-  void importDatabaseFile(String databaseName, String fileName);
+  void importDatabaseFile(String databaseName, String fileName) throws IOException;
 
   void createDatabase(String databaseName);
 

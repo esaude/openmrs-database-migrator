@@ -1,7 +1,9 @@
 package com.openmrs.migrator.core.utilities;
 
 import java.io.Console;
+import java.nio.file.Path;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -44,10 +46,11 @@ public class ConsoleUtils {
   public static int startMigrationAproach() {
 
     checkConsoleAvailability();
-    console.writer().println("Below are options to start the  migration tool, select one of them:");
-    console.writer().println("1 - Provide a source database name");
-    console.writer().println("2 - Use one of the database names in the config file");
-    console.writer().println("3 - I want the tool to load the db file");
+    console.writer().println("Below are the options for database source:");
+    console.writer().println("1 - Provide a source database name.");
+    console.writer().println("2 - Use valid database from config file.");
+    console.writer().println("3 - Use loaded mysql database.");
+    console.writer().println("4 - Load an sql dump file and migrate.");
     int choice;
     try {
       choice = Integer.parseInt(console.readLine());
@@ -102,5 +105,24 @@ public class ConsoleUtils {
     dbConn.put("port=", console.readLine());
 
     return dbConn;
+  }
+
+  public static String chooseDumpFile(List<Path> inputs) {
+
+    checkConsoleAvailability();
+    console.writer().println("Choose a dump file from the list to restore your mysql instance");
+    if (inputs.isEmpty()) {
+      console.writer().println("There is no  input files");
+      return null;
+    }
+    inputs.forEach(input -> console.writer().println(input));
+    console.writer().println("Dump file:");
+    return console.readLine();
+  }
+
+  public static String getChosenDBName() {
+    checkConsoleAvailability();
+    console.writer().println("Data Base name:");
+    return console.readLine();
   }
 }

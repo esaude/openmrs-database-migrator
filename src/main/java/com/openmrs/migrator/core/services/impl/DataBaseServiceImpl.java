@@ -3,6 +3,7 @@ package com.openmrs.migrator.core.services.impl;
 import com.openmrs.migrator.core.config.ConfigurationStore;
 import com.openmrs.migrator.core.services.CommandService;
 import com.openmrs.migrator.core.services.DataBaseService;
+import com.openmrs.migrator.core.utilities.FileIOUtilities;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -20,19 +21,25 @@ public class DataBaseServiceImpl implements DataBaseService {
 
   private final ConfigurationStore configurationStore;
 
+  private final FileIOUtilities fileIOUtilities;
+
   @Autowired
-  public DataBaseServiceImpl(CommandService commandService, ConfigurationStore configurationStore) {
+  public DataBaseServiceImpl(
+      CommandService commandService,
+      ConfigurationStore configurationStore,
+      FileIOUtilities fileIOUtilities) {
     this.commandService = commandService;
     this.configurationStore = configurationStore;
+    this.fileIOUtilities = fileIOUtilities;
   }
 
   @Override
-  public void importDatabaseFile(String databaseName, String fileName) {
+  public void importDatabaseFile(String databaseName, String fileName) throws IOException {
     commandService.runCommand(
         "mysql",
-        "-u" + configurationStore.getDatabaseUser(),
-        "-p" + configurationStore.getDatabasePassword(),
-        "-h" + configurationStore.getDatabasePassword(),
+        "-u" + fileIOUtilities.getValueFromConfig("username", "="),
+        "-p" + fileIOUtilities.getValueFromConfig("password", "="),
+        "-h" + fileIOUtilities.getValueFromConfig("host", "="),
         "-e",
         String.format("use %s; source %s;", databaseName, fileName));
   }

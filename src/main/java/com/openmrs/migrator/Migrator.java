@@ -9,6 +9,8 @@ import com.openmrs.migrator.core.utilities.FileIOUtilities;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -21,7 +23,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
-@Command(name = "migrator", mixinStandardHelpOptions = true)
+@Command(
+    name = "migrator",
+    subcommands = {RunCommand.class},
+    mixinStandardHelpOptions = true)
 public class Migrator implements Callable<Optional<Void>> {
 
   private PDIService pdiService;
@@ -104,8 +109,6 @@ public class Migrator implements Callable<Optional<Void>> {
 
     bootstrapService.createDirectoryStructure(dirList);
     bootstrapService.populateDefaultResources(pdiFiles);
-
-    fileIOUtilities.setDafaultStrutureForConfigFile();
   }
 
   private void executeRunCommandLogic() throws FileNotFoundException, IOException {
@@ -129,7 +132,7 @@ public class Migrator implements Callable<Optional<Void>> {
       case 2:
         String selectDBName =
             ConsoleUtils.getValidSelectedDataBase(
-                validateDataBaseNames(fileIOUtilities.getUserPassword()));
+                validateDataBaseNames(fileIOUtilities.getValueFromConfig("password", "=")));
         if (selectDBName != null) {
           fileIOUtilities.setConnectionToKettleFile(selectDBName);
           runAllJobs();
@@ -137,6 +140,30 @@ public class Migrator implements Callable<Optional<Void>> {
 
         break;
       case 3:
+        String dbName =
+            ConsoleUtils.getValidSelectedDataBase(
+                new HashSet<>(
+                    dataBaseService.getDatabases(
+                        fileIOUtilities.getValueFromConfig("password", "="))));
+        fileIOUtilities.setConnectionToKettleFile(dbName);
+        runAllJobs();
+        break;
+
+      case 4:
+        List<Path> inputs = fileIOUtilities.listFiles(Paths.get("input/"));
+
+        String sqlDumpFile = ConsoleUtils.chooseDumpFile(inputs);
+
+        if (sqlDumpFile == null) {
+          break;
+        }
+
+        String databaseName = ConsoleUtils.getChosenDBName();
+
+        dataBaseService.importDatabaseFile(databaseName, sqlDumpFile);
+        fileIOUtilities.setConnectionToKettleFile(databaseName);
+        runAllJobs();
+
         break;
 
       default:
