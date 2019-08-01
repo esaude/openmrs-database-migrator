@@ -1,6 +1,8 @@
 package com.openmrs.migrator;
 
 import com.openmrs.migrator.core.services.BootstrapService;
+import com.openmrs.migrator.core.services.CommandService;
+import com.openmrs.migrator.core.services.DataBaseService;
 import com.openmrs.migrator.core.services.PDIService;
 import com.openmrs.migrator.core.utilities.ConsoleUtils;
 import com.openmrs.migrator.core.utilities.FileIOUtilities;
@@ -9,8 +11,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.Callable;
 import org.pentaho.di.core.exception.KettleException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +29,10 @@ public class Migrator implements Callable<Optional<Void>> {
   private FileIOUtilities fileIOUtilities;
 
   private BootstrapService bootstrapService;
+
+  private DataBaseService dataBaseService;
+
+  private CommandService commandService;
 
   private String[] jobs = {"pdiresources/jobs/merge-patient-job.kjb"};
 
@@ -49,17 +57,24 @@ public class Migrator implements Callable<Optional<Void>> {
 
   @Autowired
   public Migrator(
-      PDIService pdiService, FileIOUtilities fileIOUtilities, BootstrapService bootstrapService) {
+      PDIService pdiService,
+      FileIOUtilities fileIOUtilities,
+      BootstrapService bootstrapService,
+      DataBaseService dataBaseService,
+      CommandService commandService) {
     this.pdiService = pdiService;
     this.fileIOUtilities = fileIOUtilities;
     this.bootstrapService = bootstrapService;
+    this.dataBaseService = dataBaseService;
+    this.commandService = commandService;
   }
 
   @Override
-  public Optional<Void> call() throws IOException {
+  public Optional<Void> call() throws IOException, InterruptedException {
 
     if (setup) {
       executeSetupCommand();
+      fileIOUtilities.fillConfigFile();
     }
 
     if (run) {
@@ -89,19 +104,64 @@ public class Migrator implements Callable<Optional<Void>> {
 
     bootstrapService.createDirectoryStructure(dirList);
     bootstrapService.populateDefaultResources(pdiFiles);
+
+    fileIOUtilities.setDafaultStrutureForConfigFile();
   }
 
   private void executeRunCommandLogic() throws FileNotFoundException, IOException {
-    Optional<String> providedDataBaseName = ConsoleUtils.getDatabaseDetaName();
-    Optional<String> storedDataBaseName =
-        fileIOUtilities.searchForDataBaseNameInSettingsFile(providedDataBaseName.get());
+    int choice = ConsoleUtils.startMigrationAproach();
 
-    if (!storedDataBaseName.isPresent()) {
-      if (ConsoleUtils.isConnectionIsToBeStored()) {
-        fileIOUtilities.addSettingToConfigFile(providedDataBaseName.get());
-      }
-      fileIOUtilities.setDataBaseNameToKettleFile(providedDataBaseName.get());
+    switch (choice) {
+      case 1:
+        Optional<String> providedDataBaseName = ConsoleUtils.getDatabaseDetaName();
+        Optional<String> storedDataBaseName =
+            fileIOUtilities.searchForDataBaseNameInSettingsFile(providedDataBaseName.get());
+
+        if (!storedDataBaseName.isPresent()) {
+          if (ConsoleUtils.isConnectionIsToBeStored()) {
+            fileIOUtilities.addSettingToConfigFile(providedDataBaseName.get());
+          }
+          fileIOUtilities.setConnectionToKettleFile(providedDataBaseName.get());
+        }
+        runAllJobs();
+        break;
+
+      case 2:
+        String selectDBName =
+            ConsoleUtils.getValidSelectedDataBase(
+                validateDataBaseNames(fileIOUtilities.getUserPassword()));
+        if (selectDBName != null) {
+          fileIOUtilities.setConnectionToKettleFile(selectDBName);
+          runAllJobs();
+        }
+
+        break;
+      case 3:
+        break;
+
+      default:
+        ConsoleUtils.showUnavailableOption();
+        break;
     }
-    runAllJobs();
+  }
+
+  private Set<String> validateDataBaseNames(String password)
+      throws FileNotFoundException, IOException {
+    Set<String> validNames = new HashSet<>();
+    List<String> fromConfig = fileIOUtilities.getAllDataBaseNamesFromConfigFile();
+
+    List<String> fromMySql = dataBaseService.getDatabases(password);
+
+    fromConfig.forEach(
+        conf -> {
+          fromMySql.forEach(
+              mysql -> {
+                if (conf.equals(mysql)) {
+                  validNames.add(conf);
+                }
+              });
+        });
+
+    return validNames;
   }
 }

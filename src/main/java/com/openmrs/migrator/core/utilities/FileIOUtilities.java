@@ -3,17 +3,22 @@ package com.openmrs.migrator.core.utilities;
 import com.openmrs.migrator.core.exceptions.EmptyFileException;
 import com.openmrs.migrator.core.exceptions.InvalidParameterException;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +33,11 @@ public class FileIOUtilities {
   private Path settingProperties = Paths.get("settings.properties");
   private final String KETTLE_PROPERTIES = "kettle.properties";
   private final String KETTLE_DIR = ".kettle";
+
+  String username;
+  String password;
+  String host;
+  String port;
 
   public void UploadFile(MultipartFile file) throws EmptyFileException {
     if (file.isEmpty()) {
@@ -166,7 +176,7 @@ public class FileIOUtilities {
   }
 
   public void addSettingToConfigFile(String dataBaseName) throws IOException {
-    logger.info("Adding database name:"+dataBaseName+" in config file");
+    logger.info("Adding database name:" + dataBaseName + " in config file");
 
     List<String> lines = Files.readAllLines(settingProperties);
     lines.add("database_name=" + dataBaseName);
@@ -192,20 +202,39 @@ public class FileIOUtilities {
     }
   }
 
-  public void setDataBaseNameToKettleFile(String dataBaseName) throws IOException {
-    logger.info("Adding the  provided database name to the kettle.properties file");
-    int lineNumber = 0;
-    Path path = getKettlePropertiesLocation().toPath();
-    List<String> lines = Files.readAllLines(path, StandardCharsets.UTF_8);
+  public void setConnectionToKettleFile(String dataBaseName) throws IOException {
+    logger.info("Setting the database source  connections to the kettle.properties file");
 
-    for (String line : lines) {
-      lineNumber++;
-      if (line.contains("ETL_SOURCE_DATABASE=")) {
-        break;
-      }
+    Path kettlePath = getKettlePropertiesLocation().toPath();
+
+    Files.readAllLines(settingProperties)
+        .forEach(
+            configLine -> {
+              if (configLine.contains("username=")) {
+                username = configLine.split("=")[1];
+              }
+              if (configLine.contains("password=")) {
+                password = configLine.split("=")[1];
+              }
+              if (configLine.contains("host=")) {
+                host = configLine.split("=")[1];
+              }
+              if (configLine.contains("port=")) {
+                port = configLine.split("=")[1];
+              }
+            });
+    if (kettlePath.toFile().length() != 0) {
+
+      new PrintWriter(kettlePath.toFile()).close();
+
+      writeToFile(
+          kettlePath.toFile(),
+          "ETL_SOURCE_DATABASE=" + dataBaseName,
+          "ETL_DATABASE_HOST=" + host,
+          "ETL_DATABASE_PORT=" + port,
+          "ETL_DATABASE_USER=" + username,
+          "ETL_DATABASE_PASSWORD=" + password);
     }
-    lines.set(lineNumber - 1, "ETL_SOURCE_DATABASE=" + dataBaseName);
-    Files.write(path, lines, StandardCharsets.UTF_8);
   }
 
   private File getKettlePropertiesLocation() throws IOException {
@@ -225,5 +254,74 @@ public class FileIOUtilities {
 
     File file = new File(homeDirectory + "/" + KETTLE_DIR + "/" + KETTLE_PROPERTIES);
     return file;
+  }
+
+  public List<String> getAllDataBaseNamesFromConfigFile()
+      throws FileNotFoundException, IOException {
+    logger.info("retrieving all data base  names in " + settingProperties + " file");
+    List<String> names = new ArrayList<>();
+    try (BufferedReader br = new BufferedReader(new FileReader(settingProperties.toFile()))) {
+      String line;
+      while ((line = br.readLine()) != null) {
+        if (line.contains("database_name")) {
+          names.add(line.split("=")[1]);
+        }
+      }
+    }
+    return names;
+  }
+
+  public void setDafaultStrutureForConfigFile() throws IOException {
+
+    try (BufferedWriter bw = new BufferedWriter(new FileWriter(settingProperties.toFile()))) {
+
+      //      logger.info("Writting 'username' label for:" + settingProperties + " file");
+      //      writeToFile("username=", settingProperties.toFile());
+      //
+      //      logger.info("Writting 'password' label for:" + settingProperties + " file");
+      //      writeToFile("password=", settingProperties.toFile());
+      //
+      //      logger.info("Writting 'host' label for:" + settingProperties + " file");
+      //      writeToFile("host=", settingProperties.toFile());
+      //
+      //      logger.info("Writting 'port' label for:" + settingProperties + " file");
+      //      writeToFile("port=", settingProperties.toFile());
+    }
+  }
+
+  private void writeToFile(File file, String... contents) throws IOException {
+    try (BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
+      for (String content : contents) {
+        bw.append(content);
+        bw.newLine();
+      }
+      bw.flush();
+    }
+  }
+
+  public String getUserPassword() throws IOException {
+    String line;
+    String password = null;
+    try (BufferedReader bw = new BufferedReader(new FileReader(settingProperties.toFile()))) {
+
+      while ((line = bw.readLine()) != null) {
+        if (line.contains("password=")) {
+          password = line.split("=")[1];
+        }
+      }
+    }
+    return password;
+  }
+
+  public void fillConfigFile() throws IOException {
+
+    Map<String, String> connDB = ConsoleUtils.readSourceDBConn();
+
+    writeToFile(
+        settingProperties.toFile(),
+        "username=" + connDB.get("username="),
+        "password=" + connDB.get("password="),
+        "host=" + connDB.get("host="),
+        "port=" + connDB.get("port="));
   }
 }
