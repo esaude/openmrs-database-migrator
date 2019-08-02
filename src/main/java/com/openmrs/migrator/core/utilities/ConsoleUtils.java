@@ -10,11 +10,9 @@ import java.util.Set;
 
 public class ConsoleUtils {
 
-  private static Console console = System.console();
+  public static Optional<String> getDatabaseDetaName(Console console) {
 
-  public static Optional<String> getDatabaseDetaName() {
-
-    checkConsoleAvailability();
+    checkConsoleAvailability(console);
     Optional<String> wrappedName = Optional.empty();
 
     console.writer().println("Database name:");
@@ -25,15 +23,15 @@ public class ConsoleUtils {
     return wrappedName;
   }
 
-  private static void checkConsoleAvailability() {
+  private static void checkConsoleAvailability(Console console) {
 
     if (console == null) {
       throw new NullPointerException("System.console() is null");
     }
   }
 
-  public static boolean isConnectionIsToBeStored() {
-    checkConsoleAvailability();
+  public static boolean isConnectionIsToBeStored(Console console) {
+    checkConsoleAvailability(console);
     console.writer().println("Do you want to keep this connection? [y/n]");
     String answer = console.readLine();
     if ("y".equals(answer)) {
@@ -43,9 +41,9 @@ public class ConsoleUtils {
     return false;
   }
 
-  public static int startMigrationAproach() {
+  public static int startMigrationAproach(Console console) {
 
-    checkConsoleAvailability();
+    checkConsoleAvailability(console);
     console.writer().println("Below are the options for database source:");
     console.writer().println("1 - Provide a source database name.");
     console.writer().println("2 - Use valid database from config file.");
@@ -61,34 +59,29 @@ public class ConsoleUtils {
     }
   }
 
-  public static String getValidSelectedDataBase(Set<String> dataBases) {
+  public static String getValidSelectedDataBase(Console console, Set<String> dataBases) {
 
-    checkConsoleAvailability();
+    checkConsoleAvailability(console);
     if (dataBases.isEmpty()) {
       console.writer().println("There is no valid databases in the config file");
       return null;
     }
-    console.writer().println("Valid databases names");
+    console.writer().println("Valid databases names:");
     dataBases.forEach(name -> console.writer().println(name));
-    console.writer().println("Above are the valid databases, go ahead with one to migrate");
+    console.writer().println("Above are the valid databases, go ahead with one to migrate:");
 
     console.writer().print("Selected data base name");
     return console.readLine();
   }
 
-  public static void collectMysqlConnection() {
-    checkConsoleAvailability();
-    console.writer().println("Please  do not forget to fill the setting.properties  file");
-  }
-
-  public static void showUnavailableOption() {
-    checkConsoleAvailability();
+  public static void showUnavailableOption(Console console) {
+    checkConsoleAvailability(console);
     console.writer().println("Unavailable Option");
   }
 
-  public static Map<String, String> readSourceDBConn() {
+  public static Map<String, String> readSourceDBConn(Console console) {
 
-    checkConsoleAvailability();
+    checkConsoleAvailability(console);
     Map<String, String> dbConn = new HashMap<>();
     console.writer().println("Provide  the source data base connection.");
 
@@ -107,9 +100,9 @@ public class ConsoleUtils {
     return dbConn;
   }
 
-  public static String chooseDumpFile(List<Path> inputs) {
+  public static String chooseDumpFile(Console console, List<Path> inputs) {
 
-    checkConsoleAvailability();
+    checkConsoleAvailability(console);
     console.writer().println("Choose a dump file from the list to restore your mysql instance");
     if (inputs.isEmpty()) {
       console.writer().println("There is no  input files");
@@ -120,8 +113,8 @@ public class ConsoleUtils {
     return console.readLine();
   }
 
-  public static String getChosenDBName() {
-    checkConsoleAvailability();
+  public static String getChosenDBName(Console console) {
+    checkConsoleAvailability(console);
     console.writer().println("Data Base name:");
     return console.readLine();
   }

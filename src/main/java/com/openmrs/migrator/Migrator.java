@@ -1,11 +1,11 @@
 package com.openmrs.migrator;
 
 import com.openmrs.migrator.core.services.BootstrapService;
-import com.openmrs.migrator.core.services.CommandService;
 import com.openmrs.migrator.core.services.DataBaseService;
 import com.openmrs.migrator.core.services.PDIService;
 import com.openmrs.migrator.core.utilities.ConsoleUtils;
 import com.openmrs.migrator.core.utilities.FileIOUtilities;
+import java.io.Console;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,10 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
-@Command(
-    name = "migrator",
-    subcommands = {RunCommand.class},
-    mixinStandardHelpOptions = true)
+@Command(name = "migrator", mixinStandardHelpOptions = true)
 public class Migrator implements Callable<Optional<Void>> {
 
   private PDIService pdiService;
@@ -37,7 +34,7 @@ public class Migrator implements Callable<Optional<Void>> {
 
   private DataBaseService dataBaseService;
 
-  private CommandService commandService;
+  private Console console;
 
   private String[] jobs = {"pdiresources/jobs/merge-patient-job.kjb"};
 
@@ -62,16 +59,16 @@ public class Migrator implements Callable<Optional<Void>> {
 
   @Autowired
   public Migrator(
+      Console console,
       PDIService pdiService,
       FileIOUtilities fileIOUtilities,
       BootstrapService bootstrapService,
-      DataBaseService dataBaseService,
-      CommandService commandService) {
+      DataBaseService dataBaseService) {
     this.pdiService = pdiService;
     this.fileIOUtilities = fileIOUtilities;
     this.bootstrapService = bootstrapService;
     this.dataBaseService = dataBaseService;
-    this.commandService = commandService;
+    this.console = console;
   }
 
   @Override
@@ -112,16 +109,16 @@ public class Migrator implements Callable<Optional<Void>> {
   }
 
   private void executeRunCommandLogic() throws FileNotFoundException, IOException {
-    int choice = ConsoleUtils.startMigrationAproach();
+    int choice = ConsoleUtils.startMigrationAproach(console);
 
     switch (choice) {
       case 1:
-        Optional<String> providedDataBaseName = ConsoleUtils.getDatabaseDetaName();
+        Optional<String> providedDataBaseName = ConsoleUtils.getDatabaseDetaName(console);
         Optional<String> storedDataBaseName =
             fileIOUtilities.searchForDataBaseNameInSettingsFile(providedDataBaseName.get());
 
         if (!storedDataBaseName.isPresent()) {
-          if (ConsoleUtils.isConnectionIsToBeStored()) {
+          if (ConsoleUtils.isConnectionIsToBeStored(console)) {
             fileIOUtilities.addSettingToConfigFile(providedDataBaseName.get());
           }
           fileIOUtilities.setConnectionToKettleFile(providedDataBaseName.get());
@@ -132,6 +129,7 @@ public class Migrator implements Callable<Optional<Void>> {
       case 2:
         String selectDBName =
             ConsoleUtils.getValidSelectedDataBase(
+                console,
                 validateDataBaseNames(fileIOUtilities.getValueFromConfig("password", "=")));
         if (selectDBName != null) {
           fileIOUtilities.setConnectionToKettleFile(selectDBName);
@@ -142,6 +140,7 @@ public class Migrator implements Callable<Optional<Void>> {
       case 3:
         String dbName =
             ConsoleUtils.getValidSelectedDataBase(
+                console,
                 new HashSet<>(
                     dataBaseService.getDatabases(
                         fileIOUtilities.getValueFromConfig("password", "="))));
@@ -152,13 +151,13 @@ public class Migrator implements Callable<Optional<Void>> {
       case 4:
         List<Path> inputs = fileIOUtilities.listFiles(Paths.get("input/"));
 
-        String sqlDumpFile = ConsoleUtils.chooseDumpFile(inputs);
+        String sqlDumpFile = ConsoleUtils.chooseDumpFile(console, inputs);
 
         if (sqlDumpFile == null) {
           break;
         }
 
-        String databaseName = ConsoleUtils.getChosenDBName();
+        String databaseName = ConsoleUtils.getChosenDBName(console);
 
         dataBaseService.importDatabaseFile(databaseName, sqlDumpFile);
         fileIOUtilities.setConnectionToKettleFile(databaseName);
@@ -167,7 +166,7 @@ public class Migrator implements Callable<Optional<Void>> {
         break;
 
       default:
-        ConsoleUtils.showUnavailableOption();
+        ConsoleUtils.showUnavailableOption(console);
         break;
     }
   }

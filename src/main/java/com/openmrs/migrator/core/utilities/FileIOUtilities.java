@@ -282,7 +282,7 @@ public class FileIOUtilities {
 
   public void fillConfigFile() throws IOException {
 
-    Map<String, String> connDB = ConsoleUtils.readSourceDBConn();
+    Map<String, String> connDB = ConsoleUtils.readSourceDBConn(System.console());
 
     writeToFile(
         settingProperties.toFile(),
@@ -290,6 +290,17 @@ public class FileIOUtilities {
         "password=" + connDB.get("password="),
         "host=" + connDB.get("host="),
         "port=" + connDB.get("port="));
+  }
+
+  public void fillConfigFile(String user, String password, String host, String port)
+      throws IOException {
+
+    writeToFile(
+        settingProperties.toFile(),
+        "username=" + user,
+        "password=" + password,
+        "host=" + host,
+        "port=" + port);
   }
 
   public List<Path> listFiles(Path path) throws IOException {

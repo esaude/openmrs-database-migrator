@@ -1,10 +1,10 @@
 package com.openmrs.migrator;
 
 import com.openmrs.migrator.core.services.BootstrapService;
-import com.openmrs.migrator.core.services.CommandService;
 import com.openmrs.migrator.core.services.DataBaseService;
 import com.openmrs.migrator.core.services.PDIService;
 import com.openmrs.migrator.core.utilities.FileIOUtilities;
+import java.io.Console;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.ExitCodeGenerator;
@@ -23,15 +23,14 @@ public class MigratorApplication implements CommandLineRunner, ExitCodeGenerator
 
   @Autowired private BootstrapService bootstrapService;
 
-  @Autowired private CommandService commandService;
-
   @Autowired private DataBaseService dataBaseService;
+
+  private Console console = System.console();
 
   @Override
   public void run(String... args) throws Exception {
     CommandLine.call(
-        new Migrator(
-            pdiService, fileIOUtilities, bootstrapService, dataBaseService, commandService),
+        new Migrator(console, pdiService, fileIOUtilities, bootstrapService, dataBaseService),
         args);
   }
 

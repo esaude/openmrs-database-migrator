@@ -56,6 +56,10 @@ To merge OpenMRS databases run:
 
     java -jar migrator.jar run
 
+To list available subcommands run:
+
+    java -jar migrator.jar -h
+
 This will run PDI transformations using `ETL_SOURCE_DATABASE` as the input database. The output will be saved in a database called `merge_db`.
 
 ### Configuration

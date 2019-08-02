@@ -5,53 +5,63 @@ import static org.junit.Assert.*;
 import com.openmrs.migrator.Migrator;
 import com.openmrs.migrator.MigratorApplication;
 import com.openmrs.migrator.core.exceptions.InvalidParameterException;
+import com.openmrs.migrator.core.services.BootstrapService;
+import com.openmrs.migrator.core.services.DataBaseService;
+import com.openmrs.migrator.core.services.PDIService;
 import com.openmrs.migrator.core.utilities.FileIOUtilities;
+import java.io.Console;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import picocli.CommandLine;
+import picocli.CommandLine.ExecutionException;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = MigratorApplication.class)
 public class MigratorApplicationTests {
 
-  @Autowired private Migrator migratorApplication;
+  private Migrator migrator;
 
   @Autowired private FileIOUtilities fileIOUtils;
 
+  @Autowired private PDIService pdiService;
+
+  @Autowired private BootstrapService bootstrapService;
+
+  @Autowired private DataBaseService dataBaseService;
+
   private CommandLineRunner commandLineRunner;
+
+  private Console console;
 
   private static List<String> structurePaths =
       Arrays.asList("input", "output", "config", "pdiresources", "settings.properties");;
 
   @Before
   public void init() throws IOException, InvalidParameterException {
-    commandLineRunner = command -> migratorApplication.call(/*command*/ );
+    console = System.console();
+
+    migrator = new Migrator(console, pdiService, fileIOUtils, bootstrapService, dataBaseService);
+    commandLineRunner = command -> migrator.call();
 
     fileIOUtils.removeAllDirectories(structurePaths);
   }
 
-  @Ignore
-  @Test
-  public void executeSetupCommandSucessfully() throws Exception {
+  @Test(expected = ExecutionException.class)
+  public void failExecuteSetupCommand() throws Exception {
 
-    commandLineRunner.run("setup");
+    CommandLine.call(migrator, "setup");
     assertNotNull(commandLineRunner);
-
-    structurePaths.forEach(path -> assertTrue(Files.exists(Paths.get(path))));
   }
 
-  @Ignore
   @Test
   public void executeRunCommandSucessfully() throws Exception {
 
