@@ -26,7 +26,7 @@ public class ConsoleUtils {
   private static void checkConsoleAvailability(Console console) {
 
     if (console == null) {
-      throw new NullPointerException("System.console() is null");
+      throw new IllegalArgumentException("System.console() can't be  null");
     }
   }
 
@@ -34,11 +34,7 @@ public class ConsoleUtils {
     checkConsoleAvailability(console);
     console.writer().println("Do you want to keep this connection? [y/n]");
     String answer = console.readLine();
-    if ("y".equals(answer)) {
-      return true;
-    }
-
-    return false;
+    return "y".equals(answer);
   }
 
   public static int startMigrationAproach(Console console) {

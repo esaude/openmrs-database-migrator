@@ -9,7 +9,6 @@ import com.openmrs.migrator.core.services.BootstrapService;
 import com.openmrs.migrator.core.services.DataBaseService;
 import com.openmrs.migrator.core.services.PDIService;
 import com.openmrs.migrator.core.utilities.FileIOUtilities;
-import java.io.Console;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -40,16 +39,14 @@ public class MigratorApplicationTests {
 
   private CommandLineRunner commandLineRunner;
 
-  private Console console;
-
   private static List<String> structurePaths =
       Arrays.asList("input", "output", "config", "pdiresources", "settings.properties");;
 
   @Before
   public void init() throws IOException, InvalidParameterException {
-    console = System.console();
 
-    migrator = new Migrator(console, pdiService, fileIOUtils, bootstrapService, dataBaseService);
+    migrator =
+        new Migrator(System.console(), pdiService, fileIOUtils, bootstrapService, dataBaseService);
     commandLineRunner = command -> migrator.call();
 
     fileIOUtils.removeAllDirectories(structurePaths);

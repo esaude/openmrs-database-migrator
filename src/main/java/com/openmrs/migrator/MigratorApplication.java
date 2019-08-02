@@ -41,6 +41,6 @@ public class MigratorApplication implements CommandLineRunner, ExitCodeGenerator
 
   public static void main(String[] args) {
     // let Spring instantiate and inject dependencies
-    System.exit(SpringApplication.exit(SpringApplication.run(MigratorApplication.class, args)));
+    SpringApplication.exit(SpringApplication.run(MigratorApplication.class, args));
   }
 }

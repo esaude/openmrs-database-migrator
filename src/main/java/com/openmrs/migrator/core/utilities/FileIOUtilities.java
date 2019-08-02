@@ -35,10 +35,10 @@ public class FileIOUtilities {
   private final String KETTLE_PROPERTIES = "kettle.properties";
   private final String KETTLE_DIR = ".kettle";
 
-  String username;
-  String password;
-  String host;
-  String port;
+  private String username;
+  private String password;
+  private String host;
+  private String port;
 
   public void UploadFile(MultipartFile file) throws EmptyFileException {
     if (file.isEmpty()) {
@@ -191,12 +191,10 @@ public class FileIOUtilities {
       String line;
       while ((line = br.readLine()) != null) {
         String[] keyValue = line.split("=");
-        if ("database_name".equals(keyValue[0])) {
+        if ("database_name".equals(keyValue[0]) && (databaseName.equals(keyValue[1]))) {
 
-          if (databaseName.equals(keyValue[1])) {
-            logger.info("database name '" + databaseName + "' found in config file");
-            return Optional.of(keyValue[1]);
-          }
+          logger.info("database name '" + databaseName + "' found in config file");
+          return Optional.of(keyValue[1]);
         }
       }
       return Optional.empty();
