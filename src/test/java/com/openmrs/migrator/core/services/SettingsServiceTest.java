@@ -1,6 +1,5 @@
 package com.openmrs.migrator.core.services;
 
-import com.mysql.jdbc.exceptions.jdbc4.CommunicationsException;
 import com.openmrs.migrator.core.exceptions.SettingsException;
 import org.junit.Assert;
 import org.junit.Test;
@@ -16,14 +15,9 @@ public class SettingsServiceTest {
 
   @Autowired private SettingsService settingsService;
 
-  @Test(expected = CommunicationsException.class)
-  public void initializeKettleEnvironmentShouldThrowExceptionWithNonExistingConnection()
-      throws SettingsException {
-    settingsService.initializeKettleEnvironment(true);
-  }
-
   @Test
   public void initializeKettleEnvironment() throws SettingsException {
+    Assert.assertNull(EnvUtil.getSystemProperty(SettingsService.DB_TEST_CONNECTION));
     Assert.assertNull(EnvUtil.getSystemProperty(SettingsService.DB));
     Assert.assertNull(EnvUtil.getSystemProperty(SettingsService.DB_HOST));
     Assert.assertNull(EnvUtil.getSystemProperty(SettingsService.DB_PORT));
@@ -33,8 +27,9 @@ public class SettingsServiceTest {
     Assert.assertNull(EnvUtil.getSystemProperty(SettingsService.DBS_BACKUPS));
     Assert.assertNull(EnvUtil.getSystemProperty(SettingsService.DBS_BACKUPS_DIRECTORY));
 
-    settingsService.initializeKettleEnvironment(false);
+    settingsService.initializeKettleEnvironment();
 
+    Assert.assertEquals("false", EnvUtil.getSystemProperty(SettingsService.DB_TEST_CONNECTION));
     Assert.assertEquals("fgh", EnvUtil.getSystemProperty(SettingsService.DB));
     Assert.assertEquals("127.0.0.1", EnvUtil.getSystemProperty(SettingsService.DB_HOST));
     Assert.assertEquals("3306", EnvUtil.getSystemProperty(SettingsService.DB_PORT));

@@ -9,6 +9,8 @@ public interface SettingsService {
   String PDI_RESOURCES_DIR = "pdiresources";
 
   // settings keys
+  String DB_TEST_CONNECTION = "ETL_TEST_DATABASE_CONNECTION";
+
   String DB = "ETL_SOURCE_DATABASE";
 
   String DB_HOST = "ETL_DATABASE_HOST";
@@ -25,5 +27,5 @@ public interface SettingsService {
 
   String DBS_BACKUPS_DIRECTORY = "EPTS_DATABASES_DIRECTORY";
 
-  void initializeKettleEnvironment(boolean testDbConnection) throws SettingsException;
+  void initializeKettleEnvironment() throws SettingsException;
 }

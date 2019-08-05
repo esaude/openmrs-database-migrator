@@ -24,13 +24,14 @@ public class SettingsServiceImpl implements SettingsService {
 
   @Autowired private FileIOUtilities fileIOUtilities;
 
-  public void initializeKettleEnvironment(boolean testDbConnection) throws SettingsException {
+  public void initializeKettleEnvironment() throws SettingsException {
     try {
       Properties props = new Properties();
       InputStream is = fileIOUtilities.getResourceAsStream(SettingsService.SETTINGS_PROPERTIES);
       props.load(is);
       is.close();
 
+      String testConnection = props.getProperty(SettingsService.DB_TEST_CONNECTION);
       String host = props.getProperty(SettingsService.DB_HOST);
       String port = props.getProperty(SettingsService.DB_PORT);
       String db = props.getProperty(SettingsService.DB);
@@ -39,18 +40,22 @@ public class SettingsServiceImpl implements SettingsService {
       String dbsLoaded = props.getProperty(SettingsService.DBS_ALREADY_LOADED);
       String dbsBackups = props.getProperty(SettingsService.DBS_BACKUPS);
       String dbsBackupsFolder = props.getProperty(SettingsService.DBS_BACKUPS_DIRECTORY);
-      if (!testDbConnection || dataBaseService.testConnection(host, port, db, user, pass)) {
+      if ("false".equals(testConnection)
+          || dataBaseService.testConnection(host, port, db, user, pass)) {
         // load database backups
-        File backupsFolder = new File(dbsBackupsFolder);
-        if (backupsFolder.exists()
-            && "false".equals(dbsLoaded)
-            && StringUtils.isNotBlank(dbsBackups)) {
-          dataBaseService.loadDatabaseBackups(
-              host, port, dbsBackups.split(","), backupsFolder, user, pass);
-          // TODO fix these 2 lines below
-          props.setProperty(SettingsService.DBS_ALREADY_LOADED, "true");
-          props.store(
-              new FileOutputStream(SettingsService.SETTINGS_PROPERTIES), "MySQL backups loaded!");
+        if (StringUtils.isNotBlank(dbsBackupsFolder)
+            && StringUtils.isNotBlank(dbsBackups)
+            && "false".equals(dbsLoaded)) {
+          File backupsFolder = new File(dbsBackupsFolder);
+
+          if (backupsFolder.exists()) {
+            dataBaseService.loadDatabaseBackups(
+                host, port, dbsBackups.split(","), backupsFolder, user, pass);
+            // TODO fix these 2 lines below
+            props.setProperty(SettingsService.DBS_ALREADY_LOADED, "true");
+            props.store(
+                new FileOutputStream(SettingsService.SETTINGS_PROPERTIES), "MySQL backups loaded!");
+          }
         }
 
         // initialize kettle environment

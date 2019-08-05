@@ -23,7 +23,7 @@ public class PDIServiceImpl implements PDIService {
   public boolean runJob(InputStream pdiJobFileStream) throws SettingsException {
     try {
       // TODO somehow i think this is better in MigratorApplication run
-      settingsService.initializeKettleEnvironment(true);
+      settingsService.initializeKettleEnvironment();
 
       JobMeta jobMeta = new JobMeta(pdiJobFileStream, null, null);
 
