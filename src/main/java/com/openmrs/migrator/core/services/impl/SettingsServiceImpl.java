@@ -4,6 +4,12 @@ import com.openmrs.migrator.core.exceptions.SettingsException;
 import com.openmrs.migrator.core.services.DataBaseService;
 import com.openmrs.migrator.core.services.SettingsService;
 import com.openmrs.migrator.core.utilities.FileIOUtilities;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.sql.SQLException;
+import java.util.Properties;
 import org.apache.commons.lang.StringUtils;
 import org.pentaho.di.core.KettleEnvironment;
 import org.pentaho.di.core.exception.KettleException;
@@ -11,21 +17,12 @@ import org.pentaho.di.core.util.EnvUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.sql.SQLException;
-import java.util.Properties;
-
 @Component
 public class SettingsServiceImpl implements SettingsService {
 
-  @Autowired
-  private DataBaseService dataBaseService;
+  @Autowired private DataBaseService dataBaseService;
 
-  @Autowired
-  private FileIOUtilities fileIOUtilities;
+  @Autowired private FileIOUtilities fileIOUtilities;
 
   public void initializeKettleEnvironment(boolean testDbConnection) throws SettingsException {
     try {
@@ -46,12 +43,14 @@ public class SettingsServiceImpl implements SettingsService {
         // load database backups
         File backupsFolder = new File(dbsBackupsFolder);
         if (backupsFolder.exists()
-                && "false".equals(dbsLoaded)
-                && StringUtils.isNotBlank(dbsBackups)) {
-          dataBaseService.loadDatabaseBackups(host, port, dbsBackups.split(","), backupsFolder, user, pass);
+            && "false".equals(dbsLoaded)
+            && StringUtils.isNotBlank(dbsBackups)) {
+          dataBaseService.loadDatabaseBackups(
+              host, port, dbsBackups.split(","), backupsFolder, user, pass);
           // TODO fix these 2 lines below
           props.setProperty(SettingsService.DBS_ALREADY_LOADED, "true");
-          props.store(new FileOutputStream(SettingsService.SETTINGS_PROPERTIES), "MySQL backups loaded!");
+          props.store(
+              new FileOutputStream(SettingsService.SETTINGS_PROPERTIES), "MySQL backups loaded!");
         }
 
         // initialize kettle environment

@@ -4,9 +4,6 @@ import com.ibatis.common.jdbc.ScriptRunner;
 import com.openmrs.migrator.core.config.ConfigurationStore;
 import com.openmrs.migrator.core.services.CommandService;
 import com.openmrs.migrator.core.services.DataBaseService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -17,6 +14,8 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /** Database operations */
 @Service
@@ -74,29 +73,29 @@ public class DataBaseServiceImpl implements DataBaseService {
 
   @Override
   public boolean testConnection(
-          String host, String port, String database, String username, String password)
-          throws SQLException {
+      String host, String port, String database, String username, String password)
+      throws SQLException {
     Boolean results =
-            executeMySQLStatement(getConnection(host, port, database, username, password), "select 1");
+        executeMySQLStatement(getConnection(host, port, database, username, password), "select 1");
     return results != null ? results : false;
   }
 
   private Connection getConnection(
-          String host, String port, String database, String username, String password)
-          throws SQLException {
+      String host, String port, String database, String username, String password)
+      throws SQLException {
     return DriverManager.getConnection(
-            String.format("jdbc:mysql://%s:%s/%s", host, port, database), username, password);
+        String.format("jdbc:mysql://%s:%s/%s", host, port, database), username, password);
   }
 
   @Override
   public void loadDatabaseBackups(
-          String host,
-          String port,
-          String[] databases,
-          File backupsFolder,
-          String username,
-          String password)
-          throws SQLException, IOException {
+      String host,
+      String port,
+      String[] databases,
+      File backupsFolder,
+      String username,
+      String password)
+      throws SQLException, IOException {
     for (String db : databases) {
       File dbPath = new File(backupsFolder.getAbsolutePath() + File.separator + db + ".sql");
       if (dbPath.exists()) {
@@ -104,7 +103,7 @@ public class DataBaseServiceImpl implements DataBaseService {
         statement.executeUpdate(String.format("CREATE DATABASE IF NOT EXISTS %s", db));
         statement.close();
         ScriptRunner sr =
-                new ScriptRunner(getConnection(host, port, db, username, password), false, false);
+            new ScriptRunner(getConnection(host, port, db, username, password), false, false);
         Reader reader = new BufferedReader(new FileReader(dbPath));
         sr.runScript(reader);
       }
