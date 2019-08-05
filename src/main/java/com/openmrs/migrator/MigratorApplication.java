@@ -20,6 +20,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class MigratorApplication implements CommandLineRunner {
 
+  private static final String MIGRATOR_HOME = "MIGRATOR_HOME";
+
+  private static final String USER_DIR = "user.dir";
+
   private static Logger LOG = LoggerFactory.getLogger(MigratorApplication.class);
 
   private final PDIService pdiService;
@@ -56,12 +60,13 @@ public class MigratorApplication implements CommandLineRunner {
   public void run(String... args) throws SettingsException, IOException {
     LOG.info("EXECUTING : command line runner");
 
+    setMigratorHome();
+
     for (int i = 0; i < args.length; ++i) {
       LOG.info("args[{}]: {}", i, args[i]);
     }
 
     if (args.length > 0 && "setup".equals(args[0])) {
-
       executeSetupCommand();
     }
 
@@ -103,5 +108,14 @@ public class MigratorApplication implements CommandLineRunner {
 
     bootstrapService.createDirectoryStructure(dirList);
     bootstrapService.populateDefaultResources(pdiFiles);
+  }
+
+  private void setMigratorHome() {
+    String home = System.getProperty(MIGRATOR_HOME);
+    if (home == null) {
+      String userDir = System.getProperty(USER_DIR);
+      System.setProperty(MIGRATOR_HOME, userDir);
+    }
+    LOG.info("MIGRATOR_HOME={}", System.getProperty(MIGRATOR_HOME));
   }
 }

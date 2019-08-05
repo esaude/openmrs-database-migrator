@@ -589,7 +589,7 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <filename>src/main/resources/pdiresources/config/order_type.csv</filename>
+    <filename>${MIGRATOR_HOME}/config/order_type.csv</filename>
     <filename_field/>
     <rownum_field/>
     <include_filename>N</include_filename>

@@ -589,7 +589,7 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <filename>src/main/resources/pdiresources/config/role.csv</filename>
+    <filename>${MIGRATOR_HOME}/config/role.csv</filename>
     <filename_field/>
     <rownum_field/>
     <include_filename>N</include_filename>
