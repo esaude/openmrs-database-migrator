@@ -1,6 +1,7 @@
 package com.openmrs.migrator.core.services;
 
 import com.mysql.jdbc.exceptions.jdbc4.CommunicationsException;
+import com.openmrs.migrator.core.exceptions.SettingsException;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,12 +18,12 @@ public class SettingsServiceTest {
 
   @Test(expected = CommunicationsException.class)
   public void initializeKettleEnvironmentShouldThrowExceptionWithNonExistingConnection()
-      throws Exception {
+      throws SettingsException {
     settingsService.initializeKettleEnvironment(true);
   }
 
   @Test
-  public void initializeKettleEnvironment() throws Exception {
+  public void initializeKettleEnvironment() throws SettingsException {
     Assert.assertNull(EnvUtil.getSystemProperty(SettingsService.DB));
     Assert.assertNull(EnvUtil.getSystemProperty(SettingsService.DB_HOST));
     Assert.assertNull(EnvUtil.getSystemProperty(SettingsService.DB_PORT));
