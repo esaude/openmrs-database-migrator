@@ -16,14 +16,13 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.concurrent.Callable;
 import org.pentaho.di.core.exception.KettleException;
 import org.springframework.beans.factory.annotation.Autowired;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
-@Command(name = "migrator", mixinStandardHelpOptions = true)
+@Command(name = "migrator", mixinStandardHelpOptions = true, helpCommand = true)
 public class Migrator implements Callable<Optional<Void>> {
 
   private PDIService pdiService;
@@ -109,6 +108,8 @@ public class Migrator implements Callable<Optional<Void>> {
   }
 
   private void executeRunCommandLogic() throws FileNotFoundException, IOException {
+
+    String userConfigPassword = fileIOUtilities.getValueFromConfig("password", "=");
     int choice = ConsoleUtils.startMigrationAproach(console);
 
     switch (choice) {
@@ -130,7 +131,9 @@ public class Migrator implements Callable<Optional<Void>> {
         String selectDBName =
             ConsoleUtils.getValidSelectedDataBase(
                 console,
-                validateDataBaseNames(fileIOUtilities.getValueFromConfig("password", "=")));
+                dataBaseService.validateDataBaseNames(
+                    fileIOUtilities.getAllDataBaseNamesFromConfigFile(),
+                    dataBaseService.getDatabases(userConfigPassword)));
         if (selectDBName != null) {
           fileIOUtilities.setConnectionToKettleFile(selectDBName);
           runAllJobs();
@@ -140,10 +143,7 @@ public class Migrator implements Callable<Optional<Void>> {
       case 3:
         String dbName =
             ConsoleUtils.getValidSelectedDataBase(
-                console,
-                new HashSet<>(
-                    dataBaseService.getDatabases(
-                        fileIOUtilities.getValueFromConfig("password", "="))));
+                console, new HashSet<>(dataBaseService.getDatabases(userConfigPassword)));
         fileIOUtilities.setConnectionToKettleFile(dbName);
         runAllJobs();
         break;
@@ -169,25 +169,5 @@ public class Migrator implements Callable<Optional<Void>> {
         ConsoleUtils.showUnavailableOption(console);
         break;
     }
-  }
-
-  private Set<String> validateDataBaseNames(String password)
-      throws FileNotFoundException, IOException {
-    Set<String> validNames = new HashSet<>();
-    List<String> fromConfig = fileIOUtilities.getAllDataBaseNamesFromConfigFile();
-
-    List<String> fromMySql = dataBaseService.getDatabases(password);
-
-    fromConfig.forEach(
-        conf -> {
-          fromMySql.forEach(
-              mysql -> {
-                if (conf.equals(mysql)) {
-                  validNames.add(conf);
-                }
-              });
-        });
-
-    return validNames;
   }
 }

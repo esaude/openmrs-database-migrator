@@ -41,10 +41,12 @@ public class ConsoleUtils {
 
     checkConsoleAvailability(console);
     console.writer().println("Below are the options for database source:");
-    console.writer().println("1 - Provide a source database name.");
-    console.writer().println("2 - Use valid database from config file.");
-    console.writer().println("3 - Use loaded mysql database.");
-    console.writer().println("4 - Load an sql dump file and migrate.");
+    console.writer().println("Get database names:");
+    console.writer().println("1 - Provide database name for existing db in MySQL server");
+    console.writer().println("2 - Use databases names from settings file");
+    console.writer().println("Location of databases:");
+    console.writer().println("3 - Already loaded in MySQL");
+    console.writer().println("4 - Use sql dump files");
     int choice;
     try {
       choice = Integer.parseInt(console.readLine());

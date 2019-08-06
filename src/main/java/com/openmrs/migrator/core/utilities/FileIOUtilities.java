@@ -268,7 +268,7 @@ public class FileIOUtilities {
     return names;
   }
 
-  private void writeToFile(File file, String... contents) throws IOException {
+  public void writeToFile(File file, String... contents) throws IOException {
     try (BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
       for (String content : contents) {
         bw.append(content);

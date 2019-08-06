@@ -5,10 +5,13 @@ import com.openmrs.migrator.core.services.CommandService;
 import com.openmrs.migrator.core.services.DataBaseService;
 import com.openmrs.migrator.core.utilities.FileIOUtilities;
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -68,5 +71,23 @@ public class DataBaseServiceImpl implements DataBaseService {
             .collect(Collectors.joining(","));
 
     return Arrays.asList(result.split(","));
+  }
+
+  @Override
+  public Set<String> validateDataBaseNames(List<String> fromConfig, List<String> fromMySql)
+      throws FileNotFoundException, IOException {
+    Set<String> validNames = new HashSet<>();
+
+    fromConfig.forEach(
+        conf -> {
+          fromMySql.forEach(
+              mysql -> {
+                if (conf.equals(mysql)) {
+                  validNames.add(conf);
+                }
+              });
+        });
+
+    return validNames;
   }
 }

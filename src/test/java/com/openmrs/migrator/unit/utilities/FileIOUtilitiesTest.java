@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import com.openmrs.migrator.core.exceptions.InvalidParameterException;
 import com.openmrs.migrator.core.utilities.FileIOUtilities;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -12,6 +13,8 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Stream;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -178,5 +181,35 @@ public class FileIOUtilitiesTest {
   public void removeDirectoryShouldFailGivenUndefined()
       throws IOException, InvalidParameterException {
     fileIOUtilities.removeDirectory(null);
+  }
+
+  @Test
+  public void listFilesShouldListlsExistentFilesInTheDrectory() throws IOException {
+    List<Path> paths = fileIOUtilities.listFiles(Paths.get("/etc"));
+
+    assertTrue(paths.contains(Paths.get("/etc/resolv.conf")));
+    assertNotNull(paths);
+    assertFalse(paths.isEmpty());
+  }
+
+  @Test
+  public void writeToFileShouldWrite2LinesToTempFile()
+      throws IOException, InvalidParameterException {
+    Path newDirectory = Paths.get("temp");
+    fileIOUtilities.createDirectory(newDirectory);
+    fileIOUtilities.createFile(Paths.get("temp/temp_file.txt"));
+    fileIOUtilities.writeToFile(Paths.get("temp/temp_file.txt").toFile(), "line1", "line2");
+    @SuppressWarnings("resource")
+    Stream<String> stream = Files.lines(Paths.get("temp/temp_file.txt"));
+    Optional<String> result = stream.reduce((a, b) -> a + b);
+
+    assertEquals("line1line2", result.get());
+    fileIOUtilities.removeDirectory(newDirectory.toFile());
+  }
+
+  @Test(expected = FileNotFoundException.class)
+  public void writeToFileShouldThrowAnException() throws IOException, InvalidParameterException {
+    Path path = Paths.get("/notunitlikedirectory/");
+    fileIOUtilities.writeToFile(path.toFile(), "line1", "line2");
   }
 }
