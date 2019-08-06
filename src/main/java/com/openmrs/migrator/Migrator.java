@@ -20,6 +20,7 @@ import java.util.Optional;
 import java.util.concurrent.Callable;
 import org.pentaho.di.core.exception.KettleException;
 import org.springframework.beans.factory.annotation.Autowired;
+import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
@@ -59,6 +60,8 @@ public class Migrator implements Callable<Optional<Void>> {
       description = "setups the migrator tool")
   private boolean setup;
 
+  public Migrator() {}
+
   @Autowired
   public Migrator(
       Console console,
@@ -86,6 +89,11 @@ public class Migrator implements Callable<Optional<Void>> {
     if (run) {
       executeRunCommandLogic();
     }
+
+    if (!run && !setup) {
+      CommandLine.usage(new Migrator(), System.out);
+    }
+
     return Optional.empty();
   }
 
