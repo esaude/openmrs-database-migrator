@@ -3,6 +3,7 @@ package com.openmrs.migrator;
 import com.openmrs.migrator.core.services.BootstrapService;
 import com.openmrs.migrator.core.services.DataBaseService;
 import com.openmrs.migrator.core.services.PDIService;
+import com.openmrs.migrator.core.services.SettingsService;
 import com.openmrs.migrator.core.utilities.ConsoleUtils;
 import com.openmrs.migrator.core.utilities.FileIOUtilities;
 import java.io.Console;
@@ -33,6 +34,8 @@ public class Migrator implements Callable<Optional<Void>> {
 
   private DataBaseService dataBaseService;
 
+  private SettingsService settingsService;
+
   private Console console;
 
   private String[] jobs = {"pdiresources/jobs/merge-patient-job.kjb"};
@@ -62,12 +65,14 @@ public class Migrator implements Callable<Optional<Void>> {
       PDIService pdiService,
       FileIOUtilities fileIOUtilities,
       BootstrapService bootstrapService,
-      DataBaseService dataBaseService) {
+      DataBaseService dataBaseService,
+      SettingsService settingsService) {
     this.pdiService = pdiService;
     this.fileIOUtilities = fileIOUtilities;
     this.bootstrapService = bootstrapService;
     this.dataBaseService = dataBaseService;
     this.console = console;
+    this.settingsService = settingsService;
   }
 
   @Override
@@ -75,7 +80,7 @@ public class Migrator implements Callable<Optional<Void>> {
 
     if (setup) {
       executeSetupCommand();
-      fileIOUtilities.fillConfigFile();
+      settingsService.fillConfigFile();
     }
 
     if (run) {
@@ -109,8 +114,13 @@ public class Migrator implements Callable<Optional<Void>> {
 
   private void executeRunCommandLogic() throws FileNotFoundException, IOException {
 
-    String userConfigPassword = fileIOUtilities.getValueFromConfig("password", "=");
+    String userConfigPassword = fileIOUtilities.getValueFromConfig(SettingsService.DB_PASS, "=");
     int choice = ConsoleUtils.startMigrationAproach(console);
+    List<String> alreadyLoadedDataBases =
+        dataBaseService.runSQLCommand(
+            fileIOUtilities.getValueFromConfig(SettingsService.DB_USER, "="),
+            userConfigPassword,
+            "show databases");
 
     switch (choice) {
       case 1:
@@ -120,7 +130,7 @@ public class Migrator implements Callable<Optional<Void>> {
 
         if (!storedDataBaseName.isPresent()) {
           if (ConsoleUtils.isConnectionIsToBeStored(console)) {
-            fileIOUtilities.addSettingToConfigFile(providedDataBaseName.get());
+            settingsService.addSettingToConfigFile(SettingsService.DB, providedDataBaseName.get());
           }
           fileIOUtilities.setConnectionToKettleFile(providedDataBaseName.get());
         }
@@ -132,8 +142,7 @@ public class Migrator implements Callable<Optional<Void>> {
             ConsoleUtils.getValidSelectedDataBase(
                 console,
                 dataBaseService.validateDataBaseNames(
-                    fileIOUtilities.getAllDataBaseNamesFromConfigFile(),
-                    dataBaseService.getDatabases(userConfigPassword)));
+                    fileIOUtilities.getAllDataBaseNamesFromConfigFile(), alreadyLoadedDataBases));
         if (selectDBName != null) {
           fileIOUtilities.setConnectionToKettleFile(selectDBName);
           runAllJobs();
@@ -142,8 +151,7 @@ public class Migrator implements Callable<Optional<Void>> {
         break;
       case 3:
         String dbName =
-            ConsoleUtils.getValidSelectedDataBase(
-                console, new HashSet<>(dataBaseService.getDatabases(userConfigPassword)));
+            ConsoleUtils.getValidSelectedDataBase(console, new HashSet<>(alreadyLoadedDataBases));
         fileIOUtilities.setConnectionToKettleFile(dbName);
         runAllJobs();
         break;

@@ -21,10 +21,9 @@ public class DataBaseServiceTest {
 
   @Test
   public void getDatabasesNameSholdReturnAtLeastName() throws IOException {
-    List<String> names = dataBaseService.getDatabases("123w");
+    List<String> names = dataBaseService.runSQLCommand("username", "password", "show databases");
     Assert.assertFalse(names.isEmpty());
     Assert.assertEquals("", names.get(0));
-    ;
   }
 
   @Test

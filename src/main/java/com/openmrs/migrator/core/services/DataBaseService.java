@@ -11,7 +11,8 @@ public interface DataBaseService {
 
   void createDatabase(String databaseName);
 
-  List<String> getDatabases(String password) throws IOException;
+  List<String> runSQLCommand(String username, String password, String sqlCommand)
+      throws IOException;
 
   Set<String> validateDataBaseNames(List<String> fromConfig, List<String> fromMySql)
       throws FileNotFoundException, IOException;

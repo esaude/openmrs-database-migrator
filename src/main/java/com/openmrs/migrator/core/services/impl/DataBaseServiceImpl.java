@@ -3,6 +3,7 @@ package com.openmrs.migrator.core.services.impl;
 import com.openmrs.migrator.core.config.ConfigurationStore;
 import com.openmrs.migrator.core.services.CommandService;
 import com.openmrs.migrator.core.services.DataBaseService;
+import com.openmrs.migrator.core.services.SettingsService;
 import com.openmrs.migrator.core.utilities.FileIOUtilities;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -40,9 +41,9 @@ public class DataBaseServiceImpl implements DataBaseService {
   public void importDatabaseFile(String databaseName, String fileName) throws IOException {
     commandService.runCommand(
         "mysql",
-        "-u" + fileIOUtilities.getValueFromConfig("username", "="),
-        "-p" + fileIOUtilities.getValueFromConfig("password", "="),
-        "-h" + fileIOUtilities.getValueFromConfig("host", "="),
+        "-u" + fileIOUtilities.getValueFromConfig(SettingsService.DB_USER, "="),
+        "-p" + fileIOUtilities.getValueFromConfig(SettingsService.DB_PASS, "="),
+        "-h" + fileIOUtilities.getValueFromConfig(SettingsService.DB_HOST, "="),
         "-e",
         String.format("use %s; source %s;", databaseName, fileName));
   }
@@ -60,10 +61,11 @@ public class DataBaseServiceImpl implements DataBaseService {
   }
 
   @Override
-  public List<String> getDatabases(String password) throws IOException {
+  public List<String> runSQLCommand(String username, String password, String sqlCommand)
+      throws IOException {
     Process p =
         Runtime.getRuntime()
-            .exec(new String[] {"mysql", "-u", "root", "-p" + password, "-e", "show databases"});
+            .exec(new String[] {"mysql", "-u", username, "-p" + password, "-e", sqlCommand});
 
     String result =
         new BufferedReader(new InputStreamReader(p.getInputStream()))

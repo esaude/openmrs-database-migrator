@@ -1,5 +1,6 @@
 package com.openmrs.migrator.core.utilities;
 
+import com.openmrs.migrator.core.services.SettingsService;
 import java.io.Console;
 import java.nio.file.Path;
 import java.util.HashMap;
@@ -84,16 +85,16 @@ public class ConsoleUtils {
     console.writer().println("Provide  the source data base connection.");
 
     console.writer().println("username:");
-    dbConn.put("username=", console.readLine());
+    dbConn.put(SettingsService.DB_USER, console.readLine());
 
     console.writer().println("password:");
-    dbConn.put("password=", new String(console.readPassword()));
+    dbConn.put(SettingsService.DB_PASS, new String(console.readPassword()));
 
     console.writer().println("host:");
-    dbConn.put("host=", console.readLine());
+    dbConn.put(SettingsService.DB_HOST, console.readLine());
 
     console.writer().println("port:");
-    dbConn.put("port=", console.readLine());
+    dbConn.put(SettingsService.DB_PORT, console.readLine());
 
     return dbConn;
   }

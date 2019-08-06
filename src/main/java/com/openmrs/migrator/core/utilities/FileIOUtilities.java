@@ -2,6 +2,7 @@ package com.openmrs.migrator.core.utilities;
 
 import com.openmrs.migrator.core.exceptions.EmptyFileException;
 import com.openmrs.migrator.core.exceptions.InvalidParameterException;
+import com.openmrs.migrator.core.services.SettingsService;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -11,14 +12,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
@@ -176,14 +175,6 @@ public class FileIOUtilities {
     return directoryToBeDeleted.delete();
   }
 
-  public void addSettingToConfigFile(String dataBaseName) throws IOException {
-    logger.info("Adding database name:" + dataBaseName + " in config file");
-
-    List<String> lines = Files.readAllLines(settingProperties);
-    lines.add("database_name=" + dataBaseName);
-    Files.write(settingProperties, lines, StandardCharsets.UTF_8);
-  }
-
   public Optional<String> searchForDataBaseNameInSettingsFile(String databaseName)
       throws FileNotFoundException, IOException {
     logger.info("Searching database " + databaseName + " in config file");
@@ -209,16 +200,16 @@ public class FileIOUtilities {
     Files.readAllLines(settingProperties)
         .forEach(
             configLine -> {
-              if (configLine.contains("username=")) {
+              if (configLine.contains(SettingsService.DB_USER)) {
                 username = configLine.split("=")[1];
               }
-              if (configLine.contains("password=")) {
+              if (configLine.contains(SettingsService.DB_PASS)) {
                 password = configLine.split("=")[1];
               }
-              if (configLine.contains("host=")) {
+              if (configLine.contains(SettingsService.DB_HOST)) {
                 host = configLine.split("=")[1];
               }
-              if (configLine.contains("port=")) {
+              if (configLine.contains(SettingsService.DB_PORT)) {
                 port = configLine.split("=")[1];
               }
             });
@@ -227,11 +218,11 @@ public class FileIOUtilities {
 
     writeToFile(
         kettlePath.toFile(),
-        "ETL_SOURCE_DATABASE=" + dataBaseName,
-        "ETL_DATABASE_HOST=" + host,
-        "ETL_DATABASE_PORT=" + port,
-        "ETL_DATABASE_USER=" + username,
-        "ETL_DATABASE_PASSWORD=" + password);
+        SettingsService.DB + "=" + dataBaseName,
+        SettingsService.DB_HOST + "=" + host,
+        SettingsService.DB_PORT + "=" + port,
+        SettingsService.DB_USER + "=" + username,
+        SettingsService.DB_PASS + "=" + password);
   }
 
   private File getKettlePropertiesLocation() throws IOException {
@@ -260,7 +251,7 @@ public class FileIOUtilities {
     try (BufferedReader br = new BufferedReader(new FileReader(settingProperties.toFile()))) {
       String line;
       while ((line = br.readLine()) != null) {
-        if (line.contains("database_name")) {
+        if (line.contains(SettingsService.DB)) {
           names.add(line.split("=")[1]);
         }
       }
@@ -276,29 +267,6 @@ public class FileIOUtilities {
       }
       bw.flush();
     }
-  }
-
-  public void fillConfigFile() throws IOException {
-
-    Map<String, String> connDB = ConsoleUtils.readSourceDBConn(System.console());
-
-    writeToFile(
-        settingProperties.toFile(),
-        "username=" + connDB.get("username="),
-        "password=" + connDB.get("password="),
-        "host=" + connDB.get("host="),
-        "port=" + connDB.get("port="));
-  }
-
-  public void fillConfigFile(String user, String password, String host, String port)
-      throws IOException {
-
-    writeToFile(
-        settingProperties.toFile(),
-        "username=" + user,
-        "password=" + password,
-        "host=" + host,
-        "port=" + port);
   }
 
   public List<Path> listFiles(Path path) throws IOException {
