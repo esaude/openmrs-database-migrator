@@ -1,5 +1,6 @@
 package com.openmrs.migrator;
 
+import com.openmrs.migrator.core.exceptions.SettingsException;
 import com.openmrs.migrator.core.services.BootstrapService;
 import com.openmrs.migrator.core.services.PDIService;
 import com.openmrs.migrator.core.services.SettingsService;
@@ -9,7 +10,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import org.pentaho.di.core.exception.KettleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,7 +79,7 @@ public class MigratorApplication implements CommandLineRunner {
         InputStream xml = fileIOUtilities.getResourceAsStream(t);
         pdiService.runJob(xml);
       }
-    } catch (KettleException e) {
+    } catch (SettingsException e) {
       // Do nothing kettle prints stack trace
     }
   }

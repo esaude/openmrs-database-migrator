@@ -3,6 +3,7 @@ package com.openmrs.migrator.unit.core.services;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import com.openmrs.migrator.core.exceptions.SettingsException;
 import com.openmrs.migrator.core.services.PDIService;
 import com.openmrs.migrator.core.services.SettingsService;
 import com.openmrs.migrator.core.utilities.FileIOUtilities;
@@ -36,13 +37,13 @@ public class PDIServiceTest {
   }
 
   @Test
-  public void runJobSuccess() throws Exception {
+  public void runJobSuccess() throws SettingsException {
     boolean runnedCorrectly = pdiService.runJob(streamWithValidJob);
     assertTrue(runnedCorrectly);
   }
 
   @Test
-  public void runJobFail() throws Exception {
+  public void runJobFail() throws SettingsException {
     boolean runnedCorrectly = pdiService.runJob(streamWithInValidJob);
     assertFalse(runnedCorrectly);
   }
