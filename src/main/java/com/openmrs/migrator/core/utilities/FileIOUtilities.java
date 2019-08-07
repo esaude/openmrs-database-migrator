@@ -192,12 +192,13 @@ public class FileIOUtilities {
     }
   }
 
-  public void setConnectionToKettleFile(String dataBaseName) throws IOException {
+  public void setConnectionToKettleFile(String dataBaseName, Path source, File target)
+      throws IOException {
     logger.info("Setting the database source  connections to the kettle.properties file");
 
-    Path kettlePath = getKettlePropertiesLocation().toPath();
+    Path kettlePath = target.toPath();
 
-    Files.readAllLines(settingProperties)
+    Files.readAllLines(source)
         .forEach(
             configLine -> {
               if (configLine.contains(SettingsService.DB_USER)) {
@@ -225,7 +226,7 @@ public class FileIOUtilities {
         SettingsService.DB_PASS + "=" + password);
   }
 
-  private File getKettlePropertiesLocation() throws IOException {
+  public File getKettlePropertiesLocation() throws IOException {
     logger.info("Getting the default location of kettle.properties");
     String homeDirectory = System.getProperty("user.home");
 

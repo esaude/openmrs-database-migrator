@@ -1,6 +1,8 @@
 package com.openmrs.migrator.core.services;
 
 import java.io.IOException;
+import java.nio.file.Path;
+import java.util.Map;
 
 public interface SettingsService {
 
@@ -28,7 +30,7 @@ public interface SettingsService {
 
   String DBS_BACKUPS_DIRECTORY = "EPTS_DATABASES_DIRECTORY";
 
-  void fillConfigFile() throws IOException;
+  void fillConfigFile(Path target, Map<String, String> connDB) throws IOException;
 
-  void addSettingToConfigFile(String labelName, String configVaule) throws IOException;
+  void addSettingToConfigFile(Path target, String labelName, String configVaule) throws IOException;
 }

@@ -7,6 +7,7 @@ import com.openmrs.migrator.core.services.SettingsService;
 import com.openmrs.migrator.core.utilities.ConsoleUtils;
 import com.openmrs.migrator.core.utilities.FileIOUtilities;
 import java.io.Console;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.Callable;
 import org.pentaho.di.core.exception.KettleException;
@@ -85,7 +87,9 @@ public class Migrator implements Callable<Optional<Void>> {
 
     if (setup) {
       executeSetupCommand();
-      settingsService.fillConfigFile();
+      Map<String, String> connDB = ConsoleUtils.readSourceDBConn(System.console());
+
+      settingsService.fillConfigFile(settingProperties, connDB);
     }
 
     if (run) {
@@ -132,6 +136,7 @@ public class Migrator implements Callable<Optional<Void>> {
             fileIOUtilities.getValueFromConfig(SettingsService.DB_USER, "=", settingProperties),
             userConfigPassword,
             "show databases");
+    File kettleFile = fileIOUtilities.getKettlePropertiesLocation();
 
     switch (choice) {
       case 1:
@@ -142,9 +147,11 @@ public class Migrator implements Callable<Optional<Void>> {
 
         if (!storedDataBaseName.isPresent()) {
           if (ConsoleUtils.isConnectionIsToBeStored(console)) {
-            settingsService.addSettingToConfigFile(SettingsService.DB, providedDataBaseName.get());
+            settingsService.addSettingToConfigFile(
+                settingProperties, SettingsService.DB, providedDataBaseName.get());
           }
-          fileIOUtilities.setConnectionToKettleFile(providedDataBaseName.get());
+          fileIOUtilities.setConnectionToKettleFile(
+              providedDataBaseName.get(), settingProperties, kettleFile);
         }
         runAllJobs();
         break;
@@ -157,7 +164,7 @@ public class Migrator implements Callable<Optional<Void>> {
                     fileIOUtilities.getAllDataBaseNamesFromConfigFile(settingProperties),
                     alreadyLoadedDataBases));
         if (selectDBName != null) {
-          fileIOUtilities.setConnectionToKettleFile(selectDBName);
+          fileIOUtilities.setConnectionToKettleFile(selectDBName, settingProperties, kettleFile);
           runAllJobs();
         }
 
@@ -165,7 +172,7 @@ public class Migrator implements Callable<Optional<Void>> {
       case 3:
         String dbName =
             ConsoleUtils.getValidSelectedDataBase(console, new HashSet<>(alreadyLoadedDataBases));
-        fileIOUtilities.setConnectionToKettleFile(dbName);
+        fileIOUtilities.setConnectionToKettleFile(dbName, settingProperties, kettleFile);
         runAllJobs();
         break;
 
@@ -181,7 +188,7 @@ public class Migrator implements Callable<Optional<Void>> {
         String databaseName = ConsoleUtils.getChosenDBName(console);
 
         dataBaseService.importDatabaseFile(databaseName, sqlDumpFile);
-        fileIOUtilities.setConnectionToKettleFile(databaseName);
+        fileIOUtilities.setConnectionToKettleFile(databaseName, settingProperties, kettleFile);
         runAllJobs();
 
         break;

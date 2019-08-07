@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import com.openmrs.migrator.core.exceptions.InvalidParameterException;
 import com.openmrs.migrator.core.services.SettingsService;
 import com.openmrs.migrator.core.utilities.FileIOUtilities;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,7 +14,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 import org.junit.Test;
@@ -27,6 +30,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 public class FileIOUtilitiesTest {
 
   @Autowired private FileIOUtilities fileIOUtilities;
+
+  @Autowired SettingsService settingsService;
 
   private String stream = "pdiresources/jobs/job.kjb";
 
@@ -314,5 +319,58 @@ public class FileIOUtilitiesTest {
     assertFalse(name.isPresent());
 
     fileIOUtilities.removeDirectory(newDirectory.toFile());
+  }
+
+  @Test
+  public void setConnectionToKettleFileShouldWriteToKettleFile()
+      throws IOException, InvalidParameterException {
+
+    Path newDirectory = Paths.get("temp");
+    fileIOUtilities.createDirectory(newDirectory);
+
+    Path settingPropeties = Paths.get("temp/setting.propeties");
+    Path kettleFile = Paths.get("temp/kettle.propeties");
+
+    fileIOUtilities.createFile(settingPropeties);
+    fileIOUtilities.createFile(kettleFile);
+
+    Map<String, String> connectionMap = new HashMap<>();
+    connectionMap.put(SettingsService.DB_USER, "user");
+    connectionMap.put(SettingsService.DB_PASS, "pass");
+    connectionMap.put(SettingsService.DB_HOST, "localhost");
+    connectionMap.put(SettingsService.DB_PORT, "1234");
+
+    settingsService.fillConfigFile(settingPropeties, connectionMap);
+
+    assertEquals(4, Files.lines(settingPropeties).count());
+    assertEquals(
+        "user", fileIOUtilities.getValueFromConfig(SettingsService.DB_USER, "=", settingPropeties));
+    assertEquals(
+        "pass", fileIOUtilities.getValueFromConfig(SettingsService.DB_PASS, "=", settingPropeties));
+    assertEquals(
+        "localhost",
+        fileIOUtilities.getValueFromConfig(SettingsService.DB_HOST, "=", settingPropeties));
+    assertEquals(
+        "1234", fileIOUtilities.getValueFromConfig(SettingsService.DB_PORT, "=", settingPropeties));
+
+    fileIOUtilities.setConnectionToKettleFile("icap", settingPropeties, kettleFile.toFile());
+    assertEquals(
+        "user", fileIOUtilities.getValueFromConfig(SettingsService.DB_USER, "=", kettleFile));
+    assertEquals(
+        "pass", fileIOUtilities.getValueFromConfig(SettingsService.DB_PASS, "=", kettleFile));
+    assertEquals(
+        "localhost", fileIOUtilities.getValueFromConfig(SettingsService.DB_HOST, "=", kettleFile));
+    assertEquals(
+        "1234", fileIOUtilities.getValueFromConfig(SettingsService.DB_PORT, "=", kettleFile));
+
+    fileIOUtilities.removeDirectory(newDirectory.toFile());
+  }
+
+  @Test
+  public void getKettlePropertiesLocationShouldReturnKettleFile() throws IOException {
+    File kettleFile = fileIOUtilities.getKettlePropertiesLocation();
+
+    assertNotNull(kettleFile);
+    assertTrue(kettleFile.exists());
   }
 }
