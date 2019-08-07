@@ -187,7 +187,7 @@ public class FileIOUtilitiesTest {
   @Test
   public void listFilesShouldListlsExistentFilesInTheDrectory() throws IOException {
     List<Path> paths = fileIOUtilities.listFiles(Paths.get("/etc"));
-    // we know all linux ditros have the  below file, even FREE_BSD has :)
+    // we know all linux ditros have the below file, even FREE_BSD has :)
     assertTrue(paths.contains(Paths.get("/etc/resolv.conf")));
     assertNotNull(paths);
     assertFalse(paths.isEmpty());
@@ -277,6 +277,42 @@ public class FileIOUtilitiesTest {
 
     List<String> names = fileIOUtilities.getAllDataBaseNamesFromConfigFile(path);
     assertTrue(names.isEmpty());
+    fileIOUtilities.removeDirectory(newDirectory.toFile());
+  }
+
+  @Test
+  public void searchForDataBaseNameInSettingsFileShouldReturnOneDBName()
+      throws IOException, InvalidParameterException {
+
+    Path newDirectory = Paths.get("temp");
+
+    fileIOUtilities.createDirectory(newDirectory);
+    fileIOUtilities.createFile(Paths.get("temp/temp_file.txt"));
+    Path path = Paths.get("temp/temp_file.txt");
+
+    fileIOUtilities.writeToFile(path.toFile(), SettingsService.DB + "=fgh");
+    Optional<String> name = fileIOUtilities.searchForDataBaseNameInSettingsFile("fgh", path);
+
+    assertEquals("fgh", name.get());
+
+    fileIOUtilities.removeDirectory(newDirectory.toFile());
+  }
+
+  @Test
+  public void searchForDataBaseNameInSettingsFileShouldReturnEmptyOptonalValue()
+      throws IOException, InvalidParameterException {
+
+    Path newDirectory = Paths.get("temp");
+
+    fileIOUtilities.createDirectory(newDirectory);
+    fileIOUtilities.createFile(Paths.get("temp/temp_file.txt"));
+    Path path = Paths.get("temp/temp_file.txt");
+
+    fileIOUtilities.writeToFile(path.toFile(), "unknown_label_attribute" + "=fgh");
+    Optional<String> name = fileIOUtilities.searchForDataBaseNameInSettingsFile("fgh", path);
+
+    assertFalse(name.isPresent());
+
     fileIOUtilities.removeDirectory(newDirectory.toFile());
   }
 }

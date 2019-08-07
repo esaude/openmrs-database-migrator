@@ -137,7 +137,8 @@ public class Migrator implements Callable<Optional<Void>> {
       case 1:
         Optional<String> providedDataBaseName = ConsoleUtils.getDatabaseDetaName(console);
         Optional<String> storedDataBaseName =
-            fileIOUtilities.searchForDataBaseNameInSettingsFile(providedDataBaseName.get());
+            fileIOUtilities.searchForDataBaseNameInSettingsFile(
+                providedDataBaseName.get(), settingProperties);
 
         if (!storedDataBaseName.isPresent()) {
           if (ConsoleUtils.isConnectionIsToBeStored(console)) {

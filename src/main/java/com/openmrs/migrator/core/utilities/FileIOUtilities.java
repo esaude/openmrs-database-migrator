@@ -175,14 +175,14 @@ public class FileIOUtilities {
     return directoryToBeDeleted.delete();
   }
 
-  public Optional<String> searchForDataBaseNameInSettingsFile(String databaseName)
+  public Optional<String> searchForDataBaseNameInSettingsFile(String databaseName, Path path)
       throws FileNotFoundException, IOException {
     logger.info("Searching database " + databaseName + " in config file");
-    try (BufferedReader br = new BufferedReader(new FileReader(settingProperties.toFile()))) {
+    try (BufferedReader br = new BufferedReader(new FileReader(path.toFile()))) {
       String line;
       while ((line = br.readLine()) != null) {
         String[] keyValue = line.split("=");
-        if ("database_name".equals(keyValue[0]) && (databaseName.equals(keyValue[1]))) {
+        if (SettingsService.DB.equals(keyValue[0]) && (databaseName.equals(keyValue[1]))) {
 
           logger.info("database name '" + databaseName + "' found in config file");
           return Optional.of(keyValue[1]);
