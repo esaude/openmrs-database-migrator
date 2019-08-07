@@ -3,6 +3,7 @@ package com.openmrs.migrator.unit.utilities;
 import static org.junit.Assert.*;
 
 import com.openmrs.migrator.core.exceptions.InvalidParameterException;
+import com.openmrs.migrator.core.services.SettingsService;
 import com.openmrs.migrator.core.utilities.FileIOUtilities;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -186,7 +187,7 @@ public class FileIOUtilitiesTest {
   @Test
   public void listFilesShouldListlsExistentFilesInTheDrectory() throws IOException {
     List<Path> paths = fileIOUtilities.listFiles(Paths.get("/etc"));
-
+    // we know all linux ditros have the  below file, even FREE_BSD has :)
     assertTrue(paths.contains(Paths.get("/etc/resolv.conf")));
     assertNotNull(paths);
     assertFalse(paths.isEmpty());
@@ -209,7 +210,73 @@ public class FileIOUtilitiesTest {
 
   @Test(expected = FileNotFoundException.class)
   public void writeToFileShouldThrowAnException() throws IOException, InvalidParameterException {
-    Path path = Paths.get("/notunitlikedirectory/");
+    Path path = Paths.get("/not_unix_like_directory/");
     fileIOUtilities.writeToFile(path.toFile(), "line1", "line2");
+  }
+
+  @Test
+  public void getValueFromConfigShouldReturnValueFromFile()
+      throws IOException, InvalidParameterException {
+    Path newDirectory = Paths.get("temp");
+
+    fileIOUtilities.createDirectory(newDirectory);
+    fileIOUtilities.createFile(Paths.get("temp/temp_file.txt"));
+    Path path = Paths.get("temp/temp_file.txt");
+
+    fileIOUtilities.writeToFile(path.toFile(), SettingsService.DB_HOST + "=0.0.0.0");
+
+    String value = fileIOUtilities.getValueFromConfig(SettingsService.DB_HOST, "=", path);
+
+    assertEquals("0.0.0.0", value);
+    fileIOUtilities.removeDirectory(newDirectory.toFile());
+  }
+
+  @Test
+  public void getValueFromConfigShouldReturnNull() throws IOException, InvalidParameterException {
+    Path newDirectory = Paths.get("temp");
+
+    fileIOUtilities.createDirectory(newDirectory);
+    fileIOUtilities.createFile(Paths.get("temp/temp_file.txt"));
+    Path path = Paths.get("temp/temp_file.txt");
+
+    fileIOUtilities.writeToFile(path.toFile(), "not_to_be_found_label" + "=any_value");
+
+    String value = fileIOUtilities.getValueFromConfig("label_not_to_be_found", "=", path);
+
+    assertNull(value);
+    fileIOUtilities.removeDirectory(newDirectory.toFile());
+  }
+
+  @Test
+  public void getAllDataBaseNamesFromConfigFileSShouldReturnDBName()
+      throws IOException, InvalidParameterException {
+
+    Path newDirectory = Paths.get("temp");
+
+    fileIOUtilities.createDirectory(newDirectory);
+    fileIOUtilities.createFile(Paths.get("temp/temp_file.txt"));
+    Path path = Paths.get("temp/temp_file.txt");
+
+    fileIOUtilities.writeToFile(path.toFile(), SettingsService.DB + "=data_base");
+
+    List<String> names = fileIOUtilities.getAllDataBaseNamesFromConfigFile(path);
+    assertEquals(1, names.size());
+    assertEquals("data_base", names.get(0));
+    fileIOUtilities.removeDirectory(newDirectory.toFile());
+  }
+
+  @Test
+  public void getAllDataBaseNamesFromConfigFileShouldReturnEmptyList()
+      throws IOException, InvalidParameterException {
+
+    Path newDirectory = Paths.get("temp");
+
+    fileIOUtilities.createDirectory(newDirectory);
+    fileIOUtilities.createFile(Paths.get("temp/temp_file.txt"));
+    Path path = Paths.get("temp/temp_file.txt");
+
+    List<String> names = fileIOUtilities.getAllDataBaseNamesFromConfigFile(path);
+    assertTrue(names.isEmpty());
+    fileIOUtilities.removeDirectory(newDirectory.toFile());
   }
 }

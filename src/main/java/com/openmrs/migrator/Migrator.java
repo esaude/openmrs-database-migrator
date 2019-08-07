@@ -41,6 +41,8 @@ public class Migrator implements Callable<Optional<Void>> {
 
   private String[] jobs = {"pdiresources/jobs/merge-patient-job.kjb"};
 
+  private Path settingProperties = Paths.get("settings.properties");
+
   private List<String> dirList =
       Arrays.asList(
           "input/",
@@ -122,11 +124,12 @@ public class Migrator implements Callable<Optional<Void>> {
 
   private void executeRunCommandLogic() throws FileNotFoundException, IOException {
 
-    String userConfigPassword = fileIOUtilities.getValueFromConfig(SettingsService.DB_PASS, "=");
+    String userConfigPassword =
+        fileIOUtilities.getValueFromConfig(SettingsService.DB_PASS, "=", settingProperties);
     int choice = ConsoleUtils.startMigrationAproach(console);
     List<String> alreadyLoadedDataBases =
         dataBaseService.runSQLCommand(
-            fileIOUtilities.getValueFromConfig(SettingsService.DB_USER, "="),
+            fileIOUtilities.getValueFromConfig(SettingsService.DB_USER, "=", settingProperties),
             userConfigPassword,
             "show databases");
 
@@ -150,7 +153,8 @@ public class Migrator implements Callable<Optional<Void>> {
             ConsoleUtils.getValidSelectedDataBase(
                 console,
                 dataBaseService.validateDataBaseNames(
-                    fileIOUtilities.getAllDataBaseNamesFromConfigFile(), alreadyLoadedDataBases));
+                    fileIOUtilities.getAllDataBaseNamesFromConfigFile(settingProperties),
+                    alreadyLoadedDataBases));
         if (selectDBName != null) {
           fileIOUtilities.setConnectionToKettleFile(selectDBName);
           runAllJobs();

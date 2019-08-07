@@ -9,6 +9,8 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -27,6 +29,8 @@ public class DataBaseServiceImpl implements DataBaseService {
 
   private final FileIOUtilities fileIOUtilities;
 
+  private Path settingProperties = Paths.get("settings.properties");
+
   @Autowired
   public DataBaseServiceImpl(
       CommandService commandService,
@@ -41,9 +45,9 @@ public class DataBaseServiceImpl implements DataBaseService {
   public void importDatabaseFile(String databaseName, String fileName) throws IOException {
     commandService.runCommand(
         "mysql",
-        "-u" + fileIOUtilities.getValueFromConfig(SettingsService.DB_USER, "="),
-        "-p" + fileIOUtilities.getValueFromConfig(SettingsService.DB_PASS, "="),
-        "-h" + fileIOUtilities.getValueFromConfig(SettingsService.DB_HOST, "="),
+        "-u" + fileIOUtilities.getValueFromConfig(SettingsService.DB_USER, "=", settingProperties),
+        "-p" + fileIOUtilities.getValueFromConfig(SettingsService.DB_PASS, "=", settingProperties),
+        "-h" + fileIOUtilities.getValueFromConfig(SettingsService.DB_HOST, "=", settingProperties),
         "-e",
         String.format("use %s; source %s;", databaseName, fileName));
   }

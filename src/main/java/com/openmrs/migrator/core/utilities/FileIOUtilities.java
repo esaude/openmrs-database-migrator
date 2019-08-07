@@ -244,11 +244,11 @@ public class FileIOUtilities {
     return file;
   }
 
-  public List<String> getAllDataBaseNamesFromConfigFile()
+  public List<String> getAllDataBaseNamesFromConfigFile(Path path)
       throws FileNotFoundException, IOException {
     logger.info("retrieving all data base  names in " + settingProperties + " file");
     List<String> names = new ArrayList<>();
-    try (BufferedReader br = new BufferedReader(new FileReader(settingProperties.toFile()))) {
+    try (BufferedReader br = new BufferedReader(new FileReader(path.toFile()))) {
       String line;
       while ((line = br.readLine()) != null) {
         if (line.contains(SettingsService.DB)) {
@@ -274,10 +274,10 @@ public class FileIOUtilities {
     return Files.list(path).collect(Collectors.toList());
   }
 
-  public String getValueFromConfig(String key, String separator) throws IOException {
+  public String getValueFromConfig(String key, String separator, Path path) throws IOException {
     String line;
     String value = null;
-    try (BufferedReader bw = new BufferedReader(new FileReader(settingProperties.toFile()))) {
+    try (BufferedReader bw = new BufferedReader(new FileReader(path.toFile()))) {
 
       while ((line = bw.readLine()) != null) {
         if (line.contains(key)) {
