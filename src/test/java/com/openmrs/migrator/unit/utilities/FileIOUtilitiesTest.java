@@ -31,7 +31,7 @@ public class FileIOUtilitiesTest {
 
   @Autowired private FileIOUtilities fileIOUtilities;
 
-  @Autowired SettingsService settingsService;
+  @Autowired private SettingsService settingsService;
 
   private String stream = "pdiresources/jobs/job.kjb";
 
