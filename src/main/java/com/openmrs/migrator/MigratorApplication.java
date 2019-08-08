@@ -1,14 +1,15 @@
 package com.openmrs.migrator;
 
+import com.openmrs.migrator.core.exceptions.SettingsException;
 import com.openmrs.migrator.core.services.BootstrapService;
 import com.openmrs.migrator.core.services.PDIService;
+import com.openmrs.migrator.core.services.SettingsService;
 import com.openmrs.migrator.core.utilities.FileIOUtilities;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import org.pentaho.di.core.exception.KettleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,7 @@ public class MigratorApplication implements CommandLineRunner {
 
   private FileIOUtilities fileIOUtilities;
 
-  private String[] jobs = {"pdiresources/jobs/merge-patient-job.kjb"};
+  private String[] jobs = {SettingsService.PDI_RESOURCES_DIR + "/jobs/merge-patient-job.kjb"};
 
   private List<String> dirList =
       Arrays.asList(
@@ -52,7 +53,9 @@ public class MigratorApplication implements CommandLineRunner {
 
   // TODO: to be replaced with PICOCLI
   @Override
-  public void run(String... args) throws IOException {
+  public void run(String... args) throws Exception {
+    LOG.info("EXECUTING : command line runner");
+
     for (int i = 0; i < args.length; ++i) {
       LOG.info("args[{}]: {}", i, args[i]);
     }
@@ -69,14 +72,14 @@ public class MigratorApplication implements CommandLineRunner {
     }
   }
 
-  private void runAllJobs() throws IOException {
+  private void runAllJobs() throws Exception {
     try {
       for (String t : jobs) {
 
         InputStream xml = fileIOUtilities.getResourceAsStream(t);
         pdiService.runJob(xml);
       }
-    } catch (KettleException e) {
+    } catch (SettingsException e) {
       // Do nothing kettle prints stack trace
     }
   }

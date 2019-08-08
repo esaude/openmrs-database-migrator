@@ -1,8 +1,10 @@
 package com.openmrs.migrator.unit.utilities;
 
 import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
 
 import com.openmrs.migrator.core.exceptions.InvalidParameterException;
+import com.openmrs.migrator.core.services.SettingsService;
 import com.openmrs.migrator.core.utilities.FileIOUtilities;
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,7 +26,7 @@ public class FileIOUtilitiesTest {
 
   @Autowired private FileIOUtilities fileIOUtilities;
 
-  private String stream = "pdiresources/jobs/job.kjb";
+  private String stream = SettingsService.PDI_RESOURCES_DIR + "/jobs/job.kjb";
 
   @Test
   public void getValidResourceAsStream() throws IOException {

@@ -44,7 +44,7 @@ public class FileIOUtilities {
    * @throws IOException if the resource could not be found
    */
   public InputStream getResourceAsStream(String resource) throws IOException {
-    InputStream resourceAsStream = getClass().getResourceAsStream("/" + resource);
+    InputStream resourceAsStream = getClass().getResourceAsStream(File.separator + resource);
     if (resourceAsStream == null) {
       throw new IOException("Could not load resource " + resource);
     }
