@@ -5,15 +5,16 @@ import com.openmrs.migrator.core.services.BootstrapService;
 import com.openmrs.migrator.core.services.DataBaseService;
 import com.openmrs.migrator.core.services.PDIService;
 import com.openmrs.migrator.core.services.SettingsService;
+import com.openmrs.migrator.core.services.impl.MySQLProps;
 import com.openmrs.migrator.core.utilities.ConsoleUtils;
 import com.openmrs.migrator.core.utilities.FileIOUtilities;
 import java.io.Console;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -43,7 +44,7 @@ public class Migrator implements Callable<Optional<Void>> {
 
   private String[] jobs = {"pdiresources/jobs/merge-patient-job.kjb"};
 
-  private Path settingProperties = Paths.get("settings.properties");
+  private Path settingProperties = Paths.get(SettingsService.SETTINGS_PROPERTIES);
 
   private List<String> dirList =
       Arrays.asList(
@@ -83,7 +84,7 @@ public class Migrator implements Callable<Optional<Void>> {
   }
 
   @Override
-  public Optional<Void> call() throws IOException, InterruptedException, SettingsException {
+  public Optional<Void> call() throws IOException, SQLException, SettingsException {
 
     if (setup) {
       executeSetupCommand();
@@ -120,23 +121,29 @@ public class Migrator implements Callable<Optional<Void>> {
 
     pdiFiles.add("pdiresources/jobs/merge-patient-job.kjb");
     pdiFiles.add("pdiresources/transformations/merge-patient.ktr");
-    pdiFiles.add("settings.properties");
+    pdiFiles.add(SettingsService.SETTINGS_PROPERTIES);
 
     bootstrapService.createDirectoryStructure(dirList);
     bootstrapService.populateDefaultResources(pdiFiles);
   }
 
-  private void executeRunCommandLogic()
-      throws FileNotFoundException, IOException, SettingsException {
+  private MySQLProps getMysqlConn() throws IOException {
+    return new MySQLProps(
+        fileIOUtilities.getValueFromConfig(SettingsService.DB_HOST, "=", settingProperties),
+        fileIOUtilities.getValueFromConfig(SettingsService.DB_PORT, "=", settingProperties),
+        fileIOUtilities.getValueFromConfig(SettingsService.DB_USER, "=", settingProperties),
+        fileIOUtilities.getValueFromConfig(SettingsService.DB_PASS, "=", settingProperties),
+        fileIOUtilities.getValueFromConfig(SettingsService.DB, "=", settingProperties));
+  }
 
-    String userConfigPassword =
-        fileIOUtilities.getValueFromConfig(SettingsService.DB_PASS, "=", settingProperties);
+  private void executeRunCommandLogic() throws SQLException, IOException, SettingsException {
+
+    MySQLProps mySQLProps = getMysqlConn();
+    mySQLProps.setIncludeDbOntoUrl(false);
     int choice = ConsoleUtils.startMigrationAproach(console);
     List<String> alreadyLoadedDataBases =
-        dataBaseService.runSQLCommand(
-            fileIOUtilities.getValueFromConfig(SettingsService.DB_USER, "=", settingProperties),
-            userConfigPassword,
-            "show databases");
+        dataBaseService.oneColumnSQLSelectorCommand(mySQLProps, "show databases", "Database");
+    mySQLProps.setIncludeDbOntoUrl(true);
     File kettleFile = fileIOUtilities.getKettlePropertiesLocation();
 
     switch (choice) {
@@ -188,7 +195,7 @@ public class Migrator implements Callable<Optional<Void>> {
 
         String databaseName = ConsoleUtils.getChosenDBName(console);
 
-        dataBaseService.importDatabaseFile(databaseName, sqlDumpFile);
+        dataBaseService.importDatabaseFile(sqlDumpFile, mySQLProps);
         fileIOUtilities.setConnectionToKettleFile(databaseName, settingProperties, kettleFile);
         runAllJobs();
 

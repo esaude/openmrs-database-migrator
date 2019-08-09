@@ -1,9 +1,11 @@
 package com.openmrs.migrator.unit.core.services;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import com.openmrs.migrator.core.exceptions.InvalidParameterException;
 import com.openmrs.migrator.core.services.BootstrapService;
+import com.openmrs.migrator.core.services.SettingsService;
 import com.openmrs.migrator.core.utilities.FileIOUtilities;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -31,12 +33,10 @@ public class BootstrapServiceTest {
       Arrays.asList(
           "input", "output", "pdiresources", "pdiresources/transformations", "pdiresources/jobs");
 
-  private String settingsFile = "settings.properties";
-
   @Before
   public void setUp() throws IOException, InvalidParameterException {
     fileIOUtils.removeAllDirectories(folders);
-    fileIOUtils.removeDirectory(Paths.get(settingsFile).toFile());
+    fileIOUtils.removeDirectory(Paths.get(SettingsService.SETTINGS_PROPERTIES).toFile());
   }
 
   @Test
@@ -56,7 +56,7 @@ public class BootstrapServiceTest {
     List<String> pdiFiles = new ArrayList<>();
     pdiFiles.add("pdiresources/jobs/job.kjb");
     pdiFiles.add("pdiresources/transformations/transformation.ktr");
-    pdiFiles.add(settingsFile);
+    pdiFiles.add(SettingsService.SETTINGS_PROPERTIES);
 
     boolean result = bootstrapService.populateDefaultResources(pdiFiles);
 
@@ -84,6 +84,6 @@ public class BootstrapServiceTest {
   @After
   public void cleanUp() throws IOException, InvalidParameterException {
     fileIOUtils.removeAllDirectories(folders);
-    fileIOUtils.removeDirectory(Paths.get(settingsFile).toFile());
+    fileIOUtils.removeDirectory(Paths.get(SettingsService.SETTINGS_PROPERTIES).toFile());
   }
 }

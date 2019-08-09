@@ -113,7 +113,7 @@ public class FileIOUtilitiesTest {
 
   @Test
   public void copyFileFromResourcesShouldSucceed() throws IOException, InvalidParameterException {
-    Path file = Paths.get("settings.properties");
+    Path file = Paths.get(SettingsService.SETTINGS_PROPERTIES);
     fileIOUtilities.copyFileFromResources(file.toFile().getName());
 
     assertTrue(Files.exists(file));

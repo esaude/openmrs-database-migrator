@@ -1,5 +1,6 @@
 package com.openmrs.migrator.core.services;
 
+import com.openmrs.migrator.core.services.impl.MySQLProps;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -9,26 +10,18 @@ import java.util.Set;
 
 public interface DataBaseService {
 
-  void importDatabaseFile(String databaseName, String fileName) throws IOException;
+  void importDatabaseFile(String fileName, MySQLProps mySQLProps) throws SQLException, IOException;
 
-  void createDatabase(String databaseName);
+  void createDatabase(MySQLProps mySQLProps) throws SQLException;
 
-  List<String> runSQLCommand(String username, String password, String sqlCommand)
-      throws IOException;
+  List<String> oneColumnSQLSelectorCommand(MySQLProps mySQLProps, String sqlCommand, String column)
+      throws IOException, SQLException;
 
   Set<String> validateDataBaseNames(List<String> fromConfig, List<String> fromMySql)
       throws FileNotFoundException, IOException;
 
-  boolean testConnection(
-      String host, String port, String database, String username, String password)
-      throws SQLException;
+  boolean testConnection(MySQLProps mySQLProps) throws SQLException;
 
-  void loadDatabaseBackups(
-      String host,
-      String port,
-      String[] databases,
-      File backupsFolder,
-      String username,
-      String password)
+  void loadDatabaseBackups(MySQLProps mySQLProps, String[] databases, File backupsFolder)
       throws SQLException, IOException;
 }

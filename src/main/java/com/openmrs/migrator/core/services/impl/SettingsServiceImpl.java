@@ -4,17 +4,6 @@ import com.openmrs.migrator.core.exceptions.SettingsException;
 import com.openmrs.migrator.core.services.DataBaseService;
 import com.openmrs.migrator.core.services.SettingsService;
 import com.openmrs.migrator.core.utilities.FileIOUtilities;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.sql.SQLException;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
 import org.apache.commons.lang.StringUtils;
 import org.pentaho.di.core.KettleEnvironment;
 import org.pentaho.di.core.exception.KettleException;
@@ -24,6 +13,19 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+
 @Component
 public class SettingsServiceImpl implements SettingsService {
 
@@ -32,6 +34,8 @@ public class SettingsServiceImpl implements SettingsService {
   @Autowired private FileIOUtilities fileIOUtilities;
 
   @Autowired private DataBaseService dataBaseService;
+
+  private Path settingProperties = Paths.get(SettingsService.SETTINGS_PROPERTIES);
 
   public void fillConfigFile(Path target, Map<String, String> connDB) throws IOException {
 
@@ -68,8 +72,8 @@ public class SettingsServiceImpl implements SettingsService {
       String dbsLoaded = props.getProperty(SettingsService.DBS_ALREADY_LOADED);
       String dbsBackups = props.getProperty(SettingsService.DBS_BACKUPS);
       String dbsBackupsFolder = props.getProperty(SettingsService.DBS_BACKUPS_DIRECTORY);
-      if ("false".equals(testConnection)
-          || dataBaseService.testConnection(host, port, db, user, pass)) {
+      MySQLProps mysqlOpts = new MySQLProps(host, port, user, pass, db);
+      if ("false".equals(testConnection) || dataBaseService.testConnection(mysqlOpts)) {
         // load database backups
         if (StringUtils.isNotBlank(dbsBackupsFolder)
             && StringUtils.isNotBlank(dbsBackups)
@@ -77,8 +81,7 @@ public class SettingsServiceImpl implements SettingsService {
           File backupsFolder = new File(dbsBackupsFolder);
 
           if (backupsFolder.exists()) {
-            dataBaseService.loadDatabaseBackups(
-                host, port, dbsBackups.split(","), backupsFolder, user, pass);
+            dataBaseService.loadDatabaseBackups(mysqlOpts, dbsBackups.split(","), backupsFolder);
             // TODO fix these 2 lines below
             props.setProperty(SettingsService.DBS_ALREADY_LOADED, "true");
             props.store(

@@ -30,7 +30,7 @@ public class FileIOUtilities {
 
   private static Logger logger = LoggerFactory.getLogger(FileIOUtilities.class);
   private static final String UPLOADED_FOLDER = "~";
-  private Path settingProperties = Paths.get("settings.properties");
+  private Path settingProperties = Paths.get(SettingsService.SETTINGS_PROPERTIES);
   private final String KETTLE_PROPERTIES = "kettle.properties";
   private final String KETTLE_DIR = ".kettle";
 

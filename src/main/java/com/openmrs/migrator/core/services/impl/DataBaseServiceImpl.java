@@ -4,29 +4,25 @@ import com.ibatis.common.jdbc.ScriptRunner;
 import com.openmrs.migrator.core.config.ConfigurationStore;
 import com.openmrs.migrator.core.services.CommandService;
 import com.openmrs.migrator.core.services.DataBaseService;
-import com.openmrs.migrator.core.services.SettingsService;
 import com.openmrs.migrator.core.utilities.FileIOUtilities;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.Reader;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 /** Database operations */
 @Service
@@ -37,8 +33,6 @@ public class DataBaseServiceImpl implements DataBaseService {
   private final ConfigurationStore configurationStore;
 
   private final FileIOUtilities fileIOUtilities;
-
-  private Path settingProperties = Paths.get("settings.properties");
 
   @Autowired
   public DataBaseServiceImpl(
@@ -51,41 +45,32 @@ public class DataBaseServiceImpl implements DataBaseService {
   }
 
   @Override
-  public void importDatabaseFile(String databaseName, String fileName) throws IOException {
-    commandService.runCommand(
-        "mysql",
-        "-u" + fileIOUtilities.getValueFromConfig(SettingsService.DB_USER, "=", settingProperties),
-        "-p" + fileIOUtilities.getValueFromConfig(SettingsService.DB_PASS, "=", settingProperties),
-        "-h" + fileIOUtilities.getValueFromConfig(SettingsService.DB_HOST, "=", settingProperties),
-        "-e",
-        String.format("use %s; source %s;", databaseName, fileName));
+  public void importDatabaseFile(String fileName, MySQLProps mySQLProps)
+      throws SQLException, IOException {
+    loadDatabase(new File(fileName), mySQLProps);
   }
 
   @Override
-  public void createDatabase(String databaseName) {
-    commandService.runCommand(
-        "mysql",
-        "-u" + configurationStore.getDatabaseUser(),
-        "-p" + configurationStore.getDatabasePassword(),
-        "-h" + configurationStore.getDatabaseHost(),
-        "-e",
+  public void createDatabase(MySQLProps mySQLProps) throws SQLException {
+    mySQLProps.setIncludeDbOntoUrl(false);
+    runSQLUpdate(
+        mySQLProps,
         String.format(
-            "drop database if exists %s; create database %s;", databaseName, databaseName));
+            "drop database if exists %s; create database %s;",
+            mySQLProps.getDb(), mySQLProps.getDb()));
+    mySQLProps.setIncludeDbOntoUrl(true);
   }
 
   @Override
-  public List<String> runSQLCommand(String username, String password, String sqlCommand)
-      throws IOException {
-    Process p =
-        Runtime.getRuntime()
-            .exec(new String[] {"mysql", "-u", username, "-p" + password, "-e", sqlCommand});
-
-    String result =
-        new BufferedReader(new InputStreamReader(p.getInputStream()))
-            .lines()
-            .collect(Collectors.joining(","));
-
-    return Arrays.asList(result.split(","));
+  public List<String> oneColumnSQLSelectorCommand(
+      MySQLProps mySQLProps, String sqlCommand, String column) throws IOException, SQLException {
+    List<String> results = new ArrayList<>();
+    ResultSet res = runExecuteSQL(mySQLProps, sqlCommand);
+    while (res.next()) {
+      results.add(res.getString(column));
+    }
+    res.close();
+    return results;
   }
 
   @Override
@@ -122,41 +107,52 @@ public class DataBaseServiceImpl implements DataBaseService {
   }
 
   @Override
-  public boolean testConnection(
-      String host, String port, String database, String username, String password)
-      throws SQLException {
-    Boolean results =
-        executeMySQLStatement(getConnection(host, port, database, username, password), "select 1");
+  public boolean testConnection(MySQLProps mySQLProps) throws SQLException {
+    Boolean results = executeMySQLStatement(getConnection(mySQLProps), "select 1");
     return results != null ? results : false;
   }
 
-  private Connection getConnection(
-      String host, String port, String database, String username, String password)
-      throws SQLException {
+  private Connection getConnection(MySQLProps mySQLProps) throws SQLException {
     return DriverManager.getConnection(
-        String.format("jdbc:mysql://%s:%s/%s", host, port, database), username, password);
+        String.format(
+            "jdbc:mysql://%s:%s/%s",
+            mySQLProps.getHost(),
+            mySQLProps.getPort(),
+            mySQLProps.includeDbOntoUrl() ? mySQLProps.getDb() : ""),
+        mySQLProps.getUsername(),
+        mySQLProps.getPassword());
   }
 
   @Override
-  public void loadDatabaseBackups(
-      String host,
-      String port,
-      String[] databases,
-      File backupsFolder,
-      String username,
-      String password)
+  public void loadDatabaseBackups(MySQLProps mySQLProps, String[] databases, File backupsFolder)
       throws SQLException, IOException {
     for (String db : databases) {
       File dbPath = new File(backupsFolder.getAbsolutePath() + File.separator + db + ".sql");
-      if (dbPath.exists()) {
-        Statement statement = getConnection(host, port, "", username, password).createStatement();
-        statement.executeUpdate(String.format("CREATE DATABASE IF NOT EXISTS %s", db));
-        statement.close();
-        ScriptRunner sr =
-            new ScriptRunner(getConnection(host, port, db, username, password), false, false);
-        Reader reader = new BufferedReader(new FileReader(dbPath));
-        sr.runScript(reader);
-      }
+      loadDatabase(dbPath, mySQLProps);
     }
+  }
+
+  private void loadDatabase(File dbPath, MySQLProps mySQLProps) throws SQLException, IOException {
+    if (dbPath.exists()) {
+      mySQLProps.setIncludeDbOntoUrl(false);
+      runSQLUpdate(
+          mySQLProps, String.format("CREATE DATABASE IF NOT EXISTS %s", mySQLProps.getDb()));
+      mySQLProps.setIncludeDbOntoUrl(true);
+      ScriptRunner sr = new ScriptRunner(getConnection(mySQLProps), false, false);
+      Reader reader = new BufferedReader(new FileReader(dbPath));
+      sr.runScript(reader);
+    }
+  }
+
+  private void runSQLUpdate(MySQLProps mySQLProps, String sql) throws SQLException {
+    Statement statement = getConnection(mySQLProps).createStatement();
+    statement.executeUpdate(sql);
+    statement.close();
+  }
+
+  private ResultSet runExecuteSQL(MySQLProps mySQLProps, String sql) throws SQLException {
+    Statement statement = getConnection(mySQLProps).createStatement();
+    statement.executeUpdate(sql);
+    return statement.executeQuery(sql);
   }
 }
