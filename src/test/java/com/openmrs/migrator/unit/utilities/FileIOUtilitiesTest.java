@@ -33,7 +33,7 @@ public class FileIOUtilitiesTest {
 
   @Autowired private SettingsService settingsService;
 
-  private String stream = "pdiresources/jobs/job.kjb";
+  private String stream = SettingsService.PDI_RESOURCES_DIR + "/jobs/job.kjb";
 
   @Test
   public void getValidResourceAsStream() throws IOException {

@@ -1,5 +1,6 @@
 package com.openmrs.migrator.core.services;
 
+import com.openmrs.migrator.core.exceptions.SettingsException;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Map;
@@ -33,4 +34,6 @@ public interface SettingsService {
   void fillConfigFile(Path target, Map<String, String> connDB) throws IOException;
 
   void addSettingToConfigFile(Path target, String labelName, String configVaule) throws IOException;
+
+  void initializeKettleEnvironment() throws SettingsException;
 }

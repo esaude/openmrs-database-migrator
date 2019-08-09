@@ -1,5 +1,6 @@
 package com.openmrs.migrator;
 
+import com.openmrs.migrator.core.exceptions.SettingsException;
 import com.openmrs.migrator.core.services.BootstrapService;
 import com.openmrs.migrator.core.services.DataBaseService;
 import com.openmrs.migrator.core.services.PDIService;
@@ -20,7 +21,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.Callable;
-import org.pentaho.di.core.exception.KettleException;
 import org.springframework.beans.factory.annotation.Autowired;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
@@ -83,7 +83,7 @@ public class Migrator implements Callable<Optional<Void>> {
   }
 
   @Override
-  public Optional<Void> call() throws IOException, InterruptedException {
+  public Optional<Void> call() throws IOException, InterruptedException, SettingsException {
 
     if (setup) {
       executeSetupCommand();
@@ -103,14 +103,14 @@ public class Migrator implements Callable<Optional<Void>> {
     return Optional.empty();
   }
 
-  private void runAllJobs() throws IOException {
+  private void runAllJobs() throws IOException, SettingsException {
     try {
       for (String t : jobs) {
 
         InputStream xml = fileIOUtilities.getResourceAsStream(t);
         pdiService.runJob(xml);
       }
-    } catch (KettleException e) {
+    } catch (SettingsException e) {
       // Do nothing kettle prints stack trace
     }
   }
@@ -126,7 +126,8 @@ public class Migrator implements Callable<Optional<Void>> {
     bootstrapService.populateDefaultResources(pdiFiles);
   }
 
-  private void executeRunCommandLogic() throws FileNotFoundException, IOException {
+  private void executeRunCommandLogic()
+      throws FileNotFoundException, IOException, SettingsException {
 
     String userConfigPassword =
         fileIOUtilities.getValueFromConfig(SettingsService.DB_PASS, "=", settingProperties);
