@@ -1,14 +1,14 @@
 package com.openmrs.migrator.unit.utilities;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import com.openmrs.migrator.core.exceptions.InvalidParameterException;
 import com.openmrs.migrator.core.services.SettingsService;
 import com.openmrs.migrator.core.utilities.FileIOUtilities;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -18,17 +18,14 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -322,61 +319,6 @@ public class FileIOUtilitiesTest {
     Optional<String> name = fileIOUtilities.searchForDataBaseNameInSettingsFile("fgh", path);
 
     assertFalse(name.isPresent());
-
-    fileIOUtilities.removeDirectory(newDirectory.toFile());
-  }
-
-  @Test
-  public void setConnectionToKettleFileShouldWriteToKettleFile()
-      throws IOException, InvalidParameterException {
-
-    Path newDirectory = Paths.get("temp");
-    fileIOUtilities.createDirectory(newDirectory);
-
-    Path settingPropeties = Paths.get("temp/setting.propeties");
-    Path kettleFile = Paths.get("temp/kettle.propeties");
-
-    fileIOUtilities.createFile(settingPropeties);
-    fileIOUtilities.createFile(kettleFile);
-
-    Map<String, String> connectionMap = new HashMap<>();
-    connectionMap.put(SettingsService.DB_USER, "user");
-    connectionMap.put(SettingsService.DB_PASS, "pass");
-    connectionMap.put(SettingsService.DB_HOST, "localhost");
-    connectionMap.put(SettingsService.DB_PORT, "1234");
-    connectionMap.put(SettingsService.DB_TEST_CONNECTION, "false");
-    connectionMap.put(SettingsService.DBS_BACKUPS_DIRECTORY, "/input");
-
-    settingsService.fillConfigFile(settingPropeties, connectionMap);
-
-    assertEquals(6, Files.lines(settingPropeties).count());
-    assertEquals(
-        "user", fileIOUtilities.getValueFromConfig(SettingsService.DB_USER, "=", settingPropeties));
-    assertEquals(
-        "pass", fileIOUtilities.getValueFromConfig(SettingsService.DB_PASS, "=", settingPropeties));
-    assertEquals(
-        "localhost",
-        fileIOUtilities.getValueFromConfig(SettingsService.DB_HOST, "=", settingPropeties));
-    assertEquals(
-        "1234", fileIOUtilities.getValueFromConfig(SettingsService.DB_PORT, "=", settingPropeties));
-    assertEquals(
-        "false",
-        fileIOUtilities.getValueFromConfig(
-            SettingsService.DB_TEST_CONNECTION, "=", settingPropeties));
-    assertEquals(
-        "/input",
-        fileIOUtilities.getValueFromConfig(
-            SettingsService.DBS_BACKUPS_DIRECTORY, "=", settingPropeties));
-
-    fileIOUtilities.setConnectionToKettleFile("icap", settingPropeties, kettleFile.toFile());
-    assertEquals(
-        "user", fileIOUtilities.getValueFromConfig(SettingsService.DB_USER, "=", kettleFile));
-    assertEquals(
-        "pass", fileIOUtilities.getValueFromConfig(SettingsService.DB_PASS, "=", kettleFile));
-    assertEquals(
-        "localhost", fileIOUtilities.getValueFromConfig(SettingsService.DB_HOST, "=", kettleFile));
-    assertEquals(
-        "1234", fileIOUtilities.getValueFromConfig(SettingsService.DB_PORT, "=", kettleFile));
 
     fileIOUtilities.removeDirectory(newDirectory.toFile());
   }

@@ -11,7 +11,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -33,11 +32,6 @@ public class FileIOUtilities {
   private Path settingProperties = Paths.get(SettingsService.SETTINGS_PROPERTIES);
   private final String KETTLE_PROPERTIES = "kettle.properties";
   private final String KETTLE_DIR = ".kettle";
-
-  private String username;
-  private String password;
-  private String host;
-  private String port;
 
   public void UploadFile(MultipartFile file) throws EmptyFileException {
     if (file.isEmpty()) {
@@ -190,40 +184,6 @@ public class FileIOUtilities {
       }
       return Optional.empty();
     }
-  }
-
-  public void setConnectionToKettleFile(String dataBaseName, Path source, File target)
-      throws IOException {
-    logger.info("Setting the database source  connections to the kettle.properties file");
-
-    Path kettlePath = target.toPath();
-
-    Files.readAllLines(source)
-        .forEach(
-            configLine -> {
-              if (configLine.contains(SettingsService.DB_USER)) {
-                username = configLine.split("=")[1];
-              }
-              if (configLine.contains(SettingsService.DB_PASS)) {
-                password = configLine.split("=")[1];
-              }
-              if (configLine.contains(SettingsService.DB_HOST)) {
-                host = configLine.split("=")[1];
-              }
-              if (configLine.contains(SettingsService.DB_PORT)) {
-                port = configLine.split("=")[1];
-              }
-            });
-
-    new PrintWriter(kettlePath.toFile()).close();
-
-    writeToFile(
-        kettlePath.toFile(),
-        SettingsService.DB + "=" + dataBaseName,
-        SettingsService.DB_HOST + "=" + host,
-        SettingsService.DB_PORT + "=" + port,
-        SettingsService.DB_USER + "=" + username,
-        SettingsService.DB_PASS + "=" + password);
   }
 
   public File getKettlePropertiesLocation() throws IOException {

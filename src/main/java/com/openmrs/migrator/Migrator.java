@@ -9,7 +9,6 @@ import com.openmrs.migrator.core.services.impl.MySQLProps;
 import com.openmrs.migrator.core.utilities.ConsoleUtils;
 import com.openmrs.migrator.core.utilities.FileIOUtilities;
 import java.io.Console;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
@@ -145,8 +144,6 @@ public class Migrator implements Callable<Optional<Void>> {
     List<String> alreadyLoadedDataBases =
         dataBaseService.oneColumnSQLSelectorCommand(mySQLProps, "show databases", "Database");
     mySQLProps.setIncludeDbOntoUrl(true);
-    File settingsFile = settingProperties.toFile();
-
     switch (choice) {
       case 1:
         {
@@ -158,10 +155,8 @@ public class Migrator implements Callable<Optional<Void>> {
           if (!storedDataBaseName.isPresent()) {
             if (ConsoleUtils.isConnectionIsToBeStored(console)) {
               settingsService.addSettingToConfigFile(
-                  settingProperties, SettingsService.DB, providedDataBaseName.get());
+                  settingProperties, SettingsService.DB, 2, providedDataBaseName.get());
             }
-            fileIOUtilities.setConnectionToKettleFile(
-                providedDataBaseName.get(), settingProperties, settingsFile);
           }
           runAllJobs();
           break;
@@ -175,8 +170,6 @@ public class Migrator implements Callable<Optional<Void>> {
                       fileIOUtilities.getAllDataBaseNamesFromConfigFile(settingProperties),
                       alreadyLoadedDataBases));
           if (selectDBName != null) {
-            fileIOUtilities.setConnectionToKettleFile(
-                selectDBName, settingProperties, settingsFile);
             runAllJobs();
           }
 
@@ -186,7 +179,6 @@ public class Migrator implements Callable<Optional<Void>> {
         {
           String dbName =
               ConsoleUtils.getValidSelectedDataBase(console, new HashSet<>(alreadyLoadedDataBases));
-          fileIOUtilities.setConnectionToKettleFile(dbName, settingProperties, settingsFile);
           runAllJobs();
           break;
         }
@@ -204,11 +196,7 @@ public class Migrator implements Callable<Optional<Void>> {
           if (sqlDumpFile == null) {
             break;
           }
-
-          String databaseName = ConsoleUtils.getChosenDBName(console);
-
           dataBaseService.importDatabaseFile(sqlDumpFile, mySQLProps);
-          fileIOUtilities.setConnectionToKettleFile(databaseName, settingProperties, settingsFile);
           runAllJobs();
 
           break;
@@ -220,13 +208,5 @@ public class Migrator implements Callable<Optional<Void>> {
           break;
         }
     }
-  }
-
-  private String combinePathsIntoString(List<Path> paths) {
-    String combined = "";
-    for (Path p : paths) {
-      combined += (combined == "" ? "" : ",") + p.getFileName();
-    }
-    return combined;
   }
 }

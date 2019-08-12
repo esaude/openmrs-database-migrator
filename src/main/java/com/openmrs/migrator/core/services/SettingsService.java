@@ -29,7 +29,8 @@ public interface SettingsService {
 
   void fillConfigFile(Path target, Map<String, String> connDB) throws IOException;
 
-  void addSettingToConfigFile(Path target, String labelName, String configVaule) throws IOException;
+  void addSettingToConfigFile(Path target, String labelName, int lineNumber, String configVaule)
+      throws IOException;
 
   void initializeKettleEnvironment() throws SettingsException;
 }

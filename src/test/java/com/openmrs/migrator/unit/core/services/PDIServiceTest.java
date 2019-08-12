@@ -7,8 +7,11 @@ import com.openmrs.migrator.core.exceptions.SettingsException;
 import com.openmrs.migrator.core.services.PDIService;
 import com.openmrs.migrator.core.services.SettingsService;
 import com.openmrs.migrator.core.utilities.FileIOUtilities;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +42,14 @@ public class PDIServiceTest {
   @Test
   public void runJobSuccess() throws SettingsException {
     boolean runnedCorrectly = pdiService.runJob(streamWithValidJob);
+    assertTrue(runnedCorrectly);
+  }
+
+  @Ignore
+  public void runMainJob() throws SettingsException, IOException {
+    boolean runnedCorrectly =
+        pdiService.runJob(
+            new FileInputStream("src/main/resources/pdiresources/jobs/control-center.kjb"));
     assertTrue(runnedCorrectly);
   }
 

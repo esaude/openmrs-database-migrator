@@ -38,11 +38,11 @@ If you find yourself with linting exceptions, to automatically resolve all issue
 
 First create the merge database:
 
-    CREATE DATABASE merge_db CHAR SET uf8;
+    CREATE DATABASE ${ETL_SOURCE_DATABASE} CHAR SET uf8;
 
-Then load one of the dumps into `merge_db`. After that run the following script:
+Then load one of the dumps into `${ETL_SOURCE_DATABASE}`. After that run the following script:
 
-    use merge_db;
+    use ${ETL_SOURCE_DATABASE};
 
     insert into person_attribute_type
         (name, description, searchable, creator, date_created, retired, uuid) values
@@ -60,7 +60,7 @@ To list available subcommands run:
 
     java -jar migrator.jar -h
 
-This will run PDI transformations using `ETL_SOURCE_DATABASE` as the input database. The output will be saved in a database called `merge_db`.
+This will run PDI transformations using `ETL_SOURCE_DATABASE` as the input database. The output will be saved in a database called `${ETL_SOURCE_DATABASE}`.
 
 ### Configuration
 

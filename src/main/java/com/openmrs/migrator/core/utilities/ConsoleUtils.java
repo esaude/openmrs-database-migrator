@@ -79,12 +79,6 @@ public class ConsoleUtils {
     console.writer().println("Unavailable Option");
   }
 
-  private static String readValueFromConsole(Console console, String message, String name) {
-    checkConsoleAvailability(console);
-    console.writer().println(message);
-    return console.readLine();
-  }
-
   public static Map<String, String> readSettingsFromConsole(Console console) {
     checkConsoleAvailability(console);
 

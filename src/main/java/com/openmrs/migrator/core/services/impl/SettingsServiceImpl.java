@@ -4,6 +4,8 @@ import com.openmrs.migrator.core.exceptions.SettingsException;
 import com.openmrs.migrator.core.services.DataBaseService;
 import com.openmrs.migrator.core.services.SettingsService;
 import com.openmrs.migrator.core.utilities.FileIOUtilities;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -44,19 +46,23 @@ public class SettingsServiceImpl implements SettingsService {
             + connDB.get(SettingsService.DBS_BACKUPS_DIRECTORY));
   }
 
-  public void addSettingToConfigFile(Path target, String labelName, String configVaule)
-      throws IOException {
+  public void addSettingToConfigFile(
+      Path target, String labelName, int lineNumber, String configVaule) throws IOException {
     logger.info("Adding " + labelName + ":" + configVaule + " in config file");
 
     List<String> lines = Files.readAllLines(target);
-    lines.add(labelName + "=" + configVaule);
+    lines.add(lineNumber - 1, labelName + "=" + configVaule);
     Files.write(target, lines, StandardCharsets.UTF_8);
   }
 
   public void initializeKettleEnvironment() throws SettingsException {
     try {
       Properties props = new Properties();
-      InputStream is = fileIOUtilities.getResourceAsStream(SettingsService.SETTINGS_PROPERTIES);
+      File settingsFile = new File(SettingsService.SETTINGS_PROPERTIES);
+      InputStream is =
+          settingsFile.exists()
+              ? new FileInputStream(settingsFile)
+              : fileIOUtilities.getResourceAsStream(SettingsService.SETTINGS_PROPERTIES);
       props.load(is);
       is.close();
 
@@ -71,7 +77,7 @@ public class SettingsServiceImpl implements SettingsService {
         // initialize kettle environment
         KettleEnvironment.init();
 
-        // apply our props to default settings.properties
+        // apply our props from default settings.properties
         EnvUtil.applyKettleProperties(props, true);
       }
     } catch (IOException | SQLException | KettleException e) {
