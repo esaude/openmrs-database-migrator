@@ -4,7 +4,15 @@ import com.openmrs.migrator.core.exceptions.SettingsException;
 import com.openmrs.migrator.core.services.DataBaseService;
 import com.openmrs.migrator.core.services.SettingsService;
 import com.openmrs.migrator.core.utilities.FileIOUtilities;
-import org.apache.commons.lang.StringUtils;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 import org.pentaho.di.core.KettleEnvironment;
 import org.pentaho.di.core.exception.KettleException;
 import org.pentaho.di.core.util.EnvUtil;
@@ -12,19 +20,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.sql.SQLException;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
 
 @Component
 public class SettingsServiceImpl implements SettingsService {
@@ -35,16 +30,18 @@ public class SettingsServiceImpl implements SettingsService {
 
   @Autowired private DataBaseService dataBaseService;
 
-  private Path settingProperties = Paths.get(SettingsService.SETTINGS_PROPERTIES);
-
   public void fillConfigFile(Path target, Map<String, String> connDB) throws IOException {
 
     fileIOUtilities.writeToFile(
         target.toFile(),
+        SettingsService.DB_TEST_CONNECTION + "=" + connDB.get(SettingsService.DB_TEST_CONNECTION),
         SettingsService.DB_USER + "=" + connDB.get(SettingsService.DB_USER),
         SettingsService.DB_PASS + "=" + connDB.get(SettingsService.DB_PASS),
         SettingsService.DB_HOST + "=" + connDB.get(SettingsService.DB_HOST),
-        SettingsService.DB_PORT + "=" + connDB.get(SettingsService.DB_PORT));
+        SettingsService.DB_PORT + "=" + connDB.get(SettingsService.DB_PORT),
+        SettingsService.DBS_BACKUPS_DIRECTORY
+            + "="
+            + connDB.get(SettingsService.DBS_BACKUPS_DIRECTORY));
   }
 
   public void addSettingToConfigFile(Path target, String labelName, String configVaule)
@@ -69,26 +66,8 @@ public class SettingsServiceImpl implements SettingsService {
       String db = props.getProperty(SettingsService.DB);
       String user = props.getProperty(SettingsService.DB_USER);
       String pass = props.getProperty(SettingsService.DB_PASS);
-      String dbsLoaded = props.getProperty(SettingsService.DBS_ALREADY_LOADED);
-      String dbsBackups = props.getProperty(SettingsService.DBS_BACKUPS);
-      String dbsBackupsFolder = props.getProperty(SettingsService.DBS_BACKUPS_DIRECTORY);
       MySQLProps mysqlOpts = new MySQLProps(host, port, user, pass, db);
       if ("false".equals(testConnection) || dataBaseService.testConnection(mysqlOpts)) {
-        // load database backups
-        if (StringUtils.isNotBlank(dbsBackupsFolder)
-            && StringUtils.isNotBlank(dbsBackups)
-            && "false".equals(dbsLoaded)) {
-          File backupsFolder = new File(dbsBackupsFolder);
-
-          if (backupsFolder.exists()) {
-            dataBaseService.loadDatabaseBackups(mysqlOpts, dbsBackups.split(","), backupsFolder);
-            // TODO fix these 2 lines below
-            props.setProperty(SettingsService.DBS_ALREADY_LOADED, "true");
-            props.store(
-                new FileOutputStream(SettingsService.SETTINGS_PROPERTIES), "MySQL backups loaded!");
-          }
-        }
-
         // initialize kettle environment
         KettleEnvironment.init();
 

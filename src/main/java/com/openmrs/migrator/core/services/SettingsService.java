@@ -25,10 +25,6 @@ public interface SettingsService {
 
   String DB_PASS = "ETL_DATABASE_PASSWORD";
 
-  String DBS_ALREADY_LOADED = "EPTS_DATABASES_ALREADY_LOADED";
-
-  String DBS_BACKUPS = "EPTS_DATABASES";
-
   String DBS_BACKUPS_DIRECTORY = "EPTS_DATABASES_DIRECTORY";
 
   void fillConfigFile(Path target, Map<String, String> connDB) throws IOException;

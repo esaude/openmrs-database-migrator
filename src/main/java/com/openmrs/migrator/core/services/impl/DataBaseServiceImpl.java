@@ -1,13 +1,8 @@
 package com.openmrs.migrator.core.services.impl;
 
 import com.ibatis.common.jdbc.ScriptRunner;
-import com.openmrs.migrator.core.config.ConfigurationStore;
 import com.openmrs.migrator.core.services.CommandService;
 import com.openmrs.migrator.core.services.DataBaseService;
-import com.openmrs.migrator.core.utilities.FileIOUtilities;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -23,6 +18,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /** Database operations */
 @Service
@@ -30,18 +27,9 @@ public class DataBaseServiceImpl implements DataBaseService {
 
   private final CommandService commandService;
 
-  private final ConfigurationStore configurationStore;
-
-  private final FileIOUtilities fileIOUtilities;
-
   @Autowired
-  public DataBaseServiceImpl(
-      CommandService commandService,
-      ConfigurationStore configurationStore,
-      FileIOUtilities fileIOUtilities) {
+  public DataBaseServiceImpl(CommandService commandService) {
     this.commandService = commandService;
-    this.configurationStore = configurationStore;
-    this.fileIOUtilities = fileIOUtilities;
   }
 
   @Override

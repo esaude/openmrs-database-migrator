@@ -4,13 +4,6 @@ import com.openmrs.migrator.core.services.DataBaseService;
 import com.openmrs.migrator.core.services.SettingsService;
 import com.openmrs.migrator.core.services.impl.MySQLProps;
 import com.openmrs.migrator.core.utilities.FileIOUtilities;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
-
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,6 +12,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
+import org.junit.Assert;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -56,5 +55,4 @@ public class DataBaseServiceTest {
     Set<String> validNames = dataBaseService.validateDataBaseNames(fromConfig, fromMySql);
     Assert.assertTrue(validNames.isEmpty());
   }
-
 }

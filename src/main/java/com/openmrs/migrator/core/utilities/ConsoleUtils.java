@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import org.apache.commons.lang.StringUtils;
 
 public class ConsoleUtils {
 
@@ -78,10 +79,28 @@ public class ConsoleUtils {
     console.writer().println("Unavailable Option");
   }
 
-  public static Map<String, String> readSourceDBConn(Console console) {
-
+  private static String readValueFromConsole(Console console, String message, String name) {
     checkConsoleAvailability(console);
+    console.writer().println(message);
+    return console.readLine();
+  }
+
+  public static Map<String, String> readSettingsFromConsole(Console console) {
+    checkConsoleAvailability(console);
+
     Map<String, String> dbConn = new HashMap<>();
+
+    console.writer().println("Test Database Connection First: y/n:");
+    dbConn.put(
+        SettingsService.DB_TEST_CONNECTION,
+        "y".equalsIgnoreCase(console.readLine()) ? "true" : "false");
+
+    console.writer().println("Folder location containing backups: input/");
+    String dbsLocation = console.readLine();
+    dbConn.put(
+        SettingsService.DBS_BACKUPS_DIRECTORY,
+        StringUtils.isBlank(dbsLocation) ? "input/" : dbsLocation);
+
     console.writer().println("Provide  the source data base connection.");
 
     console.writer().println("username:");

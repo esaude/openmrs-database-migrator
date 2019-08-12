@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.Callable;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
@@ -88,7 +89,7 @@ public class Migrator implements Callable<Optional<Void>> {
 
     if (setup) {
       executeSetupCommand();
-      Map<String, String> connDB = ConsoleUtils.readSourceDBConn(System.console());
+      Map<String, String> connDB = ConsoleUtils.readSettingsFromConsole(System.console());
 
       settingsService.fillConfigFile(settingProperties, connDB);
     }
@@ -144,66 +145,88 @@ public class Migrator implements Callable<Optional<Void>> {
     List<String> alreadyLoadedDataBases =
         dataBaseService.oneColumnSQLSelectorCommand(mySQLProps, "show databases", "Database");
     mySQLProps.setIncludeDbOntoUrl(true);
-    File kettleFile = fileIOUtilities.getKettlePropertiesLocation();
+    File settingsFile = settingProperties.toFile();
 
     switch (choice) {
       case 1:
-        Optional<String> providedDataBaseName = ConsoleUtils.getDatabaseDetaName(console);
-        Optional<String> storedDataBaseName =
-            fileIOUtilities.searchForDataBaseNameInSettingsFile(
-                providedDataBaseName.get(), settingProperties);
+        {
+          Optional<String> providedDataBaseName = ConsoleUtils.getDatabaseDetaName(console);
+          Optional<String> storedDataBaseName =
+              fileIOUtilities.searchForDataBaseNameInSettingsFile(
+                  providedDataBaseName.get(), settingProperties);
 
-        if (!storedDataBaseName.isPresent()) {
-          if (ConsoleUtils.isConnectionIsToBeStored(console)) {
-            settingsService.addSettingToConfigFile(
-                settingProperties, SettingsService.DB, providedDataBaseName.get());
+          if (!storedDataBaseName.isPresent()) {
+            if (ConsoleUtils.isConnectionIsToBeStored(console)) {
+              settingsService.addSettingToConfigFile(
+                  settingProperties, SettingsService.DB, providedDataBaseName.get());
+            }
+            fileIOUtilities.setConnectionToKettleFile(
+                providedDataBaseName.get(), settingProperties, settingsFile);
           }
-          fileIOUtilities.setConnectionToKettleFile(
-              providedDataBaseName.get(), settingProperties, kettleFile);
-        }
-        runAllJobs();
-        break;
-
-      case 2:
-        String selectDBName =
-            ConsoleUtils.getValidSelectedDataBase(
-                console,
-                dataBaseService.validateDataBaseNames(
-                    fileIOUtilities.getAllDataBaseNamesFromConfigFile(settingProperties),
-                    alreadyLoadedDataBases));
-        if (selectDBName != null) {
-          fileIOUtilities.setConnectionToKettleFile(selectDBName, settingProperties, kettleFile);
           runAllJobs();
+          break;
         }
+      case 2:
+        {
+          String selectDBName =
+              ConsoleUtils.getValidSelectedDataBase(
+                  console,
+                  dataBaseService.validateDataBaseNames(
+                      fileIOUtilities.getAllDataBaseNamesFromConfigFile(settingProperties),
+                      alreadyLoadedDataBases));
+          if (selectDBName != null) {
+            fileIOUtilities.setConnectionToKettleFile(
+                selectDBName, settingProperties, settingsFile);
+            runAllJobs();
+          }
 
-        break;
+          break;
+        }
       case 3:
-        String dbName =
-            ConsoleUtils.getValidSelectedDataBase(console, new HashSet<>(alreadyLoadedDataBases));
-        fileIOUtilities.setConnectionToKettleFile(dbName, settingProperties, kettleFile);
-        runAllJobs();
-        break;
-
+        {
+          String dbName =
+              ConsoleUtils.getValidSelectedDataBase(console, new HashSet<>(alreadyLoadedDataBases));
+          fileIOUtilities.setConnectionToKettleFile(dbName, settingProperties, settingsFile);
+          runAllJobs();
+          break;
+        }
       case 4:
-        List<Path> inputs = fileIOUtilities.listFiles(Paths.get("input/"));
+        {
+          String dbsLocation =
+              fileIOUtilities.getValueFromConfig(
+                  SettingsService.DBS_BACKUPS_DIRECTORY, "=", settingProperties);
+          List<Path> inputs =
+              fileIOUtilities.listFiles(
+                  Paths.get(StringUtils.isBlank(dbsLocation) ? "input/" : dbsLocation));
 
-        String sqlDumpFile = ConsoleUtils.chooseDumpFile(console, inputs);
+          String sqlDumpFile = ConsoleUtils.chooseDumpFile(console, inputs);
 
-        if (sqlDumpFile == null) {
+          if (sqlDumpFile == null) {
+            break;
+          }
+
+          String databaseName = ConsoleUtils.getChosenDBName(console);
+
+          dataBaseService.importDatabaseFile(sqlDumpFile, mySQLProps);
+          fileIOUtilities.setConnectionToKettleFile(databaseName, settingProperties, settingsFile);
+          runAllJobs();
+
           break;
         }
 
-        String databaseName = ConsoleUtils.getChosenDBName(console);
-
-        dataBaseService.importDatabaseFile(sqlDumpFile, mySQLProps);
-        fileIOUtilities.setConnectionToKettleFile(databaseName, settingProperties, kettleFile);
-        runAllJobs();
-
-        break;
-
       default:
-        ConsoleUtils.showUnavailableOption(console);
-        break;
+        {
+          ConsoleUtils.showUnavailableOption(console);
+          break;
+        }
     }
+  }
+
+  private String combinePathsIntoString(List<Path> paths) {
+    String combined = "";
+    for (Path p : paths) {
+      combined += (combined == "" ? "" : ",") + p.getFileName();
+    }
+    return combined;
   }
 }
