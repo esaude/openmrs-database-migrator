@@ -1,4 +1,4 @@
-# OpenMRS Database Migrator Tool
+${ETL_SOURCE_DATABASE}# OpenMRS Database Migrator Tool
 
 [![Build Status](https://travis-ci.com/esaude/openmrs-database-migrator.svg?branch=master)](https://travis-ci.com/esaude/openmrs-database-migrator) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/4b76ce9cc36f41abaa078b07182f0a24)](https://app.codacy.com/app/esaude-epts/openmrs-database-migrator?utm_source=github.com&utm_medium=referral&utm_content=esaude/openmrs-database-migrator&utm_campaign=Badge_Grade_Dashboard) [![codecov](https://codecov.io/gh/esaude/openmrs-database-migrator/branch/master/graph/badge.svg)](https://codecov.io/gh/esaude/openmrs-database-migrator)
 
@@ -38,11 +38,11 @@ If you find yourself with linting exceptions, to automatically resolve all issue
 
 First create the merge database:
 
-    CREATE DATABASE ${ETL_SOURCE_DATABASE} CHAR SET uf8;
+    CREATE DATABASE merge_db CHAR SET uf8;
 
-Then load one of the dumps into `${ETL_SOURCE_DATABASE}`. After that run the following script:
+Then load one of the dumps into `merge_db`. After that run the following script:
 
-    use ${ETL_SOURCE_DATABASE};
+    use merge_db;
 
     insert into person_attribute_type
         (name, description, searchable, creator, date_created, retired, uuid) values
@@ -60,7 +60,7 @@ To list available subcommands run:
 
     java -jar migrator.jar -h
 
-This will run PDI transformations using `ETL_SOURCE_DATABASE` as the input database. The output will be saved in a database called `${ETL_SOURCE_DATABASE}`.
+This will run PDI transformations using `ETL_SOURCE_DATABASE` as the input database. The output will be saved in a database called `merge_db`.
 
 ### Configuration
 
