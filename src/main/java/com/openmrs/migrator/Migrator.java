@@ -16,7 +16,6 @@ import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -88,9 +87,6 @@ public class Migrator implements Callable<Optional<Void>> {
 
     if (setup) {
       executeSetupCommand();
-      Map<String, String> connDB = ConsoleUtils.readSettingsFromConsole(System.console());
-
-      settingsService.fillConfigFile(settingProperties, connDB);
     }
 
     if (run) {
@@ -116,7 +112,7 @@ public class Migrator implements Callable<Optional<Void>> {
     }
   }
 
-  private void executeSetupCommand() throws IOException {
+  private void executeSetupCommand() throws IOException, SQLException, SettingsException {
     List<String> pdiFiles = new ArrayList<>();
 
     pdiFiles.add("pdiresources/jobs/merge-patient-job.kjb");
@@ -125,18 +121,10 @@ public class Migrator implements Callable<Optional<Void>> {
 
     bootstrapService.createDirectoryStructure(dirList);
     bootstrapService.populateDefaultResources(pdiFiles);
-  }
 
-  private MySQLProps getMysqlConn() throws IOException {
-    return new MySQLProps(
-        fileIOUtilities.getValueFromConfig(SettingsService.DB_HOST, "=", settingProperties),
-        fileIOUtilities.getValueFromConfig(SettingsService.DB_PORT, "=", settingProperties),
-        fileIOUtilities.getValueFromConfig(SettingsService.DB_USER, "=", settingProperties),
-        fileIOUtilities.getValueFromConfig(SettingsService.DB_PASS, "=", settingProperties),
-        fileIOUtilities.getValueFromConfig(SettingsService.DB, "=", settingProperties));
-  }
+    Map<String, String> connDB = ConsoleUtils.readSettingsFromConsole(System.console());
 
-  private void executeRunCommandLogic() throws SQLException, IOException, SettingsException {
+    settingsService.fillConfigFile(settingProperties, connDB);
 
     MySQLProps mySQLProps = getMysqlConn();
     mySQLProps.setIncludeDbOntoUrl(false);
@@ -158,31 +146,9 @@ public class Migrator implements Callable<Optional<Void>> {
                   settingProperties, SettingsService.DB, 2, providedDataBaseName.get());
             }
           }
-          runAllJobs();
           break;
         }
       case 2:
-        {
-          String selectDBName =
-              ConsoleUtils.getValidSelectedDataBase(
-                  console,
-                  dataBaseService.validateDataBaseNames(
-                      fileIOUtilities.getAllDataBaseNamesFromConfigFile(settingProperties),
-                      alreadyLoadedDataBases));
-          if (selectDBName != null) {
-            runAllJobs();
-          }
-
-          break;
-        }
-      case 3:
-        {
-          String dbName =
-              ConsoleUtils.getValidSelectedDataBase(console, new HashSet<>(alreadyLoadedDataBases));
-          runAllJobs();
-          break;
-        }
-      case 4:
         {
           String dbsLocation =
               fileIOUtilities.getValueFromConfig(
@@ -196,9 +162,9 @@ public class Migrator implements Callable<Optional<Void>> {
           if (sqlDumpFile == null) {
             break;
           }
-          dataBaseService.importDatabaseFile(sqlDumpFile, mySQLProps);
-          runAllJobs();
-
+          if (!alreadyLoadedDataBases.contains(sqlDumpFile.split(".")[0])) {
+            dataBaseService.importDatabaseFile(sqlDumpFile, mySQLProps);
+          }
           break;
         }
 
@@ -208,5 +174,18 @@ public class Migrator implements Callable<Optional<Void>> {
           break;
         }
     }
+  }
+
+  private MySQLProps getMysqlConn() throws IOException {
+    return new MySQLProps(
+        fileIOUtilities.getValueFromConfig(SettingsService.DB_HOST, "=", settingProperties),
+        fileIOUtilities.getValueFromConfig(SettingsService.DB_PORT, "=", settingProperties),
+        fileIOUtilities.getValueFromConfig(SettingsService.DB_USER, "=", settingProperties),
+        fileIOUtilities.getValueFromConfig(SettingsService.DB_PASS, "=", settingProperties),
+        fileIOUtilities.getValueFromConfig(SettingsService.DB, "=", settingProperties));
+  }
+
+  private void executeRunCommandLogic() throws IOException, SettingsException {
+    runAllJobs();
   }
 }
