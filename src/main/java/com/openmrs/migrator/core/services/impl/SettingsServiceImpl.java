@@ -46,11 +46,17 @@ public class SettingsServiceImpl implements SettingsService {
   }
 
   public void addSettingToConfigFile(
-      Path target, String labelName, int lineNumber, String configVaule) throws IOException {
-    logger.info("Adding " + labelName + ":" + configVaule + " in config file");
+      Path target, String labelName, int lineNumber, String configValue) throws IOException {
+    logger.info("Adding " + labelName + ":" + configValue + " in config file");
 
     List<String> lines = Files.readAllLines(target);
-    lines.add(lineNumber - 1, labelName + "=" + configVaule);
+    for (String line : lines) {
+      if (line.startsWith(labelName + "=")) {
+        lines.remove(line);
+        break;
+      }
+    }
+    lines.add(lineNumber - 1, labelName + "=" + configValue);
     Files.write(target, lines, StandardCharsets.UTF_8);
   }
 
@@ -68,7 +74,7 @@ public class SettingsServiceImpl implements SettingsService {
       String testConnection = props.getProperty(SettingsService.DB_TEST_CONNECTION);
       String host = props.getProperty(SettingsService.DB_HOST);
       String port = props.getProperty(SettingsService.DB_PORT);
-      String db = props.getProperty(SettingsService.DB);
+      String db = props.getProperty(SettingsService.SOURCE_DB);
       String user = props.getProperty(SettingsService.DB_USER);
       String pass = props.getProperty(SettingsService.DB_PASS);
       MySQLProps mysqlOpts = new MySQLProps(host, port, user, pass, db);

@@ -172,7 +172,7 @@ public class Migrator implements Callable<Optional<Void>> {
     switch (choice) {
       case 1:
         {
-          selectFromExistingDatabase(alreadyLoadedDataBases);
+          selectExistingSourceAndMergeDatabase(alreadyLoadedDataBases);
           break;
         }
       case 2:
@@ -195,16 +195,21 @@ public class Migrator implements Callable<Optional<Void>> {
           dataBaseService.importDatabaseFile(sqlDumpFile, db);
           alreadyLoadedDataBases =
               dataBaseService.oneColumnSQLSelectorCommand(mySQLProps, "show databases", "Database");
-          selectFromExistingDatabase(alreadyLoadedDataBases);
+          selectExistingSourceAndMergeDatabase(alreadyLoadedDataBases);
           break;
         }
-
       default:
         {
           ConsoleUtils.showUnavailableOption(console);
           break;
         }
     }
+  }
+
+  private void selectExistingSourceAndMergeDatabase(List<String> alreadyLoadedDataBases)
+      throws IOException {
+    selectDbFromExistingDatabase(alreadyLoadedDataBases, SettingsService.SOURCE_DB, 2);
+    selectDbFromExistingDatabase(alreadyLoadedDataBases, SettingsService.MERGE_DB, 3);
   }
 
   private String readAndValidateBackupsFolder() throws IOException {
@@ -220,16 +225,20 @@ public class Migrator implements Callable<Optional<Void>> {
     return StringUtils.isBlank(folder) ? "input/" : folder;
   }
 
-  private void selectFromExistingDatabase(List<String> alreadyLoadedDataBases) throws IOException {
+  private void selectDbFromExistingDatabase(
+      List<String> alreadyLoadedDataBases, String dbCategory, int lineNumber) throws IOException {
     Optional<String> providedDataBaseName =
-        ConsoleUtils.getDatabaseName(console, alreadyLoadedDataBases);
+        ConsoleUtils.getDatabaseName(
+            console,
+            alreadyLoadedDataBases,
+            SettingsService.MERGE_DB.equals(dbCategory) ? "Merge" : "Source");
     Optional<String> storedDataBaseName =
         fileIOUtilities.searchForDataBaseNameInSettingsFile(
             providedDataBaseName.get(), settingProperties);
 
     if (!storedDataBaseName.isPresent()) {
       settingsService.addSettingToConfigFile(
-          settingProperties, SettingsService.DB, 2, providedDataBaseName.get());
+          settingProperties, dbCategory, lineNumber, providedDataBaseName.get());
     }
   }
 
@@ -239,7 +248,7 @@ public class Migrator implements Callable<Optional<Void>> {
         fileIOUtilities.getValueFromConfig(SettingsService.DB_PORT, "=", settingProperties),
         fileIOUtilities.getValueFromConfig(SettingsService.DB_USER, "=", settingProperties),
         fileIOUtilities.getValueFromConfig(SettingsService.DB_PASS, "=", settingProperties),
-        fileIOUtilities.getValueFromConfig(SettingsService.DB, "=", settingProperties));
+        fileIOUtilities.getValueFromConfig(SettingsService.SOURCE_DB, "=", settingProperties));
   }
 
   private void executeRunCommandLogic() throws IOException, SettingsException {

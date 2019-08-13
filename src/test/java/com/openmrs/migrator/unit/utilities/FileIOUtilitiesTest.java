@@ -262,7 +262,7 @@ public class FileIOUtilitiesTest {
     fileIOUtilities.createFile(Paths.get("temp/temp_file.txt"));
     Path path = Paths.get("temp/temp_file.txt");
 
-    fileIOUtilities.writeToFile(path.toFile(), SettingsService.DB + "=data_base");
+    fileIOUtilities.writeToFile(path.toFile(), SettingsService.SOURCE_DB + "=data_base");
 
     List<String> names = fileIOUtilities.getAllDataBaseNamesFromConfigFile(path);
     assertEquals(1, names.size());
@@ -295,7 +295,7 @@ public class FileIOUtilitiesTest {
     fileIOUtilities.createFile(Paths.get("temp/temp_file.txt"));
     Path path = Paths.get("temp/temp_file.txt");
 
-    fileIOUtilities.writeToFile(path.toFile(), SettingsService.DB + "=fgh");
+    fileIOUtilities.writeToFile(path.toFile(), SettingsService.SOURCE_DB + "=fgh");
     Optional<String> name = fileIOUtilities.searchForDataBaseNameInSettingsFile("fgh", path);
 
     assertEquals("fgh", name.get());

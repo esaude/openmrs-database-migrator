@@ -176,7 +176,7 @@ public class FileIOUtilities {
       String line;
       while ((line = br.readLine()) != null) {
         String[] keyValue = line.split("=");
-        if (SettingsService.DB.equals(keyValue[0]) && (databaseName.equals(keyValue[1]))) {
+        if (SettingsService.SOURCE_DB.equals(keyValue[0]) && (databaseName.equals(keyValue[1]))) {
 
           logger.info("database name '" + databaseName + "' found in config file");
           return Optional.of(keyValue[1]);
@@ -212,7 +212,7 @@ public class FileIOUtilities {
     try (BufferedReader br = new BufferedReader(new FileReader(path.toFile()))) {
       String line;
       while ((line = br.readLine()) != null) {
-        if (line.contains(SettingsService.DB)) {
+        if (line.contains(SettingsService.SOURCE_DB)) {
           names.add(line.split("=")[1]);
         }
       }

@@ -38,7 +38,7 @@ public class DataBaseServiceTest {
     if ("true".equals(testConnection)) {
       String host = props.getProperty(SettingsService.DB_HOST);
       String port = props.getProperty(SettingsService.DB_PORT);
-      String db = props.getProperty(SettingsService.DB);
+      String db = props.getProperty(SettingsService.SOURCE_DB);
       String user = props.getProperty(SettingsService.DB_USER);
       String pass = props.getProperty(SettingsService.DB_PASS);
       List<String> names =

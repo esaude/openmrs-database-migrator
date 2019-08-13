@@ -1,24 +1,25 @@
 package com.openmrs.migrator.core.utilities;
 
 import com.openmrs.migrator.core.services.SettingsService;
+import org.apache.commons.lang.StringUtils;
+
 import java.io.Console;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import org.apache.commons.lang.StringUtils;
 
 public class ConsoleUtils {
 
   public static Optional<String> getDatabaseName(
-      Console console, List<String> alreadyLoadedDataBases) {
+      Console console, List<String> alreadyLoadedDataBases, String labelPrefix) {
 
     checkConsoleAvailability(console);
     Optional<String> wrappedName = Optional.empty();
 
     String existingDbNames = String.join("/", alreadyLoadedDataBases);
-    console.writer().println("Database name: (" + existingDbNames + ")");
+    console.writer().println(labelPrefix + " Database name: (" + existingDbNames + ")");
     String dataBaseName = console.readLine();
     while (!alreadyLoadedDataBases.contains(dataBaseName)) {
       console.writer().println("Choose from existing databases please! (" + existingDbNames + ")");
@@ -40,9 +41,10 @@ public class ConsoleUtils {
   public static int startMigrationAproach(Console console) {
 
     checkConsoleAvailability(console);
-    console.writer().println("Below are the options for database source:");
-    console.writer().println("1 - Provide database name for existing db in MySQL server");
-    console.writer().println("2 - Load sql dump files");
+    console
+        .writer()
+        .println("1 - Provide source and merge database name for existing db in MySQL Server");
+    console.writer().println("2 - Load sql dump files into MySQL Server");
     int choice;
     try {
       choice = Integer.parseInt(console.readLine());
