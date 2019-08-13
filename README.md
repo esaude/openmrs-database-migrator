@@ -56,13 +56,15 @@ To merge OpenMRS databases run:
 
     java -jar migrator.jar run
 
-This will run PDI transformations using `ETL_SOURCE_DATABASE` as the input database. The output will be saved in a database called `merge_db`.
+This will run PDI transformations using `ETL_SOURCE_DATABASE` as the input database. The output will be saved in a database 
+referenced by `ETL_MERGE_DATABASE`.
 
 ### Configuration
 
 The tool uses the following variables that can be configured either through system properties or the PDI `kettle.properties` file:
 
     ETL_SOURCE_DATABASE=egpaf
+    ETL_MERGE_DATABASE=merge_db
     ETL_DATABASE_HOST=127.0.0.1
     ETL_DATABASE_PORT=3306
     ETL_DATABASE_USER=migrator
