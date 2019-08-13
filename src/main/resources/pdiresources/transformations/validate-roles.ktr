@@ -441,7 +441,7 @@
     <server>${ETL_DATABASE_HOST}</server>
     <type>MYSQL</type>
     <access>Native</access>
-    <database>merge_db</database>
+    <database>${ETL_MERGE_DATABASE}</database>
     <port>${ETL_DATABASE_PORT}</port>
     <username>${ETL_DATABASE_USER}</username>
     <password>${ETL_DATABASE_PASSWORD}</password>
