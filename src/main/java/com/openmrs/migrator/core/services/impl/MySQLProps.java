@@ -6,16 +6,12 @@ public class MySQLProps {
   private String username;
   private String password;
   private String db;
-  private boolean includeDbOntoUrl = true;
 
   public MySQLProps(String host, String port, String username, String password, String db) {
     this.host = host;
     this.port = port;
     this.username = username;
     this.password = password;
-    if (db == null) {
-      includeDbOntoUrl = false;
-    }
     this.db = db;
   }
 
@@ -39,11 +35,7 @@ public class MySQLProps {
     return db;
   }
 
-  public boolean includeDbOntoUrl() {
-    return includeDbOntoUrl;
-  }
-
-  public void setIncludeDbOntoUrl(boolean includeDbOntoUrl) {
-    this.includeDbOntoUrl = includeDbOntoUrl;
+  public void setDb(String db) {
+    this.db = db;
   }
 }

@@ -1,6 +1,7 @@
 package com.openmrs.migrator.core.services.impl;
 
 import com.ibatis.common.jdbc.ScriptRunner;
+import com.openmrs.migrator.core.exceptions.SettingsException;
 import com.openmrs.migrator.core.services.CommandService;
 import com.openmrs.migrator.core.services.DataBaseService;
 import java.io.BufferedReader;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,17 +38,6 @@ public class DataBaseServiceImpl implements DataBaseService {
   public void importDatabaseFile(String fileName, MySQLProps mySQLProps)
       throws SQLException, IOException {
     loadDatabase(new File(fileName), mySQLProps);
-  }
-
-  @Override
-  public void createDatabase(MySQLProps mySQLProps) throws SQLException {
-    mySQLProps.setIncludeDbOntoUrl(false);
-    runSQLUpdate(
-        mySQLProps,
-        String.format(
-            "drop database if exists %s; create database %s;",
-            mySQLProps.getDb(), mySQLProps.getDb()));
-    mySQLProps.setIncludeDbOntoUrl(true);
   }
 
   @Override
@@ -95,8 +86,16 @@ public class DataBaseServiceImpl implements DataBaseService {
   }
 
   @Override
-  public boolean testConnection(MySQLProps mySQLProps) throws SQLException {
-    Boolean results = executeMySQLStatement(getConnection(mySQLProps), "select 1");
+  public boolean testConnection(MySQLProps mySQLProps, boolean throwConnectionException)
+      throws SettingsException {
+    Boolean results = false;
+    try {
+      results = executeMySQLStatement(getConnection(mySQLProps), "select 1");
+    } catch (Exception e) {
+      if (throwConnectionException) {
+        throw new SettingsException(e);
+      }
+    }
     return results != null ? results : false;
   }
 
@@ -106,7 +105,7 @@ public class DataBaseServiceImpl implements DataBaseService {
             "jdbc:mysql://%s:%s/%s",
             mySQLProps.getHost(),
             mySQLProps.getPort(),
-            mySQLProps.includeDbOntoUrl() ? mySQLProps.getDb() : ""),
+            StringUtils.isNotBlank(mySQLProps.getDb()) ? mySQLProps.getDb() : ""),
         mySQLProps.getUsername(),
         mySQLProps.getPassword());
   }
@@ -122,10 +121,10 @@ public class DataBaseServiceImpl implements DataBaseService {
 
   private void loadDatabase(File dbPath, MySQLProps mySQLProps) throws SQLException, IOException {
     if (dbPath.exists()) {
-      mySQLProps.setIncludeDbOntoUrl(false);
-      runSQLUpdate(
-          mySQLProps, String.format("CREATE DATABASE IF NOT EXISTS %s", mySQLProps.getDb()));
-      mySQLProps.setIncludeDbOntoUrl(true);
+      String db = mySQLProps.getDb();
+      mySQLProps.setDb(null);
+      runSQLUpdate(mySQLProps, String.format("CREATE DATABASE IF NOT EXISTS %s", db));
+      mySQLProps.setDb(db);
       ScriptRunner sr = new ScriptRunner(getConnection(mySQLProps), false, false);
       Reader reader = new BufferedReader(new FileReader(dbPath));
       sr.runScript(reader);

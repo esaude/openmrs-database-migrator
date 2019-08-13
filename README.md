@@ -66,6 +66,7 @@ This will run PDI transformations using `ETL_SOURCE_DATABASE` as the input datab
 
 The tool uses the following variables that can be configured either through system properties or the PDI `kettle.properties` file:
 
+    ETL_TEST_DATABASE_CONNECTION=true
     ETL_SOURCE_DATABASE=egpaf
     ETL_DATABASE_HOST=127.0.0.1
     ETL_DATABASE_PORT=3306

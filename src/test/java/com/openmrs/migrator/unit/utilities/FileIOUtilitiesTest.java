@@ -33,8 +33,6 @@ public class FileIOUtilitiesTest {
 
   @Autowired private FileIOUtilities fileIOUtilities;
 
-  @Autowired private SettingsService settingsService;
-
   private String stream = SettingsService.PDI_RESOURCES_DIR + "/jobs/job.kjb";
 
   @Test

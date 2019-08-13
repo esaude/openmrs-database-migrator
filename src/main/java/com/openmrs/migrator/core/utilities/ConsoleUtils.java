@@ -7,18 +7,23 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import org.apache.commons.lang.StringUtils;
 
 public class ConsoleUtils {
 
-  public static Optional<String> getDatabaseDetaName(Console console) {
+  public static Optional<String> getDatabaseName(
+      Console console, List<String> alreadyLoadedDataBases) {
 
     checkConsoleAvailability(console);
     Optional<String> wrappedName = Optional.empty();
 
-    console.writer().println("Database name:");
+    String existingDbNames = String.join("/", alreadyLoadedDataBases);
+    console.writer().println("Database name: (" + existingDbNames + ")");
     String dataBaseName = console.readLine();
+    while (!alreadyLoadedDataBases.contains(dataBaseName)) {
+      console.writer().println("Choose from existing databases please! (" + existingDbNames + ")");
+      dataBaseName = console.readLine();
+    }
 
     wrappedName = Optional.of(dataBaseName);
 
@@ -32,18 +37,11 @@ public class ConsoleUtils {
     }
   }
 
-  public static boolean isConnectionIsToBeStored(Console console) {
-    checkConsoleAvailability(console);
-    console.writer().println("Do you want to keep this connection? [y/n]");
-    String answer = console.readLine();
-    return "y".equals(answer);
-  }
-
   public static int startMigrationAproach(Console console) {
 
     checkConsoleAvailability(console);
     console.writer().println("Below are the options for database source:");
-    console.writer().println("1 - Provide source database name for existing db in MySQL server");
+    console.writer().println("1 - Provide database name for existing db in MySQL server");
     console.writer().println("2 - Load sql dump files");
     int choice;
     try {
@@ -53,21 +51,6 @@ public class ConsoleUtils {
       console.writer().println("Select one of the listed options");
       return 0;
     }
-  }
-
-  public static String getValidSelectedDataBase(Console console, Set<String> dataBases) {
-
-    checkConsoleAvailability(console);
-    if (dataBases.isEmpty()) {
-      console.writer().println("There is no valid databases in the config file");
-      return null;
-    }
-    console.writer().println("Valid databases names:");
-    dataBases.forEach(name -> console.writer().println(name));
-    console.writer().println("Above are the valid databases, go ahead with one to migrate:");
-
-    console.writer().print("Selected data base name");
-    return console.readLine();
   }
 
   public static void showUnavailableOption(Console console) {
@@ -80,16 +63,7 @@ public class ConsoleUtils {
 
     Map<String, String> dbConn = new HashMap<>();
 
-    console.writer().println("Test Database Connection First: y/n:");
-    dbConn.put(
-        SettingsService.DB_TEST_CONNECTION,
-        "y".equalsIgnoreCase(console.readLine()) ? "true" : "false");
-
-    console.writer().println("Folder location containing backups: input/");
-    String dbsLocation = console.readLine();
-    dbConn.put(
-        SettingsService.DBS_BACKUPS_DIRECTORY,
-        StringUtils.isBlank(dbsLocation) ? "input/" : dbsLocation);
+    dbConn.put(SettingsService.DB_TEST_CONNECTION, "true");
 
     console.writer().println("Provide  the source data base connection.");
 
@@ -99,8 +73,9 @@ public class ConsoleUtils {
     console.writer().println("password:");
     dbConn.put(SettingsService.DB_PASS, new String(console.readPassword()));
 
-    console.writer().println("host:");
-    dbConn.put(SettingsService.DB_HOST, console.readLine());
+    console.writer().println("host: localhost");
+    String host = console.readLine();
+    dbConn.put(SettingsService.DB_HOST, StringUtils.isBlank(host) ? "localhost" : host);
 
     console.writer().println("port:");
     dbConn.put(SettingsService.DB_PORT, console.readLine());
@@ -108,22 +83,22 @@ public class ConsoleUtils {
     return dbConn;
   }
 
-  public static String chooseDumpFile(Console console, List<Path> inputs) {
+  public static String readFromConsole(String label, Console console) {
+    console.writer().println(label);
+    return console.readLine();
+  }
+
+  public static String chooseDumpFile(
+      Console console, List<Path> inputs, String locationOfBackups) {
 
     checkConsoleAvailability(console);
     console.writer().println("Choose a dump file from the list to restore your mysql instance");
     if (inputs.isEmpty()) {
-      console.writer().println("There is no  input files");
+      console.writer().println("There is no  input files in: " + locationOfBackups);
       return null;
     }
     inputs.forEach(input -> console.writer().println(input));
     console.writer().println("Dump file:");
-    return console.readLine();
-  }
-
-  public static String getChosenDBName(Console console) {
-    checkConsoleAvailability(console);
-    console.writer().println("Data Base name:");
     return console.readLine();
   }
 }

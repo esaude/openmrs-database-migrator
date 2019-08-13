@@ -9,6 +9,7 @@ import com.openmrs.migrator.core.services.impl.MySQLProps;
 import com.openmrs.migrator.core.utilities.ConsoleUtils;
 import com.openmrs.migrator.core.utilities.FileIOUtilities;
 import java.io.Console;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
@@ -20,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.Callable;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import picocli.CommandLine;
@@ -124,47 +126,61 @@ public class Migrator implements Callable<Optional<Void>> {
 
     Map<String, String> connDB = ConsoleUtils.readSettingsFromConsole(System.console());
 
+    MySQLProps mysqlConn = getMysqlOptsFromConsoleConn(connDB);
+    while (!dataBaseService.testConnection(mysqlConn, false)) {
+      System.console()
+          .writer()
+          .println("You have provided Wrong Connection details, please try again!");
+      connDB = ConsoleUtils.readSettingsFromConsole(System.console());
+      mysqlConn = getMysqlOptsFromConsoleConn(connDB);
+    }
+
     settingsService.fillConfigFile(settingProperties, connDB);
 
     MySQLProps mySQLProps = getMysqlConn();
-    mySQLProps.setIncludeDbOntoUrl(false);
+    chooseDatabase(mySQLProps);
+  }
+
+  private MySQLProps getMysqlOptsFromConsoleConn(Map<String, String> connDB) {
+    return new MySQLProps(
+        connDB.get(SettingsService.DB_HOST),
+        connDB.get(SettingsService.DB_PORT),
+        connDB.get(SettingsService.DB_USER),
+        connDB.get(SettingsService.DB_PASS),
+        "");
+  }
+
+  private void chooseDatabase(MySQLProps mySQLProps) throws IOException, SQLException {
     int choice = ConsoleUtils.startMigrationAproach(console);
     List<String> alreadyLoadedDataBases =
         dataBaseService.oneColumnSQLSelectorCommand(mySQLProps, "show databases", "Database");
-    mySQLProps.setIncludeDbOntoUrl(true);
     switch (choice) {
       case 1:
         {
-          Optional<String> providedDataBaseName = ConsoleUtils.getDatabaseDetaName(console);
-          Optional<String> storedDataBaseName =
-              fileIOUtilities.searchForDataBaseNameInSettingsFile(
-                  providedDataBaseName.get(), settingProperties);
-
-          if (!storedDataBaseName.isPresent()) {
-            if (ConsoleUtils.isConnectionIsToBeStored(console)) {
-              settingsService.addSettingToConfigFile(
-                  settingProperties, SettingsService.DB, 2, providedDataBaseName.get());
-            }
-          }
+          selectFromExistingDatabase(alreadyLoadedDataBases);
           break;
         }
       case 2:
         {
-          String dbsLocation =
-              fileIOUtilities.getValueFromConfig(
-                  SettingsService.DBS_BACKUPS_DIRECTORY, "=", settingProperties);
-          List<Path> inputs =
-              fileIOUtilities.listFiles(
-                  Paths.get(StringUtils.isBlank(dbsLocation) ? "input/" : dbsLocation));
-
-          String sqlDumpFile = ConsoleUtils.chooseDumpFile(console, inputs);
-
-          if (sqlDumpFile == null) {
-            break;
+          String sqlDumpFile = readAndValidateBackupsFolder();
+          while (StringUtils.isBlank(sqlDumpFile)
+              || alreadyLoadedDataBases.contains(
+                  FilenameUtils.removeExtension(new File(sqlDumpFile).getName()))) {
+            sqlDumpFile = readAndValidateBackupsFolder();
           }
-          if (!alreadyLoadedDataBases.contains(sqlDumpFile.split(".")[0])) {
-            dataBaseService.importDatabaseFile(sqlDumpFile, mySQLProps);
-          }
+
+          // import database if it doesn't exist in mysql
+          MySQLProps db =
+              new MySQLProps(
+                  mySQLProps.getHost(),
+                  mySQLProps.getPort(),
+                  mySQLProps.getUsername(),
+                  mySQLProps.getPassword(),
+                  FilenameUtils.removeExtension(new File(sqlDumpFile).getName()));
+          dataBaseService.importDatabaseFile(sqlDumpFile, db);
+          alreadyLoadedDataBases =
+              dataBaseService.oneColumnSQLSelectorCommand(mySQLProps, "show databases", "Database");
+          selectFromExistingDatabase(alreadyLoadedDataBases);
           break;
         }
 
@@ -173,6 +189,33 @@ public class Migrator implements Callable<Optional<Void>> {
           ConsoleUtils.showUnavailableOption(console);
           break;
         }
+    }
+  }
+
+  private String readAndValidateBackupsFolder() throws IOException {
+    String dbsLocation = readBackupsFolderFromConsole();
+    List<Path> inputs = fileIOUtilities.listFiles(Paths.get(dbsLocation));
+    return ConsoleUtils.chooseDumpFile(console, inputs, dbsLocation);
+  }
+
+  private String readBackupsFolderFromConsole() {
+    String folder =
+        ConsoleUtils.readFromConsole(
+            "Folder location containing backups: input/", System.console());
+    ;
+    return StringUtils.isBlank(folder) ? "input/" : folder;
+  }
+
+  private void selectFromExistingDatabase(List<String> alreadyLoadedDataBases) throws IOException {
+    Optional<String> providedDataBaseName =
+        ConsoleUtils.getDatabaseName(console, alreadyLoadedDataBases);
+    Optional<String> storedDataBaseName =
+        fileIOUtilities.searchForDataBaseNameInSettingsFile(
+            providedDataBaseName.get(), settingProperties);
+
+    if (!storedDataBaseName.isPresent()) {
+      settingsService.addSettingToConfigFile(
+          settingProperties, SettingsService.DB, 2, providedDataBaseName.get());
     }
   }
 

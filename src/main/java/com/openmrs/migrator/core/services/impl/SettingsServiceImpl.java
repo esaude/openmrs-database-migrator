@@ -11,7 +11,6 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -73,14 +72,14 @@ public class SettingsServiceImpl implements SettingsService {
       String user = props.getProperty(SettingsService.DB_USER);
       String pass = props.getProperty(SettingsService.DB_PASS);
       MySQLProps mysqlOpts = new MySQLProps(host, port, user, pass, db);
-      if ("false".equals(testConnection) || dataBaseService.testConnection(mysqlOpts)) {
+      if ("false".equals(testConnection) || dataBaseService.testConnection(mysqlOpts, true)) {
         // initialize kettle environment
         KettleEnvironment.init();
 
         // apply our props from default settings.properties
         EnvUtil.applyKettleProperties(props, true);
       }
-    } catch (IOException | SQLException | KettleException e) {
+    } catch (IOException | SettingsException | KettleException e) {
       throw new SettingsException(e);
     }
   }
