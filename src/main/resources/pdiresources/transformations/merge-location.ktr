@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <transformation>
   <info>
-    <name>merge-patient</name>
+    <name>merge-location</name>
     <description/>
     <extended_description/>
     <trans_version/>
     <trans_type>Normal</trans_type>
+    <trans_status>0</trans_status>
     <directory>/</directory>
     <parameters>
     </parameters>
@@ -427,16 +428,16 @@
     <clusterschemas>
     </clusterschemas>
     <created_user>-</created_user>
-    <created_date>2019/05/06 08:33:54.754</created_date>
+    <created_date>2019/08/06 09:23:50.203</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2019/05/06 08:33:54.754</modified_date>
+    <modified_date>2019/08/06 09:23:50.203</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
   </notepads>
   <connection>
-    <name>Openmrs Merge DB</name>
+    <name>OpenMRS destination</name>
     <server>${ETL_DATABASE_HOST}</server>
     <type>MYSQL</type>
     <access>Native</access>
@@ -491,7 +492,7 @@
     </attributes>
   </connection>
   <connection>
-    <name>Openmrs Source</name>
+    <name>OpenMRS source</name>
     <server>${ETL_DATABASE_HOST}</server>
     <type>MYSQL</type>
     <access>Native</access>
@@ -547,160 +548,23 @@
   </connection>
   <order>
     <hop>
-      <from>Fetch Same Person from Destination</from>
-      <to>Doesn't exist on Destination?</to>
+      <from>Load Location from Source</from>
+      <to>Fetch Same Location from Destination</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Doesn't exist on Destination?</from>
-      <to>Save Person</to>
+      <from>Fetch Same Location from Destination</from>
+      <to>Filter rows</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Data grid</from>
-      <to>Join rows (cartesian product)</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Load Person from Source</from>
-      <to>Join rows (cartesian product)</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Save Person</from>
-      <to>Fetch Source DB Identifier Type</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Fetch Source DB Identifier Type</from>
-      <to>Fetch Destination DB person_id</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Get system info</from>
-      <to>Join rows (cartesian product)</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Fetch Destination DB person_id</from>
-      <to>Generate UUID</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Generate UUID</from>
-      <to>Save Source DB person_id</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Join rows (cartesian product)</from>
-      <to>Fetch Same Person from Destination</to>
+      <from>Filter rows</from>
+      <to>Save location</to>
       <enabled>Y</enabled>
     </hop>
   </order>
   <step>
-    <name>Data grid</name>
-    <type>DataGrid</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <fields>
-      <field>
-        <name>creator_id</name>
-        <type>Number</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>source_db_identifier_type_uuid</name>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>false</name>
-        <type>Boolean</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-    </fields>
-    <data>
-      <line>
-        <item>1</item>
-        <item>8d793bee-c2cc-11de-8d13-0010c6dffd23</item>
-        <item>false</item>
-      </line>
-    </data>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>128</xloc>
-      <yloc>320</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Doesn't exist on Destination?</name>
-    <type>FilterRows</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <send_true_to>Save Person</send_true_to>
-    <send_false_to/>
-    <compare>
-      <condition>
-        <negated>N</negated>
-        <leftvalue>existing_person_id</leftvalue>
-        <function>IS NULL</function>
-        <rightvalue/>
-      </condition>
-    </compare>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>880</xloc>
-      <yloc>320</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Fetch Destination DB person_id</name>
+    <name>Fetch Same Location from Destination</name>
     <type>DBJoin</type>
     <description/>
     <distribute>Y</distribute>
@@ -710,45 +574,9 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <connection>Openmrs Merge DB</connection>
+    <connection>OpenMRS destination</connection>
     <rowlimit>1</rowlimit>
-    <sql>select person_id destination_db_person_id from person where person.uuid = ?</sql>
-    <outer_join>N</outer_join>
-    <replace_vars>N</replace_vars>
-    <parameter>
-      <field>
-        <name>uuid</name>
-        <type>String</type>
-      </field>
-    </parameter>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>1312</xloc>
-      <yloc>480</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Fetch Same Person from Destination</name>
-    <type>DBJoin</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <connection>Openmrs Merge DB</connection>
-    <rowlimit>1</rowlimit>
-    <sql>select person_id existing_person_id from person where person.uuid = ?</sql>
+    <sql>select location_id existing_location_id from location where location.uuid = ?</sql>
     <outer_join>Y</outer_join>
     <replace_vars>N</replace_vars>
     <parameter>
@@ -767,13 +595,13 @@
     </remotesteps>
     <GUI>
       <xloc>640</xloc>
-      <yloc>320</yloc>
+      <yloc>240</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Fetch Source DB Identifier Type</name>
-    <type>DBJoin</type>
+    <name>Filter rows</name>
+    <type>FilterRows</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -782,117 +610,13 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <connection>Openmrs Merge DB</connection>
-    <rowlimit>1</rowlimit>
-    <sql>select person_attribute_type.person_attribute_type_id source_db_person_attribute_type from person_attribute_type where uuid = ?</sql>
-    <outer_join>Y</outer_join>
-    <replace_vars>N</replace_vars>
-    <parameter>
-      <field>
-        <name>source_db_identifier_type_uuid</name>
-        <type>String</type>
-      </field>
-    </parameter>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>1312</xloc>
-      <yloc>320</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Generate UUID</name>
-    <type>RandomValue</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <fields>
-      <field>
-        <name>identifier_type_uuid</name>
-        <type>random uuid</type>
-      </field>
-    </fields>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>1104</xloc>
-      <yloc>480</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Get system info</name>
-    <type>SystemInfo</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <fields>
-      <field>
-        <name>system_date</name>
-        <type>system date (fixed)</type>
-      </field>
-      <field>
-        <name>database_name</name>
-        <type>command line argument 1</type>
-      </field>
-    </fields>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>128</xloc>
-      <yloc>208</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Join rows (cartesian product)</name>
-    <type>JoinRows</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <directory>%%java.io.tmpdir%%</directory>
-    <prefix>out</prefix>
-    <cache_size>500</cache_size>
-    <main/>
+    <send_true_to>Save location</send_true_to>
+    <send_false_to/>
     <compare>
       <condition>
         <negated>N</negated>
-        <leftvalue/>
-        <function>=</function>
+        <leftvalue>existing_location_id</leftvalue>
+        <function>IS NULL</function>
         <rightvalue/>
       </condition>
     </compare>
@@ -905,13 +629,13 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>352</xloc>
-      <yloc>320</yloc>
+      <xloc>896</xloc>
+      <yloc>240</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Load Person from Source</name>
+    <name>Load Location from Source</name>
     <type>TableInput</type>
     <description/>
     <distribute>Y</distribute>
@@ -921,8 +645,8 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <connection>Openmrs Source</connection>
-    <sql>select * from person</sql>
+    <connection>OpenMRS source</connection>
+    <sql>SELECT * FROM location</sql>
     <limit>0</limit>
     <lookup/>
     <execute_each_row>N</execute_each_row>
@@ -937,13 +661,13 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>128</xloc>
-      <yloc>432</yloc>
+      <xloc>320</xloc>
+      <yloc>240</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Save Person</name>
+    <name>Save location</name>
     <type>TableOutput</type>
     <description/>
     <distribute>Y</distribute>
@@ -953,9 +677,9 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <connection>Openmrs Merge DB</connection>
+    <connection>OpenMRS destination</connection>
     <schema/>
-    <table>person</table>
+    <table>location</table>
     <commit>1000</commit>
     <truncate>N</truncate>
     <ignore_errors>N</ignore_errors>
@@ -972,56 +696,108 @@
     <return_field/>
     <fields>
       <field>
-        <column_name>gender</column_name>
-        <stream_name>gender</stream_name>
+        <column_name>location_id</column_name>
+        <stream_name>location_id</stream_name>
       </field>
       <field>
-        <column_name>birthdate</column_name>
-        <stream_name>birthdate</stream_name>
+        <column_name>name</column_name>
+        <stream_name>name</stream_name>
       </field>
       <field>
-        <column_name>birthdate_estimated</column_name>
-        <stream_name>birthdate_estimated</stream_name>
+        <column_name>description</column_name>
+        <stream_name>description</stream_name>
       </field>
       <field>
-        <column_name>dead</column_name>
-        <stream_name>dead</stream_name>
+        <column_name>address1</column_name>
+        <stream_name>address1</stream_name>
       </field>
       <field>
-        <column_name>death_date</column_name>
-        <stream_name>death_date</stream_name>
+        <column_name>address2</column_name>
+        <stream_name>address2</stream_name>
       </field>
       <field>
-        <column_name>cause_of_death</column_name>
-        <stream_name>cause_of_death</stream_name>
+        <column_name>city_village</column_name>
+        <stream_name>city_village</stream_name>
+      </field>
+      <field>
+        <column_name>state_province</column_name>
+        <stream_name>state_province</stream_name>
+      </field>
+      <field>
+        <column_name>postal_code</column_name>
+        <stream_name>postal_code</stream_name>
+      </field>
+      <field>
+        <column_name>country</column_name>
+        <stream_name>country</stream_name>
+      </field>
+      <field>
+        <column_name>latitude</column_name>
+        <stream_name>latitude</stream_name>
+      </field>
+      <field>
+        <column_name>longitude</column_name>
+        <stream_name>longitude</stream_name>
       </field>
       <field>
         <column_name>creator</column_name>
-        <stream_name>creator_id</stream_name>
+        <stream_name>creator</stream_name>
       </field>
       <field>
         <column_name>date_created</column_name>
         <stream_name>date_created</stream_name>
       </field>
       <field>
-        <column_name>voided</column_name>
-        <stream_name>voided</stream_name>
+        <column_name>county_district</column_name>
+        <stream_name>county_district</stream_name>
       </field>
       <field>
-        <column_name>void_reason</column_name>
-        <stream_name>void_reason</stream_name>
+        <column_name>address3</column_name>
+        <stream_name>address3</stream_name>
+      </field>
+      <field>
+        <column_name>address6</column_name>
+        <stream_name>address6</stream_name>
+      </field>
+      <field>
+        <column_name>address5</column_name>
+        <stream_name>address5</stream_name>
+      </field>
+      <field>
+        <column_name>address4</column_name>
+        <stream_name>address4</stream_name>
+      </field>
+      <field>
+        <column_name>retired</column_name>
+        <stream_name>retired</stream_name>
+      </field>
+      <field>
+        <column_name>retired_by</column_name>
+        <stream_name>retired_by</stream_name>
+      </field>
+      <field>
+        <column_name>date_retired</column_name>
+        <stream_name>date_retired</stream_name>
+      </field>
+      <field>
+        <column_name>retire_reason</column_name>
+        <stream_name>retire_reason</stream_name>
+      </field>
+      <field>
+        <column_name>parent_location</column_name>
+        <stream_name>parent_location</stream_name>
       </field>
       <field>
         <column_name>uuid</column_name>
         <stream_name>uuid</stream_name>
       </field>
       <field>
-        <column_name>deathdate_estimated</column_name>
-        <stream_name>deathdate_estimated</stream_name>
+        <column_name>changed_by</column_name>
+        <stream_name>changed_by</stream_name>
       </field>
       <field>
-        <column_name>birthtime</column_name>
-        <stream_name>birthtime</stream_name>
+        <column_name>date_changed</column_name>
+        <stream_name>date_changed</stream_name>
       </field>
     </fields>
     <attributes/>
@@ -1033,80 +809,8 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>1104</xloc>
-      <yloc>320</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Save Source DB person_id</name>
-    <type>TableOutput</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <connection>Openmrs Merge DB</connection>
-    <schema/>
-    <table>person_attribute</table>
-    <commit>1000</commit>
-    <truncate>N</truncate>
-    <ignore_errors>N</ignore_errors>
-    <use_batch>Y</use_batch>
-    <specify_fields>Y</specify_fields>
-    <partitioning_enabled>N</partitioning_enabled>
-    <partitioning_field/>
-    <partitioning_daily>N</partitioning_daily>
-    <partitioning_monthly>Y</partitioning_monthly>
-    <tablename_in_field>N</tablename_in_field>
-    <tablename_field/>
-    <tablename_in_table>Y</tablename_in_table>
-    <return_keys>N</return_keys>
-    <return_field/>
-    <fields>
-      <field>
-        <column_name>person_id</column_name>
-        <stream_name>destination_db_person_id</stream_name>
-      </field>
-      <field>
-        <column_name>value</column_name>
-        <stream_name>person_id</stream_name>
-      </field>
-      <field>
-        <column_name>person_attribute_type_id</column_name>
-        <stream_name>source_db_person_attribute_type</stream_name>
-      </field>
-      <field>
-        <column_name>creator</column_name>
-        <stream_name>creator_id</stream_name>
-      </field>
-      <field>
-        <column_name>date_created</column_name>
-        <stream_name>system_date</stream_name>
-      </field>
-      <field>
-        <column_name>voided</column_name>
-        <stream_name>false</stream_name>
-      </field>
-      <field>
-        <column_name>uuid</column_name>
-        <stream_name>identifier_type_uuid</stream_name>
-      </field>
-    </fields>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>896</xloc>
-      <yloc>480</yloc>
+      <xloc>1200</xloc>
+      <yloc>240</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

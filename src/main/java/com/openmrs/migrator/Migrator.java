@@ -118,7 +118,22 @@ public class Migrator implements Callable<Optional<Void>> {
     List<String> pdiFiles = new ArrayList<>();
 
     pdiFiles.add("pdiresources/jobs/merge-patient-job.kjb");
+    pdiFiles.add("pdiresources/jobs/validations.kjb");
     pdiFiles.add("pdiresources/transformations/merge-patient.ktr");
+    pdiFiles.add("pdiresources/transformations/validate-concepts.ktr");
+    pdiFiles.add("pdiresources/transformations/validate-encounter-types.ktr");
+    pdiFiles.add("pdiresources/transformations/validate-forms.ktr");
+    pdiFiles.add("pdiresources/transformations/validate-order-types.ktr");
+    pdiFiles.add("pdiresources/transformations/validate-patient-identifier-types.ktr");
+    pdiFiles.add("pdiresources/transformations/validate-person-attribute-types.ktr");
+    pdiFiles.add("pdiresources/transformations/validate-programs.ktr");
+    pdiFiles.add("pdiresources/transformations/validate-program-workflows.ktr");
+    pdiFiles.add("pdiresources/transformations/validate-program-workflow-states.ktr");
+    pdiFiles.add("pdiresources/transformations/validate-relationship-types.ktr");
+    pdiFiles.add("pdiresources/transformations/validate-roles.ktr");
+    pdiFiles.add("pdiresources/transformations/validate-scheduler-task-config.ktr");
+    pdiFiles.add("pdiresources/transformations/validate-visit-attribute-types.ktr");
+    pdiFiles.add("pdiresources/transformations/validate-visit-types.ktr");
     pdiFiles.add(SettingsService.SETTINGS_PROPERTIES);
 
     bootstrapService.createDirectoryStructure(dirList);

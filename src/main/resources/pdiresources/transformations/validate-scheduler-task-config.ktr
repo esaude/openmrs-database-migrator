@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <transformation>
   <info>
-    <name>merge-patient</name>
+    <name>Validate Scheduler Task Config</name>
     <description/>
     <extended_description/>
     <trans_version/>
     <trans_type>Normal</trans_type>
+    <trans_status>0</trans_status>
     <directory>/</directory>
     <parameters>
     </parameters>
@@ -427,16 +428,16 @@
     <clusterschemas>
     </clusterschemas>
     <created_user>-</created_user>
-    <created_date>2019/05/06 08:33:54.754</created_date>
+    <created_date>2019/07/23 09:13:47.028</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2019/05/06 08:33:54.754</modified_date>
+    <modified_date>2019/07/23 09:13:47.028</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
   </notepads>
   <connection>
-    <name>Openmrs Merge DB</name>
+    <name>OpenMRS destination</name>
     <server>${ETL_DATABASE_HOST}</server>
     <type>MYSQL</type>
     <access>Native</access>
@@ -491,7 +492,7 @@
     </attributes>
   </connection>
   <connection>
-    <name>Openmrs Source</name>
+    <name>OpenMRS source</name>
     <server>${ETL_DATABASE_HOST}</server>
     <type>MYSQL</type>
     <access>Native</access>
@@ -547,59 +548,39 @@
   </connection>
   <order>
     <hop>
-      <from>Fetch Same Person from Destination</from>
-      <to>Doesn't exist on Destination?</to>
+      <from>Read Metadata Mapping</from>
+      <to>Validate Ids</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Doesn't exist on Destination?</from>
-      <to>Save Person</to>
+      <from>Read old scheduler task configs</from>
+      <to>Validate Ids</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Data grid</from>
-      <to>Join rows (cartesian product)</to>
+      <from>Validate Ids</from>
+      <to>Validate uuids</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Load Person from Source</from>
-      <to>Join rows (cartesian product)</to>
+      <from>Read old scheduler task configs</from>
+      <to>Validate uuids</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Save Person</from>
-      <to>Fetch Source DB Identifier Type</to>
+      <from>Read new scheduler taskt configs</from>
+      <to>Validate Ids</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Fetch Source DB Identifier Type</from>
-      <to>Fetch Destination DB person_id</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Get system info</from>
-      <to>Join rows (cartesian product)</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Fetch Destination DB person_id</from>
-      <to>Generate UUID</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Generate UUID</from>
-      <to>Save Source DB person_id</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Join rows (cartesian product)</from>
-      <to>Fetch Same Person from Destination</to>
+      <from>Read new scheduler taskt configs</from>
+      <to>Validate uuids</to>
       <enabled>Y</enabled>
     </hop>
   </order>
   <step>
-    <name>Data grid</name>
-    <type>DataGrid</type>
+    <name>Read Metadata Mapping</name>
+    <type>CsvInput</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -608,20 +589,22 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
+    <filename>src/main/resources/pdiresources/config/scheduler_task_config.csv</filename>
+    <filename_field/>
+    <rownum_field/>
+    <include_filename>N</include_filename>
+    <separator>,</separator>
+    <enclosure>"</enclosure>
+    <header>Y</header>
+    <buffer_size>50000</buffer_size>
+    <lazy_conversion>N</lazy_conversion>
+    <add_filename_result>N</add_filename_result>
+    <parallel>N</parallel>
+    <newline_possible>N</newline_possible>
+    <encoding/>
     <fields>
       <field>
-        <name>creator_id</name>
-        <type>Number</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>source_db_identifier_type_uuid</name>
+        <name>name</name>
         <type>String</type>
         <format/>
         <currency/>
@@ -629,199 +612,51 @@
         <group/>
         <length>-1</length>
         <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
+        <trim_type>none</trim_type>
       </field>
       <field>
-        <name>false</name>
-        <type>Boolean</type>
+        <name>old_task_config_id</name>
+        <type>Integer</type>
         <format/>
         <currency/>
         <decimal/>
         <group/>
         <length>-1</length>
         <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
+        <trim_type>none</trim_type>
       </field>
-    </fields>
-    <data>
-      <line>
-        <item>1</item>
-        <item>8d793bee-c2cc-11de-8d13-0010c6dffd23</item>
-        <item>false</item>
-      </line>
-    </data>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>128</xloc>
-      <yloc>320</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Doesn't exist on Destination?</name>
-    <type>FilterRows</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <send_true_to>Save Person</send_true_to>
-    <send_false_to/>
-    <compare>
-      <condition>
-        <negated>N</negated>
-        <leftvalue>existing_person_id</leftvalue>
-        <function>IS NULL</function>
-        <rightvalue/>
-      </condition>
-    </compare>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>880</xloc>
-      <yloc>320</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Fetch Destination DB person_id</name>
-    <type>DBJoin</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <connection>Openmrs Merge DB</connection>
-    <rowlimit>1</rowlimit>
-    <sql>select person_id destination_db_person_id from person where person.uuid = ?</sql>
-    <outer_join>N</outer_join>
-    <replace_vars>N</replace_vars>
-    <parameter>
       <field>
-        <name>uuid</name>
+        <name>old_scheduler_task_config_uuid</name>
         <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <length>-1</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
       </field>
-    </parameter>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>1312</xloc>
-      <yloc>480</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Fetch Same Person from Destination</name>
-    <type>DBJoin</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <connection>Openmrs Merge DB</connection>
-    <rowlimit>1</rowlimit>
-    <sql>select person_id existing_person_id from person where person.uuid = ?</sql>
-    <outer_join>Y</outer_join>
-    <replace_vars>N</replace_vars>
-    <parameter>
       <field>
-        <name>uuid</name>
+        <name>new_task_config_id</name>
+        <type>Integer</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <length>-1</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>new_scheduler_task_config_uuid</name>
         <type>String</type>
-      </field>
-    </parameter>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>640</xloc>
-      <yloc>320</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Fetch Source DB Identifier Type</name>
-    <type>DBJoin</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <connection>Openmrs Merge DB</connection>
-    <rowlimit>1</rowlimit>
-    <sql>select person_attribute_type.person_attribute_type_id source_db_person_attribute_type from person_attribute_type where uuid = ?</sql>
-    <outer_join>Y</outer_join>
-    <replace_vars>N</replace_vars>
-    <parameter>
-      <field>
-        <name>source_db_identifier_type_uuid</name>
-        <type>String</type>
-      </field>
-    </parameter>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>1312</xloc>
-      <yloc>320</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Generate UUID</name>
-    <type>RandomValue</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <fields>
-      <field>
-        <name>identifier_type_uuid</name>
-        <type>random uuid</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <length>-1</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
       </field>
     </fields>
     <attributes/>
@@ -833,96 +668,24 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>1104</xloc>
-      <yloc>480</yloc>
+      <xloc>368</xloc>
+      <yloc>256</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Get system info</name>
-    <type>SystemInfo</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <fields>
-      <field>
-        <name>system_date</name>
-        <type>system date (fixed)</type>
-      </field>
-      <field>
-        <name>database_name</name>
-        <type>command line argument 1</type>
-      </field>
-    </fields>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>128</xloc>
-      <yloc>208</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Join rows (cartesian product)</name>
-    <type>JoinRows</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <directory>%%java.io.tmpdir%%</directory>
-    <prefix>out</prefix>
-    <cache_size>500</cache_size>
-    <main/>
-    <compare>
-      <condition>
-        <negated>N</negated>
-        <leftvalue/>
-        <function>=</function>
-        <rightvalue/>
-      </condition>
-    </compare>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>352</xloc>
-      <yloc>320</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Load Person from Source</name>
+    <name>Read new scheduler taskt configs</name>
     <type>TableInput</type>
     <description/>
-    <distribute>Y</distribute>
+    <distribute>N</distribute>
     <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <connection>Openmrs Source</connection>
-    <sql>select * from person</sql>
+    <connection>OpenMRS destination</connection>
+    <sql>SELECT task_config_id,uuid FROM scheduler_task_config</sql>
     <limit>0</limit>
     <lookup/>
     <execute_each_row>N</execute_each_row>
@@ -937,93 +700,29 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>128</xloc>
-      <yloc>432</yloc>
+      <xloc>752</xloc>
+      <yloc>112</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Save Person</name>
-    <type>TableOutput</type>
+    <name>Read old scheduler task configs</name>
+    <type>TableInput</type>
     <description/>
-    <distribute>Y</distribute>
+    <distribute>N</distribute>
     <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <connection>Openmrs Merge DB</connection>
-    <schema/>
-    <table>person</table>
-    <commit>1000</commit>
-    <truncate>N</truncate>
-    <ignore_errors>N</ignore_errors>
-    <use_batch>Y</use_batch>
-    <specify_fields>Y</specify_fields>
-    <partitioning_enabled>N</partitioning_enabled>
-    <partitioning_field/>
-    <partitioning_daily>N</partitioning_daily>
-    <partitioning_monthly>Y</partitioning_monthly>
-    <tablename_in_field>N</tablename_in_field>
-    <tablename_field/>
-    <tablename_in_table>Y</tablename_in_table>
-    <return_keys>N</return_keys>
-    <return_field/>
-    <fields>
-      <field>
-        <column_name>gender</column_name>
-        <stream_name>gender</stream_name>
-      </field>
-      <field>
-        <column_name>birthdate</column_name>
-        <stream_name>birthdate</stream_name>
-      </field>
-      <field>
-        <column_name>birthdate_estimated</column_name>
-        <stream_name>birthdate_estimated</stream_name>
-      </field>
-      <field>
-        <column_name>dead</column_name>
-        <stream_name>dead</stream_name>
-      </field>
-      <field>
-        <column_name>death_date</column_name>
-        <stream_name>death_date</stream_name>
-      </field>
-      <field>
-        <column_name>cause_of_death</column_name>
-        <stream_name>cause_of_death</stream_name>
-      </field>
-      <field>
-        <column_name>creator</column_name>
-        <stream_name>creator_id</stream_name>
-      </field>
-      <field>
-        <column_name>date_created</column_name>
-        <stream_name>date_created</stream_name>
-      </field>
-      <field>
-        <column_name>voided</column_name>
-        <stream_name>voided</stream_name>
-      </field>
-      <field>
-        <column_name>void_reason</column_name>
-        <stream_name>void_reason</stream_name>
-      </field>
-      <field>
-        <column_name>uuid</column_name>
-        <stream_name>uuid</stream_name>
-      </field>
-      <field>
-        <column_name>deathdate_estimated</column_name>
-        <stream_name>deathdate_estimated</stream_name>
-      </field>
-      <field>
-        <column_name>birthtime</column_name>
-        <stream_name>birthtime</stream_name>
-      </field>
-    </fields>
+    <connection>OpenMRS source</connection>
+    <sql>SELECT task_config_id,uuid FROM scheduler_task_config</sql>
+    <limit>0</limit>
+    <lookup/>
+    <execute_each_row>N</execute_each_row>
+    <variables_active>N</variables_active>
+    <lazy_conversion_active>N</lazy_conversion_active>
     <attributes/>
     <cluster_schema/>
     <remotesteps>
@@ -1033,14 +732,14 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>1104</xloc>
-      <yloc>320</yloc>
+      <xloc>752</xloc>
+      <yloc>400</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Save Source DB person_id</name>
-    <type>TableOutput</type>
+    <name>Validate Ids</name>
+    <type>Validator</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -1049,53 +748,149 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <connection>Openmrs Merge DB</connection>
-    <schema/>
-    <table>person_attribute</table>
-    <commit>1000</commit>
-    <truncate>N</truncate>
-    <ignore_errors>N</ignore_errors>
-    <use_batch>Y</use_batch>
-    <specify_fields>Y</specify_fields>
-    <partitioning_enabled>N</partitioning_enabled>
-    <partitioning_field/>
-    <partitioning_daily>N</partitioning_daily>
-    <partitioning_monthly>Y</partitioning_monthly>
-    <tablename_in_field>N</tablename_in_field>
-    <tablename_field/>
-    <tablename_in_table>Y</tablename_in_table>
-    <return_keys>N</return_keys>
-    <return_field/>
-    <fields>
-      <field>
-        <column_name>person_id</column_name>
-        <stream_name>destination_db_person_id</stream_name>
-      </field>
-      <field>
-        <column_name>value</column_name>
-        <stream_name>person_id</stream_name>
-      </field>
-      <field>
-        <column_name>person_attribute_type_id</column_name>
-        <stream_name>source_db_person_attribute_type</stream_name>
-      </field>
-      <field>
-        <column_name>creator</column_name>
-        <stream_name>creator_id</stream_name>
-      </field>
-      <field>
-        <column_name>date_created</column_name>
-        <stream_name>system_date</stream_name>
-      </field>
-      <field>
-        <column_name>voided</column_name>
-        <stream_name>false</stream_name>
-      </field>
-      <field>
-        <column_name>uuid</column_name>
-        <stream_name>identifier_type_uuid</stream_name>
-      </field>
-    </fields>
+    <validate_all>N</validate_all>
+    <concat_errors>N</concat_errors>
+    <concat_separator>|</concat_separator>
+    <validator_field>
+      <name>old_task_config_id</name>
+      <validation_name>old_task_config_id</validation_name>
+      <max_length/>
+      <min_length/>
+      <null_allowed>N</null_allowed>
+      <only_null_allowed>N</only_null_allowed>
+      <only_numeric_allowed>Y</only_numeric_allowed>
+      <data_type>Integer</data_type>
+      <data_type_verified>Y</data_type_verified>
+      <conversion_mask/>
+      <decimal_symbol/>
+      <grouping_symbol/>
+      <max_value/>
+      <min_value/>
+      <start_string/>
+      <end_string/>
+      <start_string_not_allowed/>
+      <end_string_not_allowed/>
+      <regular_expression/>
+      <regular_expression_not_allowed/>
+      <error_code/>
+      <error_description/>
+      <is_sourcing_values>Y</is_sourcing_values>
+      <sourcing_step>Read old scheduler task configs</sourcing_step>
+      <sourcing_field>task_config_id</sourcing_field>
+      <allowed_value/>
+    </validator_field>
+    <validator_field>
+      <name>new_task_config_id</name>
+      <validation_name>new_task_config_id</validation_name>
+      <max_length/>
+      <min_length/>
+      <null_allowed>N</null_allowed>
+      <only_null_allowed>N</only_null_allowed>
+      <only_numeric_allowed>Y</only_numeric_allowed>
+      <data_type>Integer</data_type>
+      <data_type_verified>Y</data_type_verified>
+      <conversion_mask/>
+      <decimal_symbol/>
+      <grouping_symbol/>
+      <max_value/>
+      <min_value/>
+      <start_string/>
+      <end_string/>
+      <start_string_not_allowed/>
+      <end_string_not_allowed/>
+      <regular_expression/>
+      <regular_expression_not_allowed/>
+      <error_code/>
+      <error_description/>
+      <is_sourcing_values>Y</is_sourcing_values>
+      <sourcing_step>Read new scheduler taskt configs</sourcing_step>
+      <sourcing_field>task_config_id</sourcing_field>
+      <allowed_value/>
+    </validator_field>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>608</xloc>
+      <yloc>256</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Validate uuids</name>
+    <type>Validator</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <validate_all>N</validate_all>
+    <concat_errors>N</concat_errors>
+    <concat_separator>|</concat_separator>
+    <validator_field>
+      <name>old_scheduler_task_config_uuid</name>
+      <validation_name>old_scheduler_task_config_uuid</validation_name>
+      <max_length/>
+      <min_length/>
+      <null_allowed>N</null_allowed>
+      <only_null_allowed>N</only_null_allowed>
+      <only_numeric_allowed>N</only_numeric_allowed>
+      <data_type>String</data_type>
+      <data_type_verified>Y</data_type_verified>
+      <conversion_mask/>
+      <decimal_symbol/>
+      <grouping_symbol/>
+      <max_value/>
+      <min_value/>
+      <start_string/>
+      <end_string/>
+      <start_string_not_allowed/>
+      <end_string_not_allowed/>
+      <regular_expression/>
+      <regular_expression_not_allowed>/[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}/</regular_expression_not_allowed>
+      <error_code/>
+      <error_description/>
+      <is_sourcing_values>Y</is_sourcing_values>
+      <sourcing_step>Read old scheduler task configs</sourcing_step>
+      <sourcing_field>uuid</sourcing_field>
+      <allowed_value/>
+    </validator_field>
+    <validator_field>
+      <name>new_scheduler_task_config_uuid</name>
+      <validation_name>new_scheduler_task_config_uuid</validation_name>
+      <max_length/>
+      <min_length/>
+      <null_allowed>N</null_allowed>
+      <only_null_allowed>N</only_null_allowed>
+      <only_numeric_allowed>N</only_numeric_allowed>
+      <data_type>String</data_type>
+      <data_type_verified>Y</data_type_verified>
+      <conversion_mask/>
+      <decimal_symbol/>
+      <grouping_symbol/>
+      <max_value/>
+      <min_value/>
+      <start_string/>
+      <end_string/>
+      <start_string_not_allowed/>
+      <end_string_not_allowed/>
+      <regular_expression/>
+      <regular_expression_not_allowed>/[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}/</regular_expression_not_allowed>
+      <error_code/>
+      <error_description/>
+      <is_sourcing_values>Y</is_sourcing_values>
+      <sourcing_step>Read new scheduler taskt configs</sourcing_step>
+      <sourcing_field>uuid</sourcing_field>
+      <allowed_value/>
+    </validator_field>
     <attributes/>
     <cluster_schema/>
     <remotesteps>
@@ -1106,7 +901,7 @@
     </remotesteps>
     <GUI>
       <xloc>896</xloc>
-      <yloc>480</yloc>
+      <yloc>256</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
