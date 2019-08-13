@@ -202,7 +202,6 @@ public class Migrator implements Callable<Optional<Void>> {
     String folder =
         ConsoleUtils.readFromConsole(
             "Folder location containing backups: input/", System.console());
-    ;
     return StringUtils.isBlank(folder) ? "input/" : folder;
   }
 
