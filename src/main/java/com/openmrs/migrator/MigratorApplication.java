@@ -53,7 +53,7 @@ public class MigratorApplication implements CommandLineRunner {
 
   // TODO: to be replaced with PICOCLI
   @Override
-  public void run(String... args) throws Exception {
+  public void run(String... args) throws SettingsException, IOException {
     LOG.info("EXECUTING : command line runner");
 
     for (int i = 0; i < args.length; ++i) {
@@ -72,15 +72,10 @@ public class MigratorApplication implements CommandLineRunner {
     }
   }
 
-  private void runAllJobs() throws Exception {
-    try {
-      for (String t : jobs) {
-
-        InputStream xml = fileIOUtilities.getResourceAsStream(t);
-        pdiService.runJob(xml);
-      }
-    } catch (SettingsException e) {
-      // Do nothing kettle prints stack trace
+  private void runAllJobs() throws SettingsException, IOException {
+    for (String t : jobs) {
+      InputStream xml = fileIOUtilities.getResourceAsStream(t);
+      pdiService.runJob(xml);
     }
   }
 
