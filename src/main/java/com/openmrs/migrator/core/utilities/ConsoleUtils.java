@@ -1,14 +1,13 @@
 package com.openmrs.migrator.core.utilities;
 
 import com.openmrs.migrator.core.services.SettingsService;
-import org.apache.commons.lang.StringUtils;
-
 import java.io.Console;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import org.apache.commons.lang.StringUtils;
 
 public class ConsoleUtils {
 
