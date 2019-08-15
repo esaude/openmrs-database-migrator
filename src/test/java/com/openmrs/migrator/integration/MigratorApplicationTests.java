@@ -30,7 +30,7 @@ public class MigratorApplicationTests {
   private CommandLineRunner commandLineRunner;
 
   private static List<String> structurePaths =
-      Arrays.asList("input", "output", "config", "pdiresources", "settings.properties");;
+      Arrays.asList("input", "output", "config", "pdiresources", "settings.properties", "plugins");
 
   @Before
   public void init() throws IOException, InvalidParameterException {

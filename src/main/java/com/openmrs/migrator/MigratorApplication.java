@@ -35,7 +35,8 @@ public class MigratorApplication implements CommandLineRunner {
           "config/",
           "pdiresources/",
           "pdiresources/transformations/",
-          "pdiresources/jobs/");
+          "pdiresources/jobs/",
+          "plugins/");
 
   private BootstrapService bootstrapService;
 
@@ -100,6 +101,7 @@ public class MigratorApplication implements CommandLineRunner {
     pdiFiles.add("pdiresources/transformations/validate-visit-attribute-types.ktr");
     pdiFiles.add("pdiresources/transformations/validate-visit-types.ktr");
     pdiFiles.add("settings.properties");
+    pdiFiles.add("plugins/pdi-core-plugins-impl-8.2.0.7-719.jar");
 
     bootstrapService.createDirectoryStructure(dirList);
     bootstrapService.populateDefaultResources(pdiFiles);
