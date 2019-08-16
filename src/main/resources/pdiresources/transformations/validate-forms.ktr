@@ -548,28 +548,8 @@
   </connection>
   <order>
     <hop>
-      <from>Read Metadata Mapping</from>
-      <to>Validate Ids</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
       <from>Read old forms</from>
       <to>Validate Ids</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Read new forms</from>
-      <to>Validate Ids</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Read new forms</from>
-      <to>Validate uuids</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Read old forms</from>
-      <to>Validate uuids</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
@@ -577,9 +557,112 @@
       <to>Validate uuids</to>
       <enabled>Y</enabled>
     </hop>
+    <hop>
+      <from>Read new forms</from>
+      <to>Validate Ids</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Read old forms</from>
+      <to>Validate uuids</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Read Metadata Mapping</from>
+      <to>Validate Ids</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Read new forms</from>
+      <to>Validate uuids</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Read old forms</from>
+      <to>Validade Harmonized</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Read Harmonized Metadata</from>
+      <to>Validade Harmonized</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Validate Ids</from>
+      <to>Id Validation Failed</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Validate uuids</from>
+      <to>UUID Validation Failed</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Validade Harmonized</from>
+      <to>Could not find in harmonized</to>
+      <enabled>Y</enabled>
+    </hop>
   </order>
   <step>
-    <name>Read Metadata Mapping</name>
+    <name>Could not find in harmonized</name>
+    <type>Abort</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <row_threshold>0</row_threshold>
+    <message>Could not find form in harmonized metadata</message>
+    <always_log_rows>Y</always_log_rows>
+    <abort_option>ABORT</abort_option>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>800</xloc>
+      <yloc>560</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Id Validation Failed</name>
+    <type>Abort</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <row_threshold>0</row_threshold>
+    <message/>
+    <always_log_rows>Y</always_log_rows>
+    <abort_option>ABORT</abort_option>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>432</xloc>
+      <yloc>64</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Read Harmonized Metadata</name>
     <type>CsvInput</type>
     <description/>
     <distribute>Y</distribute>
@@ -589,7 +672,58 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <filename>src/main/resources/pdiresources/config/form.csv</filename>
+    <filename>/home/yassin/Desktop/forms.csv</filename>
+    <filename_field/>
+    <rownum_field/>
+    <include_filename>N</include_filename>
+    <separator>,</separator>
+    <enclosure>"</enclosure>
+    <header>Y</header>
+    <buffer_size>50000</buffer_size>
+    <lazy_conversion>Y</lazy_conversion>
+    <add_filename_result>N</add_filename_result>
+    <parallel>N</parallel>
+    <newline_possible>N</newline_possible>
+    <encoding/>
+    <fields>
+      <field>
+        <name>uuid</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <length>-1</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>960</xloc>
+      <yloc>256</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Read Metadata Mapping</name>
+    <type>CsvInput</type>
+    <description/>
+    <distribute>N</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <filename>/home/yassin/Projects/openmrs-database-migrator/src/main/resources/pdiresources/config/form.csv</filename>
     <filename_field/>
     <rownum_field/>
     <include_filename>N</include_filename>
@@ -668,8 +802,8 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>272</xloc>
-      <yloc>240</yloc>
+      <xloc>224</xloc>
+      <yloc>256</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -701,7 +835,7 @@
     </remotesteps>
     <GUI>
       <xloc>608</xloc>
-      <yloc>96</yloc>
+      <yloc>64</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -732,8 +866,93 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>608</xloc>
-      <yloc>384</yloc>
+      <xloc>624</xloc>
+      <yloc>432</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>UUID Validation Failed</name>
+    <type>Abort</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <row_threshold>0</row_threshold>
+    <message/>
+    <always_log_rows>Y</always_log_rows>
+    <abort_option>ABORT</abort_option>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>800</xloc>
+      <yloc>64</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Validade Harmonized</name>
+    <type>Validator</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <validate_all>N</validate_all>
+    <concat_errors>N</concat_errors>
+    <concat_separator>|</concat_separator>
+    <validator_field>
+      <name>uuid</name>
+      <validation_name>uuid</validation_name>
+      <max_length/>
+      <min_length/>
+      <null_allowed>Y</null_allowed>
+      <only_null_allowed>N</only_null_allowed>
+      <only_numeric_allowed>N</only_numeric_allowed>
+      <data_type>String</data_type>
+      <data_type_verified>Y</data_type_verified>
+      <conversion_mask/>
+      <decimal_symbol/>
+      <grouping_symbol/>
+      <max_value/>
+      <min_value/>
+      <start_string/>
+      <end_string/>
+      <start_string_not_allowed/>
+      <end_string_not_allowed/>
+      <regular_expression/>
+      <regular_expression_not_allowed/>
+      <error_code/>
+      <error_description/>
+      <is_sourcing_values>Y</is_sourcing_values>
+      <sourcing_step>Read Harmonized Metadata</sourcing_step>
+      <sourcing_field>uuid</sourcing_field>
+      <allowed_value/>
+    </validator_field>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>800</xloc>
+      <yloc>432</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -741,7 +960,7 @@
     <name>Validate Ids</name>
     <type>Validator</type>
     <description/>
-    <distribute>Y</distribute>
+    <distribute>N</distribute>
     <custom_distribution/>
     <copies>1</copies>
     <partitioning>
@@ -816,8 +1035,8 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>448</xloc>
-      <yloc>240</yloc>
+      <xloc>432</xloc>
+      <yloc>256</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -825,7 +1044,7 @@
     <name>Validate uuids</name>
     <type>Validator</type>
     <description/>
-    <distribute>Y</distribute>
+    <distribute>N</distribute>
     <custom_distribution/>
     <copies>1</copies>
     <partitioning>
@@ -900,12 +1119,48 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>752</xloc>
-      <yloc>240</yloc>
+      <xloc>800</xloc>
+      <yloc>256</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step_error_handling>
+    <error>
+      <source_step>Validade Harmonized</source_step>
+      <target_step>Could not find in harmonized</target_step>
+      <is_enabled>Y</is_enabled>
+      <nr_valuename/>
+      <descriptions_valuename/>
+      <fields_valuename/>
+      <codes_valuename/>
+      <max_errors/>
+      <max_pct_errors/>
+      <min_pct_rows/>
+    </error>
+    <error>
+      <source_step>Validate Ids</source_step>
+      <target_step>Id Validation Failed</target_step>
+      <is_enabled>Y</is_enabled>
+      <nr_valuename/>
+      <descriptions_valuename/>
+      <fields_valuename/>
+      <codes_valuename/>
+      <max_errors/>
+      <max_pct_errors/>
+      <min_pct_rows/>
+    </error>
+    <error>
+      <source_step>Validate uuids</source_step>
+      <target_step>UUID Validation Failed</target_step>
+      <is_enabled>Y</is_enabled>
+      <nr_valuename/>
+      <descriptions_valuename/>
+      <fields_valuename/>
+      <codes_valuename/>
+      <max_errors/>
+      <max_pct_errors/>
+      <min_pct_rows/>
+    </error>
   </step_error_handling>
   <slave-step-copy-partition-distribution>
   </slave-step-copy-partition-distribution>
