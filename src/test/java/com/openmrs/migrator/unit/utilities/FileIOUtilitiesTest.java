@@ -262,7 +262,7 @@ public class FileIOUtilitiesTest {
     fileIOUtilities.createFile(Paths.get("temp/temp_file.txt"));
     Path path = Paths.get("temp/temp_file.txt");
 
-    fileIOUtilities.writeToFile(path.toFile(), SettingsService.DB + "=data_base");
+    fileIOUtilities.writeToFile(path.toFile(), SettingsService.DB_SOURCE + "=data_base");
 
     List<String> names = fileIOUtilities.getAllDataBaseNamesFromConfigFile(path);
     assertEquals(1, names.size());
@@ -295,7 +295,7 @@ public class FileIOUtilitiesTest {
     fileIOUtilities.createFile(Paths.get("temp/temp_file.txt"));
     Path path = Paths.get("temp/temp_file.txt");
 
-    fileIOUtilities.writeToFile(path.toFile(), SettingsService.DB + "=fgh");
+    fileIOUtilities.writeToFile(path.toFile(), SettingsService.DB_SOURCE + "=fgh");
     Optional<String> name = fileIOUtilities.searchForDataBaseNameInSettingsFile("fgh", path);
 
     assertEquals("fgh", name.get());
@@ -372,5 +372,17 @@ public class FileIOUtilitiesTest {
 
     assertNotNull(kettleFile);
     assertTrue(kettleFile.exists());
+  }
+
+  @Test
+  public void getPDIFileAsStreamFromRelativePath() throws FileNotFoundException {
+    InputStream is = fileIOUtilities.getPDIFileAsStreamFromRelativePath("README.md");
+    assertNotNull(is);
+  }
+
+  @Test(expected = FileNotFoundException.class)
+  public void getPDIFileAsStreamFromRelativePathSouldThrowFileNotFoundException()
+      throws FileNotFoundException {
+    fileIOUtilities.getPDIFileAsStreamFromRelativePath("HEL.md");
   }
 }

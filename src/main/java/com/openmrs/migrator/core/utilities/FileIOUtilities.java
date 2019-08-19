@@ -6,6 +6,7 @@ import com.openmrs.migrator.core.services.SettingsService;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -182,7 +183,7 @@ public class FileIOUtilities {
       String line;
       while ((line = br.readLine()) != null) {
         String[] keyValue = line.split("=");
-        if (SettingsService.DB.equals(keyValue[0]) && (databaseName.equals(keyValue[1]))) {
+        if (SettingsService.DB_SOURCE.equals(keyValue[0]) && (databaseName.equals(keyValue[1]))) {
 
           logger.info("database name '" + databaseName + "' found in config file");
           return Optional.of(keyValue[1]);
@@ -219,7 +220,7 @@ public class FileIOUtilities {
 
     writeToFile(
         kettlePath.toFile(),
-        SettingsService.DB + "=" + dataBaseName,
+        SettingsService.DB_SOURCE + "=" + dataBaseName,
         SettingsService.DB_HOST + "=" + host,
         SettingsService.DB_PORT + "=" + port,
         SettingsService.DB_USER + "=" + username,
@@ -252,7 +253,7 @@ public class FileIOUtilities {
     try (BufferedReader br = new BufferedReader(new FileReader(path.toFile()))) {
       String line;
       while ((line = br.readLine()) != null) {
-        if (line.contains(SettingsService.DB)) {
+        if (line.contains(SettingsService.DB_SOURCE)) {
           names.add(line.split("=")[1]);
         }
       }
@@ -287,5 +288,13 @@ public class FileIOUtilities {
       }
     }
     return value;
+  }
+
+  public InputStream getPDIFileAsStreamFromRelativePath(String resource)
+      throws FileNotFoundException {
+
+    InputStream inputStream = new FileInputStream(new File(resource));
+
+    return inputStream;
   }
 }

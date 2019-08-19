@@ -15,7 +15,7 @@ public interface SettingsService {
   // settings keys
   String DB_TEST_CONNECTION = "ETL_TEST_DATABASE_CONNECTION";
 
-  String DB = "ETL_SOURCE_DATABASE";
+  String DB_SOURCE = "ETL_SOURCE_DATABASE";
 
   String DB_HOST = "ETL_DATABASE_HOST";
 

@@ -62,7 +62,7 @@ public class SettingsServiceImpl implements SettingsService {
       String testConnection = props.getProperty(SettingsService.DB_TEST_CONNECTION);
       String host = props.getProperty(SettingsService.DB_HOST);
       String port = props.getProperty(SettingsService.DB_PORT);
-      String db = props.getProperty(SettingsService.DB);
+      String db = props.getProperty(SettingsService.DB_SOURCE);
       String user = props.getProperty(SettingsService.DB_USER);
       String pass = props.getProperty(SettingsService.DB_PASS);
       String dbsLoaded = props.getProperty(SettingsService.DBS_ALREADY_LOADED);

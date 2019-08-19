@@ -20,7 +20,7 @@ public class SettingsServiceTest {
   @Test
   public void initializeKettleEnvironment() throws SettingsException {
     Assert.assertNull(EnvUtil.getSystemProperty(SettingsService.DB_TEST_CONNECTION));
-    Assert.assertNull(EnvUtil.getSystemProperty(SettingsService.DB));
+    Assert.assertNull(EnvUtil.getSystemProperty(SettingsService.DB_SOURCE));
     Assert.assertNull(EnvUtil.getSystemProperty(SettingsService.DB_HOST));
     Assert.assertNull(EnvUtil.getSystemProperty(SettingsService.DB_PORT));
     Assert.assertNull(EnvUtil.getSystemProperty(SettingsService.DB_USER));
@@ -32,7 +32,7 @@ public class SettingsServiceTest {
     settingsService.initializeKettleEnvironment();
 
     Assert.assertEquals("false", EnvUtil.getSystemProperty(SettingsService.DB_TEST_CONNECTION));
-    Assert.assertEquals("fgh", EnvUtil.getSystemProperty(SettingsService.DB));
+    Assert.assertEquals("fgh", EnvUtil.getSystemProperty(SettingsService.DB_SOURCE));
     Assert.assertEquals("127.0.0.1", EnvUtil.getSystemProperty(SettingsService.DB_HOST));
     Assert.assertEquals("3306", EnvUtil.getSystemProperty(SettingsService.DB_PORT));
     Assert.assertEquals("root", EnvUtil.getSystemProperty(SettingsService.DB_USER));

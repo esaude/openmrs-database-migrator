@@ -8,7 +8,6 @@ import com.openmrs.migrator.core.services.SettingsService;
 import com.openmrs.migrator.core.utilities.ConsoleUtils;
 import com.openmrs.migrator.core.utilities.FileIOUtilities;
 import java.io.Console;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -90,9 +89,11 @@ public class Migrator implements Callable<Optional<Void>> {
       Map<String, String> connDB = ConsoleUtils.readSourceDBConn(System.console());
 
       settingsService.fillConfigFile(settingProperties, connDB);
+      settingsService.initializeKettleEnvironment();
     }
 
     if (run) {
+
       executeRunCommandLogic();
     }
 
@@ -107,7 +108,7 @@ public class Migrator implements Callable<Optional<Void>> {
     try {
       for (String t : jobs) {
 
-        InputStream xml = fileIOUtilities.getResourceAsStream(t);
+        InputStream xml = fileIOUtilities.getPDIFileAsStreamFromRelativePath(t);
         pdiService.runJob(xml);
       }
     } catch (SettingsException e) {
@@ -117,7 +118,6 @@ public class Migrator implements Callable<Optional<Void>> {
 
   private void executeSetupCommand() throws IOException {
     List<String> pdiFiles = new ArrayList<>();
-
     pdiFiles.add("pdiresources/jobs/merge-patient-job.kjb");
     pdiFiles.add("pdiresources/transformations/merge-patient.ktr");
     pdiFiles.add("settings.properties");
@@ -128,7 +128,6 @@ public class Migrator implements Callable<Optional<Void>> {
 
   private void executeRunCommandLogic()
       throws FileNotFoundException, IOException, SettingsException {
-
     String userConfigPassword =
         fileIOUtilities.getValueFromConfig(SettingsService.DB_PASS, "=", settingProperties);
     int choice = ConsoleUtils.startMigrationAproach(console);
@@ -137,7 +136,7 @@ public class Migrator implements Callable<Optional<Void>> {
             fileIOUtilities.getValueFromConfig(SettingsService.DB_USER, "=", settingProperties),
             userConfigPassword,
             "show databases");
-    File kettleFile = fileIOUtilities.getKettlePropertiesLocation();
+    // File kettleFile = fileIOUtilities.getKettlePropertiesLocation();
 
     switch (choice) {
       case 1:
@@ -146,14 +145,13 @@ public class Migrator implements Callable<Optional<Void>> {
             fileIOUtilities.searchForDataBaseNameInSettingsFile(
                 providedDataBaseName.get(), settingProperties);
 
-        if (!storedDataBaseName.isPresent()) {
-          if (ConsoleUtils.isConnectionIsToBeStored(console)) {
-            settingsService.addSettingToConfigFile(
-                settingProperties, SettingsService.DB, providedDataBaseName.get());
-          }
-          fileIOUtilities.setConnectionToKettleFile(
-              providedDataBaseName.get(), settingProperties, kettleFile);
+        if (!storedDataBaseName.isPresent() && ConsoleUtils.isConnectionIsToBeStored(console)) {
+          settingsService.addSettingToConfigFile(
+              settingProperties, SettingsService.DB_SOURCE, providedDataBaseName.get());
         }
+
+        settingsService.initializeKettleEnvironment();
+
         runAllJobs();
         break;
 
@@ -165,7 +163,13 @@ public class Migrator implements Callable<Optional<Void>> {
                     fileIOUtilities.getAllDataBaseNamesFromConfigFile(settingProperties),
                     alreadyLoadedDataBases));
         if (selectDBName != null) {
-          fileIOUtilities.setConnectionToKettleFile(selectDBName, settingProperties, kettleFile);
+          //          fileIOUtilities.setConnectionToKettleFile(selectDBName, settingProperties,
+          // kettleFile);
+
+          settingsService.addSettingToConfigFile(
+              settingProperties, SettingsService.DB_SOURCE, selectDBName);
+          settingsService.initializeKettleEnvironment();
+
           runAllJobs();
         }
 
@@ -173,7 +177,12 @@ public class Migrator implements Callable<Optional<Void>> {
       case 3:
         String dbName =
             ConsoleUtils.getValidSelectedDataBase(console, new HashSet<>(alreadyLoadedDataBases));
-        fileIOUtilities.setConnectionToKettleFile(dbName, settingProperties, kettleFile);
+        //        fileIOUtilities.setConnectionToKettleFile(dbName, settingProperties, kettleFile);
+
+        settingsService.addSettingToConfigFile(
+            settingProperties, SettingsService.DB_SOURCE, dbName);
+        settingsService.initializeKettleEnvironment();
+
         runAllJobs();
         break;
 
@@ -188,8 +197,14 @@ public class Migrator implements Callable<Optional<Void>> {
 
         String databaseName = ConsoleUtils.getChosenDBName(console);
 
+        settingsService.addSettingToConfigFile(
+            settingProperties, SettingsService.DB_SOURCE, databaseName);
+
         dataBaseService.importDatabaseFile(databaseName, sqlDumpFile);
-        fileIOUtilities.setConnectionToKettleFile(databaseName, settingProperties, kettleFile);
+        //        fileIOUtilities.setConnectionToKettleFile(databaseName, settingProperties,
+        // kettleFile);
+        settingsService.initializeKettleEnvironment();
+
         runAllJobs();
 
         break;
