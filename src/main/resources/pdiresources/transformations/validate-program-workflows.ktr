@@ -653,7 +653,7 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <filename>/home/yassin/Desktop/program_workflows.csv</filename>
+    <filename>config/program_workflows.csv</filename>
     <filename_field/>
     <rownum_field/>
     <include_filename>N</include_filename>
@@ -1154,7 +1154,7 @@ where program_workflow_id=? and uuid=?</sql>
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <filename>/home/yassin/Projects/openmrs-database-migrator/src/main/resources/pdiresources/config/program_workflow.csv</filename>
+    <filename>config/program_workflow_mapping.csv</filename>
     <filename_field/>
     <rownum_field/>
     <include_filename>N</include_filename>

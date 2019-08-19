@@ -653,7 +653,7 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <filename>/home/yassin/Desktop/scheduler_task_configs.csv</filename>
+    <filename>config/scheduler_task_configs.csv</filename>
     <filename_field/>
     <rownum_field/>
     <include_filename>N</include_filename>
@@ -1154,7 +1154,7 @@ where task_config_id=? and uuid=?</sql>
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <filename>/home/yassin/Projects/openmrs-database-migrator/src/main/resources/pdiresources/config/scheduler_task_config.csv</filename>
+    <filename>config/scheduler_task_config_mapping.csv</filename>
     <filename_field/>
     <rownum_field/>
     <include_filename>N</include_filename>

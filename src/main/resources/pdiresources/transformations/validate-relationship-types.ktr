@@ -653,7 +653,7 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <filename>/home/yassin/Desktop/relationship_types.csv</filename>
+    <filename>config/relationship_types.csv</filename>
     <filename_field/>
     <rownum_field/>
     <include_filename>N</include_filename>
@@ -1154,7 +1154,7 @@ where relationship_type_id=? and uuid=?</sql>
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <filename>/home/yassin/Projects/openmrs-database-migrator/src/main/resources/pdiresources/config/relationship_type.csv</filename>
+    <filename>config/relationship_type_mapping.csv</filename>
     <filename_field/>
     <rownum_field/>
     <include_filename>N</include_filename>

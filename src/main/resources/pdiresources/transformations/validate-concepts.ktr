@@ -653,7 +653,7 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <filename>/home/yassin/Desktop/concepts.csv</filename>
+    <filename>config/concepts.csv</filename>
     <filename_field/>
     <rownum_field/>
     <include_filename>N</include_filename>
@@ -1154,7 +1154,7 @@ where concept_id=? and uuid=?</sql>
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <filename>/home/yassin/Projects/openmrs-database-migrator/src/main/resources/pdiresources/config/concept.csv</filename>
+    <filename>config/concept_mapping.csv</filename>
     <filename_field/>
     <rownum_field/>
     <include_filename>N</include_filename>
