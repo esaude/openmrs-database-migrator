@@ -46,7 +46,6 @@ public class MigratorApplication implements CommandLineRunner {
     SpringApplication.run(MigratorApplication.class, args);
   }
 
-  // TODO: to be replaced with PICOCLI
   @Override
   public void run(String... args) {
     LOG.info("EXECUTING : command line runner");

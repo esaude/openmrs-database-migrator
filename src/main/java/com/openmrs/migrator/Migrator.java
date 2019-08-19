@@ -8,10 +8,18 @@ import com.openmrs.migrator.core.services.SettingsService;
 import com.openmrs.migrator.core.services.impl.MySQLProps;
 import com.openmrs.migrator.core.utilities.ConsoleUtils;
 import com.openmrs.migrator.core.utilities.FileIOUtilities;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import picocli.CommandLine;
+import picocli.CommandLine.Command;
+import picocli.CommandLine.Option;
+
 import java.io.Console;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.SQLException;
@@ -21,12 +29,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.Callable;
-import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import picocli.CommandLine;
-import picocli.CommandLine.Command;
-import picocli.CommandLine.Option;
 
 @Command(name = "migrator", mixinStandardHelpOptions = true, helpCommand = true)
 public class Migrator implements Callable<Optional<Void>> {
@@ -43,7 +45,7 @@ public class Migrator implements Callable<Optional<Void>> {
 
   private Console console;
 
-  private String[] jobs = {"pdiresources/jobs/merge-patient-job.kjb"};
+  private String[] jobs = {SettingsService.PDI_RESOURCES_DIR + "/jobs/merge-patient-job.kjb"};
 
   private Path settingProperties = Paths.get(SettingsService.SETTINGS_PROPERTIES);
 
@@ -52,9 +54,9 @@ public class Migrator implements Callable<Optional<Void>> {
           "input/",
           "output/",
           "config/",
-          "pdiresources/",
-          "pdiresources/transformations/",
-          "pdiresources/jobs/");
+          SettingsService.PDI_RESOURCES_DIR + "/",
+          SettingsService.PDI_RESOURCES_DIR + "/transformations/",
+          SettingsService.PDI_RESOURCES_DIR + "/jobs/");
 
   @Option(
       names = {"run"},
@@ -86,7 +88,6 @@ public class Migrator implements Callable<Optional<Void>> {
 
   @Override
   public Optional<Void> call() throws IOException, SQLException, SettingsException {
-
     if (setup) {
       executeSetupCommand();
     }
@@ -117,23 +118,33 @@ public class Migrator implements Callable<Optional<Void>> {
   private void executeSetupCommand() throws IOException, SQLException, SettingsException {
     List<String> pdiFiles = new ArrayList<>();
 
-    pdiFiles.add("pdiresources/jobs/merge-patient-job.kjb");
-    pdiFiles.add("pdiresources/jobs/validations.kjb");
-    pdiFiles.add("pdiresources/transformations/merge-patient.ktr");
-    pdiFiles.add("pdiresources/transformations/validate-concepts.ktr");
-    pdiFiles.add("pdiresources/transformations/validate-encounter-types.ktr");
-    pdiFiles.add("pdiresources/transformations/validate-forms.ktr");
-    pdiFiles.add("pdiresources/transformations/validate-order-types.ktr");
-    pdiFiles.add("pdiresources/transformations/validate-patient-identifier-types.ktr");
-    pdiFiles.add("pdiresources/transformations/validate-person-attribute-types.ktr");
-    pdiFiles.add("pdiresources/transformations/validate-programs.ktr");
-    pdiFiles.add("pdiresources/transformations/validate-program-workflows.ktr");
-    pdiFiles.add("pdiresources/transformations/validate-program-workflow-states.ktr");
-    pdiFiles.add("pdiresources/transformations/validate-relationship-types.ktr");
-    pdiFiles.add("pdiresources/transformations/validate-roles.ktr");
-    pdiFiles.add("pdiresources/transformations/validate-scheduler-task-config.ktr");
-    pdiFiles.add("pdiresources/transformations/validate-visit-attribute-types.ktr");
-    pdiFiles.add("pdiresources/transformations/validate-visit-types.ktr");
+    pdiFiles.add(SettingsService.PDI_RESOURCES_DIR + "/jobs/merge-patient-job.kjb");
+    pdiFiles.add(SettingsService.PDI_RESOURCES_DIR + "/jobs/validations.kjb");
+    pdiFiles.add(SettingsService.PDI_RESOURCES_DIR + "/transformations/merge-patient.ktr");
+    pdiFiles.add(SettingsService.PDI_RESOURCES_DIR + "/transformations/validate-concepts.ktr");
+    pdiFiles.add(
+        SettingsService.PDI_RESOURCES_DIR + "/transformations/validate-encounter-types.ktr");
+    pdiFiles.add(SettingsService.PDI_RESOURCES_DIR + "/transformations/validate-forms.ktr");
+    pdiFiles.add(SettingsService.PDI_RESOURCES_DIR + "/transformations/validate-order-types.ktr");
+    pdiFiles.add(
+        SettingsService.PDI_RESOURCES_DIR
+            + "/transformations/validate-patient-identifier-types.ktr");
+    pdiFiles.add(
+        SettingsService.PDI_RESOURCES_DIR + "/transformations/validate-person-attribute-types.ktr");
+    pdiFiles.add(SettingsService.PDI_RESOURCES_DIR + "/transformations/validate-programs.ktr");
+    pdiFiles.add(
+        SettingsService.PDI_RESOURCES_DIR + "/transformations/validate-program-workflows.ktr");
+    pdiFiles.add(
+        SettingsService.PDI_RESOURCES_DIR
+            + "/transformations/validate-program-workflow-states.ktr");
+    pdiFiles.add(
+        SettingsService.PDI_RESOURCES_DIR + "/transformations/validate-relationship-types.ktr");
+    pdiFiles.add(SettingsService.PDI_RESOURCES_DIR + "/transformations/validate-roles.ktr");
+    pdiFiles.add(
+        SettingsService.PDI_RESOURCES_DIR + "/transformations/validate-scheduler-task-config.ktr");
+    pdiFiles.add(
+        SettingsService.PDI_RESOURCES_DIR + "/transformations/validate-visit-attribute-types.ktr");
+    pdiFiles.add(SettingsService.PDI_RESOURCES_DIR + "/transformations/validate-visit-types.ktr");
     pdiFiles.add(SettingsService.SETTINGS_PROPERTIES);
 
     bootstrapService.createDirectoryStructure(dirList);
@@ -198,7 +209,7 @@ public class Migrator implements Callable<Optional<Void>> {
         }
       default:
         {
-          ConsoleUtils.showUnavailableOption(console);
+          ConsoleUtils.sendMessage(console, "Unavailable Option");
           break;
         }
     }
@@ -249,6 +260,11 @@ public class Migrator implements Callable<Optional<Void>> {
   }
 
   private void executeRunCommandLogic() throws IOException, SettingsException {
-    runAllJobs();
+    if (Files.exists(Paths.get(SettingsService.PDI_RESOURCES_DIR))
+        && Files.exists(Paths.get(SettingsService.SETTINGS_PROPERTIES))) {
+      runAllJobs();
+    } else {
+      ConsoleUtils.sendMessage(console, "Run Setup first please!");
+    }
   }
 }

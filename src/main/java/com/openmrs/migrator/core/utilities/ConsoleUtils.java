@@ -54,9 +54,9 @@ public class ConsoleUtils {
     }
   }
 
-  public static void showUnavailableOption(Console console) {
+  public static void sendMessage(Console console, String message) {
     checkConsoleAvailability(console);
-    console.writer().println("Unavailable Option");
+    console.writer().println(message);
   }
 
   public static Map<String, String> readSettingsFromConsole(Console console) {
