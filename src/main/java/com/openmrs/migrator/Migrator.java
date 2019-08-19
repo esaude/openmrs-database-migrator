@@ -102,7 +102,7 @@ public class Migrator implements Callable<Optional<Void>> {
     return Optional.empty();
   }
 
-  private void runAllJobs() throws IOException, SettingsException {
+  private void runAllJobs() throws IOException {
     try {
       for (String t : jobs) {
 
@@ -139,14 +139,12 @@ public class Migrator implements Callable<Optional<Void>> {
     bootstrapService.createDirectoryStructure(dirList);
     bootstrapService.populateDefaultResources(pdiFiles);
 
-    Map<String, String> connDB = ConsoleUtils.readSettingsFromConsole(System.console());
+    Map<String, String> connDB = ConsoleUtils.readSettingsFromConsole(console);
 
     MySQLProps mysqlConn = getMysqlOptsFromConsoleConn(connDB);
     while (!dataBaseService.testConnection(mysqlConn, false)) {
-      System.console()
-          .writer()
-          .println("You have provided Wrong Connection details, please try again!");
-      connDB = ConsoleUtils.readSettingsFromConsole(System.console());
+      console.writer().println("You have provided Wrong Connection details, please try again!");
+      connDB = ConsoleUtils.readSettingsFromConsole(console);
       mysqlConn = getMysqlOptsFromConsoleConn(connDB);
     }
 
@@ -220,8 +218,7 @@ public class Migrator implements Callable<Optional<Void>> {
 
   private String readBackupsFolderFromConsole() {
     String folder =
-        ConsoleUtils.readFromConsole(
-            "Folder location containing backups: input/", System.console());
+        ConsoleUtils.readFromConsole("Folder location containing backups: input/", console);
     return StringUtils.isBlank(folder) ? "input/" : folder;
   }
 
