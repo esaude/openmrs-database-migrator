@@ -1,25 +1,27 @@
 package com.openmrs.migrator.core.services;
 
+import com.openmrs.migrator.core.exceptions.SettingsException;
+import com.openmrs.migrator.core.services.impl.MySQLProps;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
+import java.util.Set;
 
 public interface DataBaseService {
 
-  void importDatabaseFile(String databaseName, String fileName);
+  void importDatabaseFile(String fileName, MySQLProps mySQLProps) throws SQLException, IOException;
 
-  void createDatabase(String databaseName);
+  List<String> oneColumnSQLSelectorCommand(MySQLProps mySQLProps, String sqlCommand, String column)
+      throws IOException, SQLException;
 
-  boolean testConnection(
-      String host, String port, String database, String username, String password)
-      throws SQLException;
+  Set<String> validateDataBaseNames(List<String> fromConfig, List<String> fromMySql)
+      throws FileNotFoundException, IOException;
 
-  void loadDatabaseBackups(
-      String host,
-      String port,
-      String[] databases,
-      File backupsFolder,
-      String username,
-      String password)
+  boolean testConnection(MySQLProps mySQLProps, boolean throwConnectionException)
+      throws SettingsException;
+
+  void loadDatabaseBackups(MySQLProps mySQLProps, String[] databases, File backupsFolder)
       throws SQLException, IOException;
 }

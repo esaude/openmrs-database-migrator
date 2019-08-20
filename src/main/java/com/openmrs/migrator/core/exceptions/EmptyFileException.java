@@ -8,4 +8,6 @@ public class EmptyFileException extends Exception {
   public EmptyFileException(String fileName) {
     super("File is empty: " + fileName);
   }
+
+  public EmptyFileException() {}
 }
