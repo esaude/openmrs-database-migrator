@@ -8,13 +8,6 @@ import com.openmrs.migrator.core.services.SettingsService;
 import com.openmrs.migrator.core.services.impl.MySQLProps;
 import com.openmrs.migrator.core.utilities.ConsoleUtils;
 import com.openmrs.migrator.core.utilities.FileIOUtilities;
-import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import picocli.CommandLine;
-import picocli.CommandLine.Command;
-import picocli.CommandLine.Option;
-
 import java.io.Console;
 import java.io.File;
 import java.io.IOException;
@@ -29,6 +22,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.Callable;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import picocli.CommandLine;
+import picocli.CommandLine.Command;
+import picocli.CommandLine.Option;
 
 @Command(name = "migrator", mixinStandardHelpOptions = true, helpCommand = true)
 public class Migrator implements Callable<Optional<Void>> {
