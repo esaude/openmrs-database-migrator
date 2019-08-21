@@ -315,7 +315,7 @@
       <attributes/>
       <specification_method>filename</specification_method>
       <trans_object_id/>
-      <filename>src/main/resources/pdiresources/transformations/transformation-for-encounter.ktr</filename>
+      <filename>pdiresources/transformations/transformation-for-encounter.ktr</filename>
       <transname/>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
