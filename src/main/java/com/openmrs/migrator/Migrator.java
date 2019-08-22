@@ -144,6 +144,7 @@ public class Migrator implements Callable<Optional<Void>> {
     pdiFiles.add(
         SettingsService.PDI_RESOURCES_DIR + "/transformations/validate-visit-attribute-types.ktr");
     pdiFiles.add(SettingsService.PDI_RESOURCES_DIR + "/transformations/validate-visit-types.ktr");
+    pdiFiles.add(SettingsService.PDI_RESOURCES_DIR + "/transformations/merge-person-attribute.ktr");
     pdiFiles.add(SettingsService.SETTINGS_PROPERTIES);
 
     bootstrapService.createDirectoryStructure(dirList);
