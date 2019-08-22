@@ -45,5 +45,5 @@ out/
 # End of https://www.gitignore.io/api/java,gradle
 
 # migrator files
-pdiresources/
+/pdiresources/
 settings.properties
