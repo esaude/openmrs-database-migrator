@@ -20,25 +20,21 @@ public class SettingsServiceTest {
   @Test
   public void initializeKettleEnvironment() throws SettingsException {
     Assert.assertNull(EnvUtil.getSystemProperty(SettingsService.DB_TEST_CONNECTION));
-    Assert.assertNull(EnvUtil.getSystemProperty(SettingsService.DB));
+    Assert.assertNull(EnvUtil.getSystemProperty(SettingsService.SOURCE_DB));
     Assert.assertNull(EnvUtil.getSystemProperty(SettingsService.DB_HOST));
     Assert.assertNull(EnvUtil.getSystemProperty(SettingsService.DB_PORT));
     Assert.assertNull(EnvUtil.getSystemProperty(SettingsService.DB_USER));
     Assert.assertNull(EnvUtil.getSystemProperty(SettingsService.DB_PASS));
-    Assert.assertNull(EnvUtil.getSystemProperty(SettingsService.DBS_ALREADY_LOADED));
-    Assert.assertNull(EnvUtil.getSystemProperty(SettingsService.DBS_BACKUPS));
     Assert.assertNull(EnvUtil.getSystemProperty(SettingsService.DBS_BACKUPS_DIRECTORY));
 
     settingsService.initializeKettleEnvironment();
 
     Assert.assertEquals("false", EnvUtil.getSystemProperty(SettingsService.DB_TEST_CONNECTION));
-    Assert.assertEquals("fgh", EnvUtil.getSystemProperty(SettingsService.DB));
+    Assert.assertEquals("fgh", EnvUtil.getSystemProperty(SettingsService.SOURCE_DB));
     Assert.assertEquals("127.0.0.1", EnvUtil.getSystemProperty(SettingsService.DB_HOST));
     Assert.assertEquals("3306", EnvUtil.getSystemProperty(SettingsService.DB_PORT));
     Assert.assertEquals("root", EnvUtil.getSystemProperty(SettingsService.DB_USER));
     Assert.assertEquals("codecode", EnvUtil.getSystemProperty(SettingsService.DB_PASS));
-    Assert.assertEquals("false", EnvUtil.getSystemProperty(SettingsService.DBS_ALREADY_LOADED));
-    Assert.assertEquals("", EnvUtil.getSystemProperty(SettingsService.DBS_BACKUPS));
     Assert.assertEquals(
         "./input", EnvUtil.getSystemProperty(SettingsService.DBS_BACKUPS_DIRECTORY));
   }

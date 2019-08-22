@@ -1,11 +1,16 @@
 package com.openmrs.migrator.unit.utilities;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import com.openmrs.migrator.core.exceptions.InvalidParameterException;
 import com.openmrs.migrator.core.services.SettingsService;
 import com.openmrs.migrator.core.utilities.FileIOUtilities;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -14,6 +19,8 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Stream;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -106,7 +113,7 @@ public class FileIOUtilitiesTest {
 
   @Test
   public void copyFileFromResourcesShouldSucceed() throws IOException, InvalidParameterException {
-    Path file = Paths.get("settings.properties");
+    Path file = Paths.get(SettingsService.SETTINGS_PROPERTIES);
     fileIOUtilities.copyFileFromResources(file.toFile().getName());
 
     assertTrue(Files.exists(file));
@@ -180,5 +187,145 @@ public class FileIOUtilitiesTest {
   public void removeDirectoryShouldFailGivenUndefined()
       throws IOException, InvalidParameterException {
     fileIOUtilities.removeDirectory(null);
+  }
+
+  @Test
+  public void listFilesShouldListlsExistentFilesInTheDrectory() throws IOException {
+    List<Path> paths = fileIOUtilities.listFiles(Paths.get("/etc"));
+    // we know all linux ditros have the below file, even FREE_BSD has :)
+    assertTrue(paths.contains(Paths.get("/etc/resolv.conf")));
+    assertNotNull(paths);
+    assertFalse(paths.isEmpty());
+  }
+
+  @Test
+  public void writeToFileShouldWrite2LinesToTempFile()
+      throws IOException, InvalidParameterException {
+    Path newDirectory = Paths.get("temp");
+    fileIOUtilities.createDirectory(newDirectory);
+    fileIOUtilities.createFile(Paths.get("temp/temp_file.txt"));
+    fileIOUtilities.writeToFile(Paths.get("temp/temp_file.txt").toFile(), "line1", "line2");
+    @SuppressWarnings("resource")
+    Stream<String> stream = Files.lines(Paths.get("temp/temp_file.txt"));
+    Optional<String> result = stream.reduce((a, b) -> a + b);
+
+    assertEquals("line1line2", result.get());
+    fileIOUtilities.removeDirectory(newDirectory.toFile());
+  }
+
+  @Test(expected = FileNotFoundException.class)
+  public void writeToFileShouldThrowAnException() throws IOException, InvalidParameterException {
+    Path path = Paths.get("/not_unix_like_directory/");
+    fileIOUtilities.writeToFile(path.toFile(), "line1", "line2");
+  }
+
+  @Test
+  public void getValueFromConfigShouldReturnValueFromFile()
+      throws IOException, InvalidParameterException {
+    Path newDirectory = Paths.get("temp");
+
+    fileIOUtilities.createDirectory(newDirectory);
+    fileIOUtilities.createFile(Paths.get("temp/temp_file.txt"));
+    Path path = Paths.get("temp/temp_file.txt");
+
+    fileIOUtilities.writeToFile(path.toFile(), SettingsService.DB_HOST + "=0.0.0.0");
+
+    String value = fileIOUtilities.getValueFromConfig(SettingsService.DB_HOST, "=", path);
+
+    assertEquals("0.0.0.0", value);
+    fileIOUtilities.removeDirectory(newDirectory.toFile());
+  }
+
+  @Test
+  public void getValueFromConfigShouldReturnNull() throws IOException, InvalidParameterException {
+    Path newDirectory = Paths.get("temp");
+
+    fileIOUtilities.createDirectory(newDirectory);
+    fileIOUtilities.createFile(Paths.get("temp/temp_file.txt"));
+    Path path = Paths.get("temp/temp_file.txt");
+
+    fileIOUtilities.writeToFile(path.toFile(), "not_to_be_found_label" + "=any_value");
+
+    String value = fileIOUtilities.getValueFromConfig("label_not_to_be_found", "=", path);
+
+    assertNull(value);
+    fileIOUtilities.removeDirectory(newDirectory.toFile());
+  }
+
+  @Test
+  public void getAllDataBaseNamesFromConfigFileSShouldReturnDBName()
+      throws IOException, InvalidParameterException {
+
+    Path newDirectory = Paths.get("temp");
+
+    fileIOUtilities.createDirectory(newDirectory);
+    fileIOUtilities.createFile(Paths.get("temp/temp_file.txt"));
+    Path path = Paths.get("temp/temp_file.txt");
+
+    fileIOUtilities.writeToFile(path.toFile(), SettingsService.SOURCE_DB + "=data_base");
+
+    List<String> names = fileIOUtilities.getAllDataBaseNamesFromConfigFile(path);
+    assertEquals(1, names.size());
+    assertEquals("data_base", names.get(0));
+    fileIOUtilities.removeDirectory(newDirectory.toFile());
+  }
+
+  @Test
+  public void getAllDataBaseNamesFromConfigFileShouldReturnEmptyList()
+      throws IOException, InvalidParameterException {
+
+    Path newDirectory = Paths.get("temp");
+
+    fileIOUtilities.createDirectory(newDirectory);
+    fileIOUtilities.createFile(Paths.get("temp/temp_file.txt"));
+    Path path = Paths.get("temp/temp_file.txt");
+
+    List<String> names = fileIOUtilities.getAllDataBaseNamesFromConfigFile(path);
+    assertTrue(names.isEmpty());
+    fileIOUtilities.removeDirectory(newDirectory.toFile());
+  }
+
+  @Test
+  public void searchForDataBaseNameInSettingsFileShouldReturnOneDBName()
+      throws IOException, InvalidParameterException {
+
+    Path newDirectory = Paths.get("temp");
+
+    fileIOUtilities.createDirectory(newDirectory);
+    fileIOUtilities.createFile(Paths.get("temp/temp_file.txt"));
+    Path path = Paths.get("temp/temp_file.txt");
+
+    fileIOUtilities.writeToFile(path.toFile(), SettingsService.SOURCE_DB + "=fgh");
+    Optional<String> name = fileIOUtilities.searchForDataBaseNameInSettingsFile("fgh", path);
+
+    assertEquals("fgh", name.get());
+
+    fileIOUtilities.removeDirectory(newDirectory.toFile());
+  }
+
+  @Test
+  public void searchForDataBaseNameInSettingsFileShouldReturnEmptyOptonalValue()
+      throws IOException, InvalidParameterException {
+
+    Path newDirectory = Paths.get("temp");
+
+    fileIOUtilities.createDirectory(newDirectory);
+    fileIOUtilities.createFile(Paths.get("temp/temp_file.txt"));
+    Path path = Paths.get("temp/temp_file.txt");
+
+    fileIOUtilities.writeToFile(path.toFile(), "unknown_label_attribute" + "=fgh");
+    Optional<String> name = fileIOUtilities.searchForDataBaseNameInSettingsFile("fgh", path);
+
+    assertFalse(name.isPresent());
+
+    fileIOUtilities.removeDirectory(newDirectory.toFile());
+  }
+
+  @Test
+  public void getKettlePropertiesLocationShouldReturnKettleFile() throws IOException {
+    File kettleFile = fileIOUtilities.getKettlePropertiesLocation();
+
+    assertNotNull(kettleFile);
+    assertTrue(kettleFile.exists());
   }
 }
