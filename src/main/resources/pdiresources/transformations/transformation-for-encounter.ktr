@@ -568,11 +568,6 @@
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Merge join &lt;FULL OUTER></from>
-      <to>Filter for unique uuids</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
       <from>Filter for unique uuids</from>
       <to>Log for the same uuid</to>
       <enabled>Y</enabled>
@@ -583,13 +578,18 @@
       <enabled>Y</enabled>
     </hop>
     <hop>
+      <from>Filter for similar  fields</from>
+      <to>Log for similar fields</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
       <from>Merge join &lt;FULL OUTER></from>
       <to>Filter for similar  fields</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
       <from>Filter for similar  fields</from>
-      <to>Log for similar fields</to>
+      <to>Filter for unique uuids</to>
       <enabled>Y</enabled>
     </hop>
   </order>
@@ -605,7 +605,7 @@
       <schema_name/>
     </partitioning>
     <send_true_to>Log for similar fields</send_true_to>
-    <send_false_to/>
+    <send_false_to>Filter for unique uuids</send_false_to>
     <compare>
       <condition>
         <negated>N</negated>
@@ -657,8 +657,8 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>592</xloc>
-      <yloc>368</yloc>
+      <xloc>768</xloc>
+      <yloc>192</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -701,7 +701,7 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>912</xloc>
+      <xloc>944</xloc>
       <yloc>192</yloc>
       <draw>Y</draw>
     </GUI>
@@ -748,8 +748,8 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>592</xloc>
-      <yloc>512</yloc>
+      <xloc>768</xloc>
+      <yloc>48</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -783,7 +783,7 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>912</xloc>
+      <xloc>944</xloc>
       <yloc>48</yloc>
       <draw>Y</draw>
     </GUI>
