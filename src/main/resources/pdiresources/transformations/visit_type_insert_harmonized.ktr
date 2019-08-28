@@ -508,7 +508,7 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <filename>pdiresources/sample-for-harmonized-visit-type.csv</filename>
+    <filename>pdiresources/sample-of-harmonized-visit-types</filename>
     <filename_field/>
     <rownum_field/>
     <include_filename>N</include_filename>
