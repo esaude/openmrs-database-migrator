@@ -309,7 +309,7 @@
       <attributes_kjc/>
     </entry>
     <entry>
-      <name>Job</name>
+      <name>visit type transformation</name>
       <description/>
       <type>JOB</type>
       <attributes/>
@@ -349,7 +349,7 @@
   <hops>
     <hop>
       <from>Start</from>
-      <to>Job</to>
+      <to>visit type transformation</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
