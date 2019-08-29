@@ -53,6 +53,7 @@ public class Migrator implements Callable<Optional<Void>> {
           "input/",
           "output/",
           "config/",
+          "plugins",
           SettingsService.PDI_RESOURCES_DIR + "/",
           SettingsService.PDI_RESOURCES_DIR + "/transformations/",
           SettingsService.PDI_RESOURCES_DIR + "/jobs/");
@@ -146,6 +147,7 @@ public class Migrator implements Callable<Optional<Void>> {
     pdiFiles.add(SettingsService.PDI_RESOURCES_DIR + "/transformations/validate-visit-types.ktr");
     pdiFiles.add(SettingsService.PDI_RESOURCES_DIR + "/transformations/merge-person.ktr");
     pdiFiles.add(SettingsService.SETTINGS_PROPERTIES);
+    pdiFiles.add(SettingsService.PDI_PLUGINS_DIR + "/pdi-core-plugins-impl-8.2.0.7-719.jar");
 
     bootstrapService.createDirectoryStructure(dirList);
     bootstrapService.populateDefaultResources(pdiFiles);

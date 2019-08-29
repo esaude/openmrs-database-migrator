@@ -44,7 +44,12 @@ public class MigratorApplicationTests {
 
   private static List<String> structurePaths =
       Arrays.asList(
-          "input", "output", "config", "pdiresources", SettingsService.SETTINGS_PROPERTIES);;
+          "input",
+          "output",
+          "config",
+          "pdiresources",
+          SettingsService.PDI_PLUGINS_DIR,
+          SettingsService.SETTINGS_PROPERTIES);
 
   @Before
   public void init() throws IOException, InvalidParameterException {
