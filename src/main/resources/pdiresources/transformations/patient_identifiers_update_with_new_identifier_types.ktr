@@ -518,70 +518,6 @@
     </hop>
   </order>
   <step>
-    <name>wait until all previous  steps are done</name>
-    <type>BlockingStep</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <pass_all_rows>Y</pass_all_rows>
-    <directory>%%java.io.tmpdir%%</directory>
-    <prefix>block</prefix>
-    <cache_size>5000</cache_size>
-    <compress>Y</compress>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>944</xloc>
-      <yloc>368</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>join the backup and  harmonized  identifier type</name>
-    <type>MergeJoin</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <join_type>INNER</join_type>
-    <step1>load the harmonized patient_identifier_type</step1>
-    <step2>load the  patient_identifier_type backup</step2>
-    <keys_1>
-      <key>uuid</key>
-    </keys_1>
-    <keys_2>
-      <key>uuid</key>
-    </keys_2>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>624</xloc>
-      <yloc>208</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
     <name>Select  patient_identifier_type_ids values</name>
     <type>SelectValues</type>
     <description/>
@@ -663,6 +599,40 @@
     </GUI>
   </step>
   <step>
+    <name>join the backup and  harmonized  identifier type</name>
+    <type>MergeJoin</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <join_type>INNER</join_type>
+    <step1>load the harmonized patient_identifier_type</step1>
+    <step2>load the  patient_identifier_type backup</step2>
+    <keys_1>
+      <key>uuid</key>
+    </keys_1>
+    <keys_2>
+      <key>uuid</key>
+    </keys_2>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>624</xloc>
+      <yloc>208</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
     <name>load the  patient_identifier_type backup</name>
     <type>TableInput</type>
     <description/>
@@ -723,6 +693,36 @@
     <GUI>
       <xloc>272</xloc>
       <yloc>160</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>wait until all previous  steps are done</name>
+    <type>BlockingStep</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <pass_all_rows>Y</pass_all_rows>
+    <directory>%%java.io.tmpdir%%</directory>
+    <prefix>block</prefix>
+    <cache_size>5000</cache_size>
+    <compress>Y</compress>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>944</xloc>
+      <yloc>368</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

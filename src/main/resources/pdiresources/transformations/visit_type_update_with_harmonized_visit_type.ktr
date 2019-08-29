@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <transformation>
   <info>
-    <name>patient_identifier_typer_remove_and_insert_harmonized</name>
+    <name>update_visit_with_harmonized _visit_type</name>
     <description/>
     <extended_description/>
     <trans_version/>
@@ -428,16 +428,16 @@
     <clusterschemas>
     </clusterschemas>
     <created_user>-</created_user>
-    <created_date>2019/08/27 10:19:00.391</created_date>
+    <created_date>2019/08/23 10:20:43.395</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2019/08/27 10:19:00.391</modified_date>
+    <modified_date>2019/08/23 10:20:43.395</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
   </notepads>
   <connection>
-    <name>OpenMRS target DB</name>
+    <name>OpenMRS Target DB</name>
     <server>${ETL_DATABASE_HOST}</server>
     <type>MYSQL</type>
     <access>Native</access>
@@ -474,10 +474,6 @@
         <attribute>N</attribute>
       </attribute>
       <attribute>
-        <code>SQL_CONNECT</code>
-        <attribute>SET  FOREIGN_KEY_CHECKS=0;</attribute>
-      </attribute>
-      <attribute>
         <code>STREAM_RESULTS</code>
         <attribute>Y</attribute>
       </attribute>
@@ -497,14 +493,34 @@
   </connection>
   <order>
     <hop>
-      <from>load harmonized patient identifier type</from>
-      <to>write harmonized patient identifier type</to>
+      <from>Table input harmonized visit_type</from>
+      <to>join harmonized and old visit type</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Table input visit_type_backup</from>
+      <to>join harmonized and old visit type</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>join harmonized and old visit type</from>
+      <to>Select visit_type_ids</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Select visit_type_ids</from>
+      <to>wait for selected  values</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>wait for selected  values</from>
+      <to>Update visit tables with visit_type_id</to>
       <enabled>Y</enabled>
     </hop>
   </order>
   <step>
-    <name>load harmonized patient identifier type</name>
-    <type>CsvInput</type>
+    <name>wait for selected  values</name>
+    <type>BlockingStep</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -513,208 +529,11 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <filename>/home/cfaife/jembi_dev/openmrs-database-migrator/src/main/resources/config/patient_identifier_type.csv</filename>
-    <filename_field/>
-    <rownum_field/>
-    <include_filename>N</include_filename>
-    <separator>,</separator>
-    <enclosure>"</enclosure>
-    <header>Y</header>
-    <buffer_size>50000</buffer_size>
-    <lazy_conversion>Y</lazy_conversion>
-    <add_filename_result>N</add_filename_result>
-    <parallel>N</parallel>
-    <newline_possible>N</newline_possible>
-    <encoding/>
-    <fields>
-      <field>
-        <name>patient_identifier_type_id</name>
-        <type>Integer</type>
-        <format>#</format>
-        <currency>$</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>15</length>
-        <precision>0</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>name</name>
-        <type>String</type>
-        <format/>
-        <currency>$</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>29</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>description</name>
-        <type>String</type>
-        <format/>
-        <currency>$</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>156</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>format</name>
-        <type>String</type>
-        <format/>
-        <currency>$</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>26</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>check_digit</name>
-        <type>Integer</type>
-        <format>#</format>
-        <currency>$</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>15</length>
-        <precision>0</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>creator</name>
-        <type>Integer</type>
-        <format>#</format>
-        <currency>$</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>15</length>
-        <precision>0</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>date_created</name>
-        <type>Date</type>
-        <format>yyyy-MM-dd</format>
-        <currency>$</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>-1</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>required</name>
-        <type>Integer</type>
-        <format>#</format>
-        <currency>$</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>15</length>
-        <precision>0</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>format_description</name>
-        <type>String</type>
-        <format/>
-        <currency>$</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>17</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>validator</name>
-        <type>String</type>
-        <format/>
-        <currency>$</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>48</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>retired</name>
-        <type>Integer</type>
-        <format>#</format>
-        <currency>$</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>15</length>
-        <precision>0</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>retired_by</name>
-        <type>Integer</type>
-        <format>#</format>
-        <currency>$</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>15</length>
-        <precision>0</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>date_retired</name>
-        <type>Number</type>
-        <format>#.#</format>
-        <currency>$</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>15</length>
-        <precision>0</precision>
-        <trim_type>both</trim_type>
-      </field>
-      <field>
-        <name>retire_reason</name>
-        <type>String</type>
-        <format/>
-        <currency>$</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>2</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>uuid</name>
-        <type>String</type>
-        <format/>
-        <currency>$</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>36</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>location_behavior</name>
-        <type>String</type>
-        <format/>
-        <currency>$</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>2</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>uniqueness_behavior</name>
-        <type>String</type>
-        <format/>
-        <currency>$</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>2</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-    </fields>
+    <pass_all_rows>Y</pass_all_rows>
+    <directory>%%java.io.tmpdir%%</directory>
+    <prefix>block</prefix>
+    <cache_size>5000</cache_size>
+    <compress>Y</compress>
     <attributes/>
     <cluster_schema/>
     <remotesteps>
@@ -724,14 +543,14 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>144</xloc>
+      <xloc>944</xloc>
       <yloc>144</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>write harmonized patient identifier type</name>
-    <type>TableOutput</type>
+    <name>join harmonized and old visit type</name>
+    <type>MergeJoin</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -740,24 +559,50 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <connection>OpenMRS target DB</connection>
-    <schema/>
-    <table>patient_identifier_type</table>
-    <commit>1000</commit>
-    <truncate>Y</truncate>
-    <ignore_errors>N</ignore_errors>
-    <use_batch>Y</use_batch>
-    <specify_fields>N</specify_fields>
-    <partitioning_enabled>N</partitioning_enabled>
-    <partitioning_field/>
-    <partitioning_daily>N</partitioning_daily>
-    <partitioning_monthly>Y</partitioning_monthly>
-    <tablename_in_field>N</tablename_in_field>
-    <tablename_field/>
-    <tablename_in_table>Y</tablename_in_table>
-    <return_keys>N</return_keys>
-    <return_field/>
+    <join_type>INNER</join_type>
+    <step1>Table input harmonized visit_type</step1>
+    <step2>Table input visit_type_backup</step2>
+    <keys_1>
+      <key>uuid</key>
+    </keys_1>
+    <keys_2>
+      <key>uuid</key>
+    </keys_2>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>480</xloc>
+      <yloc>144</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Select visit_type_ids</name>
+    <type>SelectValues</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
     <fields>
+      <field>
+        <name>visit_type_id</name>
+        <rename>new_visit_type</rename>
+      </field>
+      <field>
+        <name>visit_type_id_1</name>
+        <rename>old_visit_type</rename>
+      </field>
+      <select_unspecified>N</select_unspecified>
     </fields>
     <attributes/>
     <cluster_schema/>
@@ -768,7 +613,116 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>544</xloc>
+      <xloc>720</xloc>
+      <yloc>144</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Table input harmonized visit_type</name>
+    <type>TableInput</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>OpenMRS Target DB</connection>
+    <sql>select  *  from visit_type order by visit_type_id </sql>
+    <limit>0</limit>
+    <lookup/>
+    <execute_each_row>N</execute_each_row>
+    <variables_active>N</variables_active>
+    <lazy_conversion_active>N</lazy_conversion_active>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>128</xloc>
+      <yloc>80</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Table input visit_type_backup</name>
+    <type>TableInput</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>OpenMRS Target DB</connection>
+    <sql>select  *  from visit_type_backup order by visit_type_id  </sql>
+    <limit>0</limit>
+    <lookup/>
+    <execute_each_row>N</execute_each_row>
+    <variables_active>N</variables_active>
+    <lazy_conversion_active>N</lazy_conversion_active>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>128</xloc>
+      <yloc>224</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Update visit tables with visit_type_id</name>
+    <type>Update</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>OpenMRS Target DB</connection>
+    <skip_lookup>N</skip_lookup>
+    <commit>100</commit>
+    <use_batch>N</use_batch>
+    <error_ignored>Y</error_ignored>
+    <ignore_flag_field/>
+    <lookup>
+      <schema/>
+      <table>visit</table>
+      <key>
+        <name>old_visit_type</name>
+        <field>visit_type_id</field>
+        <condition>=</condition>
+        <name2/>
+      </key>
+      <value>
+        <name>visit_type_id</name>
+        <rename>new_visit_type</rename>
+      </value>
+    </lookup>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1216</xloc>
       <yloc>144</yloc>
       <draw>Y</draw>
     </GUI>

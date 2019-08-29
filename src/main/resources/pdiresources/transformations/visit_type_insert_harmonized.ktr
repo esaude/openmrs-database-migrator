@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <transformation>
   <info>
-    <name>patient_identifier_typer_remove_and_insert_harmonized</name>
+    <name>visit_type_insert_harmonized</name>
     <description/>
     <extended_description/>
     <trans_version/>
     <trans_type>Normal</trans_type>
-    <trans_status>0</trans_status>
     <directory>/</directory>
     <parameters>
     </parameters>
@@ -428,16 +427,16 @@
     <clusterschemas>
     </clusterschemas>
     <created_user>-</created_user>
-    <created_date>2019/08/27 10:19:00.391</created_date>
+    <created_date>2019/08/23 10:06:24.333</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2019/08/27 10:19:00.391</modified_date>
+    <modified_date>2019/08/23 10:06:24.333</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
   </notepads>
   <connection>
-    <name>OpenMRS target DB</name>
+    <name>OpenMRS Target DB</name>
     <server>${ETL_DATABASE_HOST}</server>
     <type>MYSQL</type>
     <access>Native</access>
@@ -474,10 +473,6 @@
         <attribute>N</attribute>
       </attribute>
       <attribute>
-        <code>SQL_CONNECT</code>
-        <attribute>SET  FOREIGN_KEY_CHECKS=0;</attribute>
-      </attribute>
-      <attribute>
         <code>STREAM_RESULTS</code>
         <attribute>Y</attribute>
       </attribute>
@@ -497,13 +492,13 @@
   </connection>
   <order>
     <hop>
-      <from>load harmonized patient identifier type</from>
-      <to>write harmonized patient identifier type</to>
+      <from>load harmonized visit type</from>
+      <to>write harmonized visit_type</to>
       <enabled>Y</enabled>
     </hop>
   </order>
   <step>
-    <name>load harmonized patient identifier type</name>
+    <name>load harmonized visit type</name>
     <type>CsvInput</type>
     <description/>
     <distribute>Y</distribute>
@@ -513,7 +508,7 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <filename>/home/cfaife/jembi_dev/openmrs-database-migrator/src/main/resources/config/patient_identifier_type.csv</filename>
+    <filename>config/visit-types.csv</filename>
     <filename_field/>
     <rownum_field/>
     <include_filename>N</include_filename>
@@ -528,7 +523,7 @@
     <encoding/>
     <fields>
       <field>
-        <name>patient_identifier_type_id</name>
+        <name>visit_type_id</name>
         <type>Integer</type>
         <format>#</format>
         <currency>$</currency>
@@ -545,95 +540,7 @@
         <currency>$</currency>
         <decimal>.</decimal>
         <group>,</group>
-        <length>29</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>description</name>
-        <type>String</type>
-        <format/>
-        <currency>$</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>156</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>format</name>
-        <type>String</type>
-        <format/>
-        <currency>$</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>26</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>check_digit</name>
-        <type>Integer</type>
-        <format>#</format>
-        <currency>$</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>15</length>
-        <precision>0</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>creator</name>
-        <type>Integer</type>
-        <format>#</format>
-        <currency>$</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>15</length>
-        <precision>0</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>date_created</name>
-        <type>Date</type>
-        <format>yyyy-MM-dd</format>
-        <currency>$</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>-1</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>required</name>
-        <type>Integer</type>
-        <format>#</format>
-        <currency>$</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>15</length>
-        <precision>0</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>format_description</name>
-        <type>String</type>
-        <format/>
-        <currency>$</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>17</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>validator</name>
-        <type>String</type>
-        <format/>
-        <currency>$</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>48</length>
+        <length>27</length>
         <precision>-1</precision>
         <trim_type>none</trim_type>
       </field>
@@ -649,39 +556,6 @@
         <trim_type>none</trim_type>
       </field>
       <field>
-        <name>retired_by</name>
-        <type>Integer</type>
-        <format>#</format>
-        <currency>$</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>15</length>
-        <precision>0</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>date_retired</name>
-        <type>Number</type>
-        <format>#.#</format>
-        <currency>$</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>15</length>
-        <precision>0</precision>
-        <trim_type>both</trim_type>
-      </field>
-      <field>
-        <name>retire_reason</name>
-        <type>String</type>
-        <format/>
-        <currency>$</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>2</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
         <name>uuid</name>
         <type>String</type>
         <format/>
@@ -693,24 +567,24 @@
         <trim_type>none</trim_type>
       </field>
       <field>
-        <name>location_behavior</name>
-        <type>String</type>
-        <format/>
+        <name>creator</name>
+        <type>Integer</type>
+        <format>#</format>
         <currency>$</currency>
         <decimal>.</decimal>
         <group>,</group>
-        <length>2</length>
-        <precision>-1</precision>
+        <length>15</length>
+        <precision>0</precision>
         <trim_type>none</trim_type>
       </field>
       <field>
-        <name>uniqueness_behavior</name>
+        <name>date_created</name>
         <type>String</type>
         <format/>
         <currency>$</currency>
         <decimal>.</decimal>
         <group>,</group>
-        <length>2</length>
+        <length>15</length>
         <precision>-1</precision>
         <trim_type>none</trim_type>
       </field>
@@ -724,13 +598,13 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>144</xloc>
-      <yloc>144</yloc>
+      <xloc>176</xloc>
+      <yloc>128</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>write harmonized patient identifier type</name>
+    <name>write harmonized visit_type</name>
     <type>TableOutput</type>
     <description/>
     <distribute>Y</distribute>
@@ -740,11 +614,11 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <connection>OpenMRS target DB</connection>
+    <connection>OpenMRS Target DB</connection>
     <schema/>
-    <table>patient_identifier_type</table>
+    <table>visit_type</table>
     <commit>1000</commit>
-    <truncate>Y</truncate>
+    <truncate>N</truncate>
     <ignore_errors>N</ignore_errors>
     <use_batch>Y</use_batch>
     <specify_fields>N</specify_fields>
@@ -768,8 +642,8 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>544</xloc>
-      <yloc>144</yloc>
+      <xloc>448</xloc>
+      <yloc>128</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
