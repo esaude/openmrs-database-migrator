@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <transformation>
   <info>
-    <name>visit_type_insert_harmonized</name>
+    <name>program-backup-data</name>
     <description/>
     <extended_description/>
     <trans_version/>
@@ -427,16 +427,16 @@
     <clusterschemas>
     </clusterschemas>
     <created_user>-</created_user>
-    <created_date>2019/08/23 10:06:24.333</created_date>
+    <created_date>2019/08/28 11:02:26.371</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2019/08/23 10:06:24.333</modified_date>
+    <modified_date>2019/08/28 11:02:26.371</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
   </notepads>
   <connection>
-    <name>OpenMRS Target DB</name>
+    <name>OpenMRS target DB</name>
     <server>${ETL_DATABASE_HOST}</server>
     <type>MYSQL</type>
     <access>Native</access>
@@ -473,6 +473,10 @@
         <attribute>N</attribute>
       </attribute>
       <attribute>
+        <code>SQL_CONNECT</code>
+        <attribute>set foreign_key_checks=0</attribute>
+      </attribute>
+      <attribute>
         <code>STREAM_RESULTS</code>
         <attribute>Y</attribute>
       </attribute>
@@ -492,14 +496,29 @@
   </connection>
   <order>
     <hop>
-      <from>load harmonized visit type</from>
-      <to>write harmonized visit_type</to>
+      <from>script for program_backup table creation</from>
+      <to>Load all programs</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Load all programs</from>
+      <to>backup programs in backup table</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>backup programs in backup table</from>
+      <to>wait for all  executios</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>wait for all  executios</from>
+      <to>erase program table</to>
       <enabled>Y</enabled>
     </hop>
   </order>
   <step>
-    <name>load harmonized visit type</name>
-    <type>CsvInput</type>
+    <name>Load all programs</name>
+    <type>TableInput</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -508,87 +527,13 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <filename>config/visit-types.csv</filename>
-    <filename_field/>
-    <rownum_field/>
-    <include_filename>N</include_filename>
-    <separator>,</separator>
-    <enclosure>"</enclosure>
-    <header>Y</header>
-    <buffer_size>50000</buffer_size>
-    <lazy_conversion>Y</lazy_conversion>
-    <add_filename_result>N</add_filename_result>
-    <parallel>N</parallel>
-    <newline_possible>N</newline_possible>
-    <encoding/>
-    <fields>
-      <field>
-        <name>visit_type_id</name>
-        <type>Integer</type>
-        <format>#</format>
-        <currency>$</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>15</length>
-        <precision>0</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>name</name>
-        <type>String</type>
-        <format/>
-        <currency>$</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>27</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>retired</name>
-        <type>Integer</type>
-        <format>#</format>
-        <currency>$</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>15</length>
-        <precision>0</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>uuid</name>
-        <type>String</type>
-        <format/>
-        <currency>$</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>36</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>creator</name>
-        <type>Integer</type>
-        <format>#</format>
-        <currency>$</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>15</length>
-        <precision>0</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>date_created</name>
-        <type>String</type>
-        <format/>
-        <currency>$</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>15</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-    </fields>
+    <connection>OpenMRS target DB</connection>
+    <sql>select * from program</sql>
+    <limit>0</limit>
+    <lookup/>
+    <execute_each_row>N</execute_each_row>
+    <variables_active>N</variables_active>
+    <lazy_conversion_active>N</lazy_conversion_active>
     <attributes/>
     <cluster_schema/>
     <remotesteps>
@@ -598,13 +543,13 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>176</xloc>
-      <yloc>128</yloc>
+      <xloc>288</xloc>
+      <yloc>256</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>write harmonized visit_type</name>
+    <name>backup programs in backup table</name>
     <type>TableOutput</type>
     <description/>
     <distribute>Y</distribute>
@@ -614,9 +559,9 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <connection>OpenMRS Target DB</connection>
+    <connection>OpenMRS target DB</connection>
     <schema/>
-    <table>visit_type</table>
+    <table>program_backup</table>
     <commit>1000</commit>
     <truncate>N</truncate>
     <ignore_errors>N</ignore_errors>
@@ -644,6 +589,125 @@
     <GUI>
       <xloc>448</xloc>
       <yloc>128</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>erase program table</name>
+    <type>Delete</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>OpenMRS target DB</connection>
+    <commit>100</commit>
+    <lookup>
+      <schema/>
+      <table>program</table>
+      <key>
+        <name>program_id</name>
+        <field>program_id</field>
+        <condition>=</condition>
+        <name2/>
+      </key>
+    </lookup>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>768</xloc>
+      <yloc>128</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>script for program_backup table creation</name>
+    <type>ExecSQL</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>OpenMRS target DB</connection>
+    <execute_each_row>N</execute_each_row>
+    <single_statement>N</single_statement>
+    <replace_variables>N</replace_variables>
+    <quoteString>N</quoteString>
+    <sql>drop table if exists program_backup;
+
+CREATE TABLE `program_backup` (
+  `program_id` int(11) NOT NULL,
+  `concept_id` int(11) NOT NULL DEFAULT '0',
+  `creator` int(11) NOT NULL DEFAULT '0',
+  `date_created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `changed_by` int(11) DEFAULT NULL,
+  `date_changed` datetime DEFAULT NULL,
+  `retired` tinyint(1) NOT NULL DEFAULT '0',
+  `name` varchar(50) NOT NULL,
+  `description` text,
+  `uuid` char(38) NOT NULL,
+  `outcomes_concept_id` int(11) DEFAULT NULL
+);</sql>
+    <set_params>N</set_params>
+    <insert_field/>
+    <update_field/>
+    <delete_field/>
+    <read_field/>
+    <arguments>
+    </arguments>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>128</xloc>
+      <yloc>128</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>wait for all  executios</name>
+    <type>BlockingStep</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <pass_all_rows>Y</pass_all_rows>
+    <directory>%%java.io.tmpdir%%</directory>
+    <prefix>block</prefix>
+    <cache_size>5000</cache_size>
+    <compress>Y</compress>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>608</xloc>
+      <yloc>272</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
