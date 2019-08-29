@@ -316,7 +316,7 @@
       <attributes/>
       <specification_method>filename</specification_method>
       <trans_object_id/>
-      <filename>/home/cfaife/jembi_dev/openmrs-database-migrator/src/main/resources/pdiresources/transformations/patient_identifier_type_backup.ktr</filename>
+      <filename>pdiresources/transformations/patient_identifier_type_backup.ktr</filename>
       <transname/>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
@@ -354,7 +354,7 @@
       <attributes/>
       <specification_method>filename</specification_method>
       <trans_object_id/>
-      <filename>/home/cfaife/jembi_dev/openmrs-database-migrator/src/main/resources/pdiresources/transformations/patient_identifier_type_insert_harmonized_data.ktr</filename>
+      <filename>pdiresources/transformations/patient_identifier_type_insert_harmonized_data.ktr</filename>
       <transname/>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
@@ -392,7 +392,7 @@
       <attributes/>
       <specification_method>filename</specification_method>
       <trans_object_id/>
-      <filename>/home/cfaife/jembi_dev/openmrs-database-migrator/src/main/resources/pdiresources/transformations/patient_identifiers_update_with_new_identifier_types.ktr</filename>
+      <filename>pdiresources/transformations/patient_identifiers_update_with_new_identifier_types.ktr</filename>
       <transname/>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
@@ -430,7 +430,7 @@
       <attributes/>
       <specification_method>filename</specification_method>
       <trans_object_id/>
-      <filename>/home/cfaife/jembi_dev/openmrs-database-migrator/src/main/resources/pdiresources/transformations/patient_identifier_type_drop_temp_table.ktr</filename>
+      <filename>pdiresources/transformations/patient_identifier_type_drop_temp_table.ktr</filename>
       <transname/>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
