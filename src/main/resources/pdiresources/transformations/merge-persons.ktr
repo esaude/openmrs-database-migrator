@@ -558,11 +558,6 @@
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Creator Exists on Destination</from>
-      <to>Save Missing persons into Destination</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
       <from>insert merge mapping for persons</from>
       <to>Creator Exists on Destination</to>
       <enabled>Y</enabled>
@@ -573,23 +568,8 @@
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Person Creator uuid From Destination</from>
-      <to>Daemon user</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Daemon user</from>
-      <to>insert merge mapping for persons</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
       <from>insert merge mapping for missing creator</from>
       <to>Set creator to daemon user</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Set creator to daemon user</from>
-      <to>Save Missing persons into Destination</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
@@ -597,9 +577,109 @@
       <to>Person Creator uuid From Destination</to>
       <enabled>Y</enabled>
     </hop>
+    <hop>
+      <from>Person Creator uuid From Destination</from>
+      <to>Person voided by uuid From Destination</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Person Changed by uuid From Destination</from>
+      <to>Daemon user</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Changed by Exists on Destination</from>
+      <to>Voided By Exists on Destination</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Changed by Exists on Destination</from>
+      <to>insert merge mapping for missing changed by</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Voided By Exists on Destination</from>
+      <to>insert merge mapping for missing voided by</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Set changed by to daemon id</from>
+      <to>Voided By Exists on Destination</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>insert merge mapping for missing changed by</from>
+      <to>Set changed by to daemon id</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>insert merge mapping for missing voided by</from>
+      <to>Set voided by to daemon id</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Set creator to daemon user</from>
+      <to>Changed by Exists on Destination</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Creator Exists on Destination</from>
+      <to>Changed by Exists on Destination</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Person voided by uuid From Destination</from>
+      <to>Person Cause of death uuid From Destination</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Person Cause of death uuid From Destination</from>
+      <to>Person Changed by uuid From Destination</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Voided By Exists on Destination</from>
+      <to>Cause of death Exists on Destination</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Set voided by to daemon id</from>
+      <to>Cause of death Exists on Destination</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Cause of death Exists on Destination</from>
+      <to>Save Missing persons into Destination</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Cause of death Exists on Destination</from>
+      <to>insert merge mapping for missing cause of death</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>insert merge mapping for missing cause of death</from>
+      <to>Set cause of death to none concept id</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Set cause of death to none concept id</from>
+      <to>Save Missing persons into Destination</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Daemon user</from>
+      <to>Daemon concept</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Daemon concept</from>
+      <to>insert merge mapping for persons</to>
+      <enabled>Y</enabled>
+    </hop>
   </order>
   <step>
-    <name>Creator Exists on Destination</name>
+    <name>Cause of death Exists on Destination</name>
     <type>FilterRows</type>
     <description/>
     <distribute>Y</distribute>
@@ -609,14 +689,26 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <send_true_to>Save Missing persons into Destination</send_true_to>
-    <send_false_to>insert merge mapping for missing creator</send_false_to>
+    <send_true_to>insert merge mapping for missing cause of death</send_true_to>
+    <send_false_to>Save Missing persons into Destination</send_false_to>
     <compare>
       <condition>
         <negated>N</negated>
-        <leftvalue>destination_creator_uuid</leftvalue>
-        <function>IS NOT NULL</function>
-        <rightvalue/>
+        <conditions>
+          <condition>
+            <negated>N</negated>
+            <leftvalue>destination_cause_of_death_uuid</leftvalue>
+            <function>IS NULL</function>
+            <rightvalue/>
+          </condition>
+          <condition>
+            <negated>N</negated>
+            <operator>AND</operator>
+            <leftvalue>cause_of_death</leftvalue>
+            <function>IS NOT NULL</function>
+            <rightvalue/>
+          </condition>
+        </conditions>
       </condition>
     </compare>
     <attributes/>
@@ -628,8 +720,102 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>336</xloc>
-      <yloc>416</yloc>
+      <xloc>944</xloc>
+      <yloc>128</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Changed by Exists on Destination</name>
+    <type>FilterRows</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <send_true_to>insert merge mapping for missing changed by</send_true_to>
+    <send_false_to>Voided By Exists on Destination</send_false_to>
+    <compare>
+      <condition>
+        <negated>N</negated>
+        <conditions>
+          <condition>
+            <negated>N</negated>
+            <leftvalue>destination_changed_by</leftvalue>
+            <function>IS NULL</function>
+            <rightvalue/>
+          </condition>
+          <condition>
+            <negated>N</negated>
+            <operator>AND</operator>
+            <leftvalue>changed_by</leftvalue>
+            <function>IS NOT NULL</function>
+            <rightvalue/>
+          </condition>
+        </conditions>
+      </condition>
+    </compare>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>576</xloc>
+      <yloc>80</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Creator Exists on Destination</name>
+    <type>FilterRows</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <send_true_to>insert merge mapping for missing creator</send_true_to>
+    <send_false_to>Changed by Exists on Destination</send_false_to>
+    <compare>
+      <condition>
+        <negated>N</negated>
+        <conditions>
+          <condition>
+            <negated>N</negated>
+            <leftvalue>destination_creator_uuid</leftvalue>
+            <function>IS NULL</function>
+            <rightvalue/>
+          </condition>
+          <condition>
+            <negated>N</negated>
+            <operator>AND</operator>
+            <leftvalue>creator</leftvalue>
+            <function>IS NOT NULL</function>
+            <rightvalue/>
+          </condition>
+        </conditions>
+      </condition>
+    </compare>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>400</xloc>
+      <yloc>96</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -660,8 +846,8 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>208</xloc>
-      <yloc>32</yloc>
+      <xloc>304</xloc>
+      <yloc>16</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -692,8 +878,80 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>80</xloc>
+      <xloc>64</xloc>
       <yloc>16</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Person Cause of death uuid From Destination</name>
+    <type>DBJoin</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>OpenMRS destination</connection>
+    <rowlimit>0</rowlimit>
+    <sql>SELECT uuid as destination_cause_of_death_uuid from concept where concept_id = ?</sql>
+    <outer_join>Y</outer_join>
+    <replace_vars>N</replace_vars>
+    <parameter>
+      <field>
+        <name>cause_of_death</name>
+        <type>Integer</type>
+      </field>
+    </parameter>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>208</xloc>
+      <yloc>48</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Person Changed by uuid From Destination</name>
+    <type>DBJoin</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>OpenMRS destination</connection>
+    <rowlimit>0</rowlimit>
+    <sql>SELECT uuid as destination_changed_by from users where user_id = ?</sql>
+    <outer_join>Y</outer_join>
+    <replace_vars>N</replace_vars>
+    <parameter>
+      <field>
+        <name>changed_by</name>
+        <type>Integer</type>
+      </field>
+    </parameter>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>192</xloc>
+      <yloc>0</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -716,7 +974,7 @@
     <parameter>
       <field>
         <name>creator</name>
-        <type>String</type>
+        <type>Integer</type>
       </field>
     </parameter>
     <attributes/>
@@ -729,7 +987,43 @@
     </remotesteps>
     <GUI>
       <xloc>240</xloc>
-      <yloc>160</yloc>
+      <yloc>176</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Person voided by uuid From Destination</name>
+    <type>DBJoin</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>OpenMRS destination</connection>
+    <rowlimit>0</rowlimit>
+    <sql>SELECT uuid as destination_voided_by from users where user_id = ?</sql>
+    <outer_join>Y</outer_join>
+    <replace_vars>N</replace_vars>
+    <parameter>
+      <field>
+        <name>voided_by</name>
+        <type>Integer</type>
+      </field>
+    </parameter>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>240</xloc>
+      <yloc>112</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -765,7 +1059,7 @@
     </remotesteps>
     <GUI>
       <xloc>112</xloc>
-      <yloc>544</yloc>
+      <yloc>304</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -780,7 +1074,7 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <send_true_to>Person Creator uuid From Source</send_true_to>
+    <send_true_to/>
     <send_false_to/>
     <compare>
       <condition>
@@ -799,8 +1093,8 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>224</xloc>
-      <yloc>288</yloc>
+      <xloc>144</xloc>
+      <yloc>240</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -911,8 +1205,70 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>896</xloc>
-      <yloc>16</yloc>
+      <xloc>720</xloc>
+      <yloc>320</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Set cause of death to none concept id</name>
+    <type>SetValueField</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <fields>
+      <field>
+        <name>cause_of_death</name>
+        <replaceby>daemon_concept_id</replaceby>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>935</xloc>
+      <yloc>314</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Set changed by to daemon id</name>
+    <type>SetValueField</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <fields>
+      <field>
+        <name>changed_by</name>
+        <replaceby>daemon_user_id</replaceby>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>832</xloc>
+      <yloc>64</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -942,8 +1298,174 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>544</xloc>
-      <yloc>16</yloc>
+      <xloc>528</xloc>
+      <yloc>160</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Set voided by to daemon id</name>
+    <type>SetValueField</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <fields>
+      <field>
+        <name>voided_by</name>
+        <replaceby>daemon_user_id</replaceby>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>800</xloc>
+      <yloc>192</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Voided By Exists on Destination</name>
+    <type>FilterRows</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <send_true_to>insert merge mapping for missing voided by</send_true_to>
+    <send_false_to>Cause of death Exists on Destination</send_false_to>
+    <compare>
+      <condition>
+        <negated>N</negated>
+        <conditions>
+          <condition>
+            <negated>N</negated>
+            <leftvalue>destination_voided_by</leftvalue>
+            <function>IS NULL</function>
+            <rightvalue/>
+          </condition>
+          <condition>
+            <negated>N</negated>
+            <operator>AND</operator>
+            <leftvalue>voided_by</leftvalue>
+            <function>IS NOT NULL</function>
+            <rightvalue/>
+          </condition>
+        </conditions>
+      </condition>
+    </compare>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>704</xloc>
+      <yloc>112</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>insert merge mapping for missing cause of death</name>
+    <type>ExecSQL</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>OpenMRS destination</connection>
+    <execute_each_row>Y</execute_each_row>
+    <single_statement>N</single_statement>
+    <replace_variables>Y</replace_variables>
+    <quoteString>N</quoteString>
+    <sql>INSERT INTO migrator_merge_mappings(entity, attribute, answer, uuid) VALUES('person', 'cause_of_death', ?, ?);</sql>
+    <set_params>Y</set_params>
+    <insert_field/>
+    <update_field/>
+    <delete_field/>
+    <read_field/>
+    <arguments>
+      <argument>
+        <name>cause_of_death</name>
+      </argument>
+      <argument>
+        <name>uuid</name>
+      </argument>
+    </arguments>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>944</xloc>
+      <yloc>224</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>insert merge mapping for missing changed by</name>
+    <type>ExecSQL</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>OpenMRS destination</connection>
+    <execute_each_row>Y</execute_each_row>
+    <single_statement>N</single_statement>
+    <replace_variables>Y</replace_variables>
+    <quoteString>N</quoteString>
+    <sql>INSERT INTO migrator_merge_mappings(entity, attribute, answer, uuid) VALUES('person', 'changed_by', ?, ?);</sql>
+    <set_params>Y</set_params>
+    <insert_field/>
+    <update_field/>
+    <delete_field/>
+    <read_field/>
+    <arguments>
+      <argument>
+        <name>changed_by</name>
+      </argument>
+      <argument>
+        <name>uuid</name>
+      </argument>
+    </arguments>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>912</xloc>
+      <yloc>0</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -986,8 +1508,52 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>880</xloc>
-      <yloc>416</yloc>
+      <xloc>384</xloc>
+      <yloc>224</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>insert merge mapping for missing voided by</name>
+    <type>ExecSQL</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>OpenMRS destination</connection>
+    <execute_each_row>Y</execute_each_row>
+    <single_statement>N</single_statement>
+    <replace_variables>Y</replace_variables>
+    <quoteString>N</quoteString>
+    <sql>INSERT INTO migrator_merge_mappings(entity, attribute, answer, uuid) VALUES('person', 'voided_by', ?, ?);</sql>
+    <set_params>Y</set_params>
+    <insert_field/>
+    <update_field/>
+    <delete_field/>
+    <read_field/>
+    <arguments>
+      <argument>
+        <name>voided_by</name>
+      </argument>
+      <argument>
+        <name>uuid</name>
+      </argument>
+    </arguments>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>656</xloc>
+      <yloc>208</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1030,8 +1596,40 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>416</xloc>
-      <yloc>48</yloc>
+      <xloc>480</xloc>
+      <yloc>16</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Daemon concept</name>
+    <type>DBJoin</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>OpenMRS destination</connection>
+    <rowlimit>0</rowlimit>
+    <sql>select concept_id as daemon_concept_id from concept limit 1;</sql>
+    <outer_join>Y</outer_join>
+    <replace_vars>N</replace_vars>
+    <parameter>
+    </parameter>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>384</xloc>
+      <yloc>0</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

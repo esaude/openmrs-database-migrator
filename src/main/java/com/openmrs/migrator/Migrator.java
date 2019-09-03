@@ -8,6 +8,13 @@ import com.openmrs.migrator.core.services.SettingsService;
 import com.openmrs.migrator.core.services.impl.MySQLProps;
 import com.openmrs.migrator.core.utilities.ConsoleUtils;
 import com.openmrs.migrator.core.utilities.FileIOUtilities;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import picocli.CommandLine;
+import picocli.CommandLine.Command;
+import picocli.CommandLine.Option;
+
 import java.io.Console;
 import java.io.File;
 import java.io.IOException;
@@ -22,12 +29,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.Callable;
-import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import picocli.CommandLine;
-import picocli.CommandLine.Command;
-import picocli.CommandLine.Option;
 
 @Command(name = "migrator", mixinStandardHelpOptions = true, helpCommand = true)
 public class Migrator implements Callable<Optional<Void>> {
@@ -147,6 +148,9 @@ public class Migrator implements Callable<Optional<Void>> {
     pdiFiles.add(SettingsService.PDI_RESOURCES_DIR + "/transformations/validate-visit-types.ktr");
     pdiFiles.add(SettingsService.PDI_RESOURCES_DIR + "/transformations/merge-persons.ktr");
     pdiFiles.add(SettingsService.PDI_RESOURCES_DIR + "/transformations/merge-users.ktr");
+    pdiFiles.add(SettingsService.PDI_RESOURCES_DIR + "/transformations/merge-concept-datatypes.ktr");
+    pdiFiles.add(SettingsService.PDI_RESOURCES_DIR + "/transformations/merge-concept-classes.ktr");
+    pdiFiles.add(SettingsService.PDI_RESOURCES_DIR + "/transformations/merge-concepts.ktr");
     pdiFiles.add(SettingsService.SETTINGS_PROPERTIES);
     pdiFiles.add(SettingsService.PDI_PLUGINS_DIR + "/pdi-core-plugins-impl-8.2.0.7-719.jar");
 

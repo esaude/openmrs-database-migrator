@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <transformation>
   <info>
-    <name>merge-users</name>
+    <name>merge-concepts</name>
     <description/>
     <extended_description/>
     <trans_version/>
@@ -548,23 +548,23 @@
   </connection>
   <order>
     <hop>
-      <from>Creator Exists on Destination</from>
+      <from>Creator on Destination</from>
       <to>insert merge mapping for missing creator</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Load Users from Source</from>
-      <to>Users In Both Source &amp; Destination</to>
+      <from>Load Concepts from Source</from>
+      <to>Concepts In Both Source &amp; Destination</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Users In Both Source &amp; Destination</from>
-      <to>Users in Source Not Destination</to>
+      <from>Concepts In Both Source &amp; Destination</from>
+      <to>Concepts in Source Not Destination</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Users in Source Not Destination</from>
-      <to>User Creator uuid From Destination</to>
+      <from>Concepts in Source Not Destination</from>
+      <to>Concept Creator uuid From Destination</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
@@ -573,72 +573,22 @@
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>insert merge mapping for users</from>
-      <to>Creator Exists on Destination</to>
+      <from>insert merge mapping for concept</from>
+      <to>Creator on Destination</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Daemon user/person</from>
-      <to>insert merge mapping for users</to>
+      <from>Concept Changed by uuid From Destination</from>
+      <to>Concept retired by uuid From Destination</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Set creator to daemon user</from>
-      <to>Person Exists on Destination</to>
+      <from>Changed by on Destination</from>
+      <to>Retired By on Destination</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Creator Exists on Destination</from>
-      <to>Person Exists on Destination</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>User Creator uuid From Destination</from>
-      <to>User Person uuid From Destination</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Person Exists on Destination</from>
-      <to>insert merge mapping for missing person</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>insert merge mapping for missing person</from>
-      <to>Set person_id to daemon person id</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>User Person uuid From Destination</from>
-      <to>User Changed by uuid From Destination</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>User Changed by uuid From Destination</from>
-      <to>User retired by uuid From Destination</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>User retired by uuid From Destination</from>
-      <to>Daemon user/person</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Set person_id to daemon person id</from>
-      <to>Changed by Exists on Destination</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Person Exists on Destination</from>
-      <to>Changed by Exists on Destination</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Changed by Exists on Destination</from>
-      <to>Retired By Exists on Destination</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Changed by Exists on Destination</from>
+      <from>Changed by on Destination</from>
       <to>insert merge mapping for missing changed by</to>
       <enabled>Y</enabled>
     </hop>
@@ -649,17 +599,12 @@
     </hop>
     <hop>
       <from>Set changed by to daemon id</from>
-      <to>Retired By Exists on Destination</to>
+      <to>Retired By on Destination</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Retired By Exists on Destination</from>
+      <from>Retired By on Destination</from>
       <to>insert merge mapping for missing retired by</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Retired By Exists on Destination</from>
-      <to>Save Missing users into Destination</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
@@ -668,13 +613,103 @@
       <enabled>Y</enabled>
     </hop>
     <hop>
+      <from>Concept Creator uuid From Destination</from>
+      <to>Concept Changed by uuid From Destination</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Concept class uuid From Destination</from>
+      <to>Concept datatype uuid From Destination</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Concept datatype uuid From Destination</from>
+      <to>Daemon user/person</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Set creator to daemon user</from>
+      <to>Changed by on Destination</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Creator on Destination</from>
+      <to>Changed by on Destination</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
       <from>Set retired by to daemon id</from>
-      <to>Save Missing users into Destination</to>
+      <to>Class on Destination</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Retired By on Destination</from>
+      <to>Class on Destination</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Daemon user/person</from>
+      <to>Misc Concept class</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Misc Concept class</from>
+      <to>Misc Concept datatype</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Misc Concept datatype</from>
+      <to>insert merge mapping for concept</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Class on Destination</from>
+      <to>insert merge mapping for missing class</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>insert merge mapping for missing class</from>
+      <to>Set class to misc class</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Set class to misc class</from>
+      <to>Datatype on Destination</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Class on Destination</from>
+      <to>Datatype on Destination</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Datatype on Destination</from>
+      <to>insert merge mapping for missing datatype</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>insert merge mapping for missing datatype</from>
+      <to>Set class to na datatype</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Set class to na datatype</from>
+      <to>Save Missing concept into Destination</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Datatype on Destination</from>
+      <to>Save Missing concept into Destination</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Concept retired by uuid From Destination</from>
+      <to>Concept class uuid From Destination</to>
       <enabled>Y</enabled>
     </hop>
   </order>
   <step>
-    <name>Changed by Exists on Destination</name>
+    <name>Changed by on Destination</name>
     <type>FilterRows</type>
     <description/>
     <distribute>Y</distribute>
@@ -685,7 +720,7 @@
       <schema_name/>
     </partitioning>
     <send_true_to>insert merge mapping for missing changed by</send_true_to>
-    <send_false_to>Retired By Exists on Destination</send_false_to>
+    <send_false_to>Retired By on Destination</send_false_to>
     <compare>
       <condition>
         <negated>N</negated>
@@ -715,13 +750,311 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>960</xloc>
-      <yloc>256</yloc>
+      <xloc>624</xloc>
+      <yloc>96</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Creator Exists on Destination</name>
+    <name>Class on Destination</name>
+    <type>FilterRows</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <send_true_to>insert merge mapping for missing class</send_true_to>
+    <send_false_to>Datatype on Destination</send_false_to>
+    <compare>
+      <condition>
+        <negated>N</negated>
+        <conditions>
+          <condition>
+            <negated>N</negated>
+            <leftvalue>destination_concept_class_uuid</leftvalue>
+            <function>IS NULL</function>
+            <rightvalue/>
+          </condition>
+          <condition>
+            <negated>N</negated>
+            <operator>AND</operator>
+            <leftvalue>class_id</leftvalue>
+            <function>IS NOT NULL</function>
+            <rightvalue/>
+          </condition>
+        </conditions>
+      </condition>
+    </compare>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>832</xloc>
+      <yloc>128</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Concept Changed by uuid From Destination</name>
+    <type>DBJoin</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>OpenMRS destination</connection>
+    <rowlimit>0</rowlimit>
+    <sql>SELECT DISTINCT uuid as destination_changed_by from users where user_id = ?</sql>
+    <outer_join>Y</outer_join>
+    <replace_vars>N</replace_vars>
+    <parameter>
+      <field>
+        <name>changed_by</name>
+        <type>Integer</type>
+      </field>
+    </parameter>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>240</xloc>
+      <yloc>288</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Concept Creator uuid From Destination</name>
+    <type>DBJoin</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>OpenMRS destination</connection>
+    <rowlimit>0</rowlimit>
+    <sql>SELECT DISTINCT uuid as destination_creator_uuid from users where user_id = ?</sql>
+    <outer_join>Y</outer_join>
+    <replace_vars>N</replace_vars>
+    <parameter>
+      <field>
+        <name>creator</name>
+        <type>Integer</type>
+      </field>
+    </parameter>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>240</xloc>
+      <yloc>352</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Concept class uuid From Destination</name>
+    <type>DBJoin</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>OpenMRS destination</connection>
+    <rowlimit>0</rowlimit>
+    <sql>SELECT DISTINCT uuid as destination_concept_class_uuid from concept_class where concept_class_id = ?</sql>
+    <outer_join>Y</outer_join>
+    <replace_vars>N</replace_vars>
+    <parameter>
+      <field>
+        <name>class_id</name>
+        <type>Integer</type>
+      </field>
+    </parameter>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>256</xloc>
+      <yloc>160</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Concept datatype uuid From Destination</name>
+    <type>DBJoin</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>OpenMRS destination</connection>
+    <rowlimit>0</rowlimit>
+    <sql>SELECT uuid as destination_datatype_uuid from concept_datatype where concept_datatype_id = ?</sql>
+    <outer_join>Y</outer_join>
+    <replace_vars>N</replace_vars>
+    <parameter>
+      <field>
+        <name>datatype_id</name>
+        <type>Integer</type>
+      </field>
+    </parameter>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>208</xloc>
+      <yloc>96</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Concept retired by uuid From Destination</name>
+    <type>DBJoin</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>OpenMRS destination</connection>
+    <rowlimit>0</rowlimit>
+    <sql>SELECT DISTINCT uuid as destination_retired_by from users where retired_by = ?</sql>
+    <outer_join>Y</outer_join>
+    <replace_vars>N</replace_vars>
+    <parameter>
+      <field>
+        <name>retired_by</name>
+        <type>Integer</type>
+      </field>
+    </parameter>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>320</xloc>
+      <yloc>224</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Concepts In Both Source &amp; Destination</name>
+    <type>DBJoin</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>OpenMRS destination</connection>
+    <rowlimit>0</rowlimit>
+    <sql>select concept_id as destination_concept_id from concept where uuid = ?</sql>
+    <outer_join>Y</outer_join>
+    <replace_vars>N</replace_vars>
+    <parameter>
+      <field>
+        <name>uuid</name>
+        <type>String</type>
+      </field>
+    </parameter>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>128</xloc>
+      <yloc>544</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Concepts in Source Not Destination</name>
+    <type>FilterRows</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <send_true_to>Concept Creator uuid From Destination</send_true_to>
+    <send_false_to/>
+    <compare>
+      <condition>
+        <negated>N</negated>
+        <leftvalue>destination_concept_id</leftvalue>
+        <function>IS NULL</function>
+        <rightvalue/>
+      </condition>
+    </compare>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>208</xloc>
+      <yloc>432</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Creator on Destination</name>
     <type>FilterRows</type>
     <description/>
     <distribute>Y</distribute>
@@ -732,7 +1065,7 @@
       <schema_name/>
     </partitioning>
     <send_true_to>insert merge mapping for missing creator</send_true_to>
-    <send_false_to>Person Exists on Destination</send_false_to>
+    <send_false_to>Changed by on Destination</send_false_to>
     <compare>
       <condition>
         <negated>N</negated>
@@ -800,7 +1133,54 @@
     </GUI>
   </step>
   <step>
-    <name>Load Users from Source</name>
+    <name>Datatype on Destination</name>
+    <type>FilterRows</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <send_true_to>insert merge mapping for missing datatype</send_true_to>
+    <send_false_to>Save Missing concept into Destination</send_false_to>
+    <compare>
+      <condition>
+        <negated>N</negated>
+        <conditions>
+          <condition>
+            <negated>N</negated>
+            <leftvalue>destination_datatype_uuid</leftvalue>
+            <function>IS NULL</function>
+            <rightvalue/>
+          </condition>
+          <condition>
+            <negated>N</negated>
+            <operator>AND</operator>
+            <leftvalue>datatype_id</leftvalue>
+            <function>IS NOT NULL</function>
+            <rightvalue/>
+          </condition>
+        </conditions>
+      </condition>
+    </compare>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>816</xloc>
+      <yloc>320</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Load Concepts from Source</name>
     <type>TableInput</type>
     <description/>
     <distribute>N</distribute>
@@ -811,7 +1191,7 @@
       <schema_name/>
     </partitioning>
     <connection>OpenMRS source</connection>
-    <sql>SELECT * FROM users</sql>
+    <sql>SELECT * FROM concept</sql>
     <limit>0</limit>
     <lookup/>
     <execute_each_row>N</execute_each_row>
@@ -832,8 +1212,8 @@
     </GUI>
   </step>
   <step>
-    <name>Person Exists on Destination</name>
-    <type>FilterRows</type>
+    <name>Misc Concept class</name>
+    <type>DBJoin</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -842,28 +1222,13 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <send_true_to>insert merge mapping for missing person</send_true_to>
-    <send_false_to>Changed by Exists on Destination</send_false_to>
-    <compare>
-      <condition>
-        <negated>N</negated>
-        <conditions>
-          <condition>
-            <negated>N</negated>
-            <leftvalue>destination_person_uuid</leftvalue>
-            <function>IS NULL</function>
-            <rightvalue/>
-          </condition>
-          <condition>
-            <negated>N</negated>
-            <operator>AND</operator>
-            <leftvalue>person_id</leftvalue>
-            <function>IS NOT NULL</function>
-            <rightvalue/>
-          </condition>
-        </conditions>
-      </condition>
-    </compare>
+    <connection>OpenMRS destination</connection>
+    <rowlimit>0</rowlimit>
+    <sql>select concept_class_id AS misc_concept_class_id from concept_class where `name` = 'Misc';</sql>
+    <outer_join>Y</outer_join>
+    <replace_vars>N</replace_vars>
+    <parameter>
+    </parameter>
     <attributes/>
     <cluster_schema/>
     <remotesteps>
@@ -873,13 +1238,45 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>880</xloc>
-      <yloc>48</yloc>
+      <xloc>304</xloc>
+      <yloc>0</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Retired By Exists on Destination</name>
+    <name>Misc Concept datatype</name>
+    <type>DBJoin</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>OpenMRS destination</connection>
+    <rowlimit>0</rowlimit>
+    <sql>select concept_datatype_id AS na_concept_datatype_id from concept_datatype where `name` = 'N/A';</sql>
+    <outer_join>Y</outer_join>
+    <replace_vars>N</replace_vars>
+    <parameter>
+    </parameter>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>368</xloc>
+      <yloc>80</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Retired By on Destination</name>
     <type>FilterRows</type>
     <description/>
     <distribute>Y</distribute>
@@ -890,7 +1287,7 @@
       <schema_name/>
     </partitioning>
     <send_true_to>insert merge mapping for missing retired by</send_true_to>
-    <send_false_to>Save Missing users into Destination</send_false_to>
+    <send_false_to>Class on Destination</send_false_to>
     <compare>
       <condition>
         <negated>N</negated>
@@ -920,13 +1317,13 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>720</xloc>
-      <yloc>384</yloc>
+      <xloc>688</xloc>
+      <yloc>192</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Save Missing users into Destination</name>
+    <name>Save Missing concept into Destination</name>
     <type>TableOutput</type>
     <description/>
     <distribute>Y</distribute>
@@ -938,7 +1335,7 @@
     </partitioning>
     <connection>OpenMRS destination</connection>
     <schema/>
-    <table>users</table>
+    <table>concept</table>
     <commit>1000</commit>
     <truncate>N</truncate>
     <ignore_errors>N</ignore_errors>
@@ -955,28 +1352,32 @@
     <return_field/>
     <fields>
       <field>
-        <column_name>system_id</column_name>
-        <stream_name>system_id</stream_name>
+        <column_name>retired</column_name>
+        <stream_name>retired</stream_name>
       </field>
       <field>
-        <column_name>username</column_name>
-        <stream_name>username</stream_name>
+        <column_name>short_name</column_name>
+        <stream_name>short_name</stream_name>
       </field>
       <field>
-        <column_name>password</column_name>
-        <stream_name>password</stream_name>
+        <column_name>description</column_name>
+        <stream_name>description</stream_name>
       </field>
       <field>
-        <column_name>salt</column_name>
-        <stream_name>salt</stream_name>
+        <column_name>form_text</column_name>
+        <stream_name>form_text</stream_name>
       </field>
       <field>
-        <column_name>secret_question</column_name>
-        <stream_name>secret_question</stream_name>
+        <column_name>datatype_id</column_name>
+        <stream_name>datatype_id</stream_name>
       </field>
       <field>
-        <column_name>secret_answer</column_name>
-        <stream_name>secret_answer</stream_name>
+        <column_name>class_id</column_name>
+        <stream_name>class_id</stream_name>
+      </field>
+      <field>
+        <column_name>is_set</column_name>
+        <stream_name>is_set</stream_name>
       </field>
       <field>
         <column_name>creator</column_name>
@@ -987,20 +1388,16 @@
         <stream_name>date_created</stream_name>
       </field>
       <field>
+        <column_name>version</column_name>
+        <stream_name>version</stream_name>
+      </field>
+      <field>
         <column_name>changed_by</column_name>
         <stream_name>changed_by</stream_name>
       </field>
       <field>
         <column_name>date_changed</column_name>
         <stream_name>date_changed</stream_name>
-      </field>
-      <field>
-        <column_name>person_id</column_name>
-        <stream_name>person_id</stream_name>
-      </field>
-      <field>
-        <column_name>retired</column_name>
-        <stream_name>retired</stream_name>
       </field>
       <field>
         <column_name>retired_by</column_name>
@@ -1059,8 +1456,70 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>608</xloc>
-      <yloc>336</yloc>
+      <xloc>560</xloc>
+      <yloc>208</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Set class to misc class</name>
+    <type>SetValueField</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <fields>
+      <field>
+        <name>class_id</name>
+        <replaceby>misc_concept_class_id</replaceby>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>544</xloc>
+      <yloc>384</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Set class to na datatype</name>
+    <type>SetValueField</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <fields>
+      <field>
+        <name>datatype_id</name>
+        <replaceby>na_concept_datatype_id</replaceby>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>562</xloc>
+      <yloc>510</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1090,39 +1549,8 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>704</xloc>
-      <yloc>0</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Set person_id to daemon person id</name>
-    <type>SetValueField</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <fields>
-      <field>
-        <name>person_id</name>
-        <replaceby>daemon_person_id</replaceby>
-      </field>
-    </fields>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>816</xloc>
-      <yloc>208</yloc>
+      <xloc>624</xloc>
+      <yloc>16</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1152,14 +1580,14 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>823</xloc>
-      <yloc>455</yloc>
+      <xloc>432</xloc>
+      <yloc>416</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>User Changed by uuid From Destination</name>
-    <type>DBJoin</type>
+    <name>insert merge mapping for concept</name>
+    <type>ExecSQL</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -1169,160 +1597,24 @@
       <schema_name/>
     </partitioning>
     <connection>OpenMRS destination</connection>
-    <rowlimit>0</rowlimit>
-    <sql>SELECT uuid as destination_changed_by from users where user_id = ?</sql>
-    <outer_join>Y</outer_join>
-    <replace_vars>N</replace_vars>
-    <parameter>
-      <field>
-        <name>changed_by</name>
-        <type>Integer</type>
-      </field>
-    </parameter>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>240</xloc>
-      <yloc>192</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>User Creator uuid From Destination</name>
-    <type>DBJoin</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <connection>OpenMRS destination</connection>
-    <rowlimit>0</rowlimit>
-    <sql>SELECT uuid as destination_creator_uuid from users where user_id = ?</sql>
-    <outer_join>Y</outer_join>
-    <replace_vars>N</replace_vars>
-    <parameter>
-      <field>
-        <name>creator</name>
-        <type>Integer</type>
-      </field>
-    </parameter>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>240</xloc>
-      <yloc>336</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>User Person uuid From Destination</name>
-    <type>DBJoin</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <connection>OpenMRS destination</connection>
-    <rowlimit>0</rowlimit>
-    <sql>SELECT uuid as destination_person_uuid from person where person_id = ?</sql>
-    <outer_join>Y</outer_join>
-    <replace_vars>N</replace_vars>
-    <parameter>
-      <field>
-        <name>person_id</name>
-        <type>Integer</type>
-      </field>
-    </parameter>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>240</xloc>
-      <yloc>272</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>User retired by uuid From Destination</name>
-    <type>DBJoin</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <connection>OpenMRS destination</connection>
-    <rowlimit>0</rowlimit>
-    <sql>SELECT uuid as destination_retired_by from users where user_id = ?</sql>
-    <outer_join>Y</outer_join>
-    <replace_vars>N</replace_vars>
-    <parameter>
-      <field>
-        <name>retired_by</name>
-        <type>Integer</type>
-      </field>
-    </parameter>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>224</xloc>
-      <yloc>112</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Users In Both Source &amp; Destination</name>
-    <type>DBJoin</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <connection>OpenMRS destination</connection>
-    <rowlimit>0</rowlimit>
-    <sql>select user_id as destination_user_id from users where uuid = ?</sql>
-    <outer_join>Y</outer_join>
-    <replace_vars>N</replace_vars>
-    <parameter>
-      <field>
+    <execute_each_row>Y</execute_each_row>
+    <single_statement>N</single_statement>
+    <replace_variables>Y</replace_variables>
+    <quoteString>N</quoteString>
+    <sql>INSERT INTO migrator_merge_mappings(entity, attribute, answer, uuid) VALUES('concept', 'concept_id', ?, ?);</sql>
+    <set_params>Y</set_params>
+    <insert_field/>
+    <update_field/>
+    <delete_field/>
+    <read_field/>
+    <arguments>
+      <argument>
+        <name>concept_id</name>
+      </argument>
+      <argument>
         <name>uuid</name>
-        <type>String</type>
-      </field>
-    </parameter>
+      </argument>
+    </arguments>
     <attributes/>
     <cluster_schema/>
     <remotesteps>
@@ -1332,43 +1624,8 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>128</xloc>
-      <yloc>544</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Users in Source Not Destination</name>
-    <type>FilterRows</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <send_true_to>User Creator uuid From Destination</send_true_to>
-    <send_false_to/>
-    <compare>
-      <condition>
-        <negated>N</negated>
-        <leftvalue>destination_user_id</leftvalue>
-        <function>IS NULL</function>
-        <rightvalue/>
-      </condition>
-    </compare>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>208</xloc>
-      <yloc>432</yloc>
+      <xloc>496</xloc>
+      <yloc>32</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1411,8 +1668,52 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>784</xloc>
-      <yloc>288</yloc>
+      <xloc>800</xloc>
+      <yloc>48</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>insert merge mapping for missing class</name>
+    <type>ExecSQL</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>OpenMRS destination</connection>
+    <execute_each_row>Y</execute_each_row>
+    <single_statement>N</single_statement>
+    <replace_variables>Y</replace_variables>
+    <quoteString>N</quoteString>
+    <sql>INSERT INTO migrator_merge_mappings(entity, attribute, answer, uuid) VALUES('concept', 'class_id', ?, ?);</sql>
+    <set_params>Y</set_params>
+    <insert_field/>
+    <update_field/>
+    <delete_field/>
+    <read_field/>
+    <arguments>
+      <argument>
+        <name>class_id</name>
+      </argument>
+      <argument>
+        <name>uuid</name>
+      </argument>
+    </arguments>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>752</xloc>
+      <yloc>256</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1432,7 +1733,7 @@
     <single_statement>N</single_statement>
     <replace_variables>Y</replace_variables>
     <quoteString>N</quoteString>
-    <sql>INSERT INTO migrator_merge_mappings(entity, attribute, answer, uuid) VALUES('users', 'creator', ?, ?);</sql>
+    <sql>INSERT INTO migrator_merge_mappings(entity, attribute, answer, uuid) VALUES('concept', 'creator', ?, ?);</sql>
     <set_params>Y</set_params>
     <insert_field/>
     <update_field/>
@@ -1455,13 +1756,13 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>592</xloc>
+      <xloc>496</xloc>
       <yloc>128</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>insert merge mapping for missing person</name>
+    <name>insert merge mapping for missing datatype</name>
     <type>ExecSQL</type>
     <description/>
     <distribute>Y</distribute>
@@ -1476,7 +1777,7 @@
     <single_statement>N</single_statement>
     <replace_variables>Y</replace_variables>
     <quoteString>N</quoteString>
-    <sql>INSERT INTO migrator_merge_mappings(entity, attribute, answer, uuid) VALUES('users', 'person_id', ?, ?);</sql>
+    <sql>INSERT INTO migrator_merge_mappings(entity, attribute, answer, uuid) VALUES('concept', 'datatype_id', ?, ?);</sql>
     <set_params>Y</set_params>
     <insert_field/>
     <update_field/>
@@ -1484,7 +1785,7 @@
     <read_field/>
     <arguments>
       <argument>
-        <name>person_id</name>
+        <name>datatype_id</name>
       </argument>
       <argument>
         <name>uuid</name>
@@ -1499,8 +1800,8 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>816</xloc>
-      <yloc>144</yloc>
+      <xloc>688</xloc>
+      <yloc>416</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1543,52 +1844,8 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>672</xloc>
-      <yloc>485</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>insert merge mapping for users</name>
-    <type>ExecSQL</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <connection>OpenMRS destination</connection>
-    <execute_each_row>Y</execute_each_row>
-    <single_statement>N</single_statement>
-    <replace_variables>Y</replace_variables>
-    <quoteString>N</quoteString>
-    <sql>INSERT INTO migrator_merge_mappings(entity, attribute, answer, uuid) VALUES('users', 'user_id', ?, ?);</sql>
-    <set_params>Y</set_params>
-    <insert_field/>
-    <update_field/>
-    <delete_field/>
-    <read_field/>
-    <arguments>
-      <argument>
-        <name>user_id</name>
-      </argument>
-      <argument>
-        <name>uuid</name>
-      </argument>
-    </arguments>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>496</xloc>
-      <yloc>32</yloc>
+      <xloc>512</xloc>
+      <yloc>320</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

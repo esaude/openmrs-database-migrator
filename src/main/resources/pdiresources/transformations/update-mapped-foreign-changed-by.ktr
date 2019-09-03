@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <transformation>
   <info>
-    <name>update-mapped-user-creators</name>
+    <name>update-mapped-foreign-changed-by</name>
     <description/>
     <extended_description/>
     <trans_version/>
@@ -547,23 +547,23 @@
   </connection>
   <order>
     <hop>
-      <from>Read creators from mappings</from>
-      <to>Get creator Source user uuid</to>
+      <from>Read changed by from mappings</from>
+      <to>Get entity's changed by Source uuid</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Get creator Source user uuid</from>
-      <to>Get creator Destination user id</to>
+      <from>Get entity's changed by Source uuid</from>
+      <to>Get changed by Destination entity id</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Get creator Destination user id</from>
-      <to>Update user creator to mapped in destination</to>
+      <from>Get changed by Destination entity id</from>
+      <to>Update entity's changed by to mapped in destination</to>
       <enabled>Y</enabled>
     </hop>
   </order>
   <step>
-    <name>Get creator Destination user id</name>
+    <name>Get changed by Destination entity id</name>
     <type>DBJoin</type>
     <description/>
     <distribute>Y</distribute>
@@ -575,9 +575,9 @@
     </partitioning>
     <connection>destination/merge</connection>
     <rowlimit>0</rowlimit>
-    <sql>SELECT user_id as mapping_destination_creator_user_id from users where uuid = ?</sql>
+    <sql>SELECT user_id as mapping_destination_changed_by_entity_id from users where uuid = ?</sql>
     <outer_join>Y</outer_join>
-    <replace_vars>N</replace_vars>
+    <replace_vars>Y</replace_vars>
     <parameter>
       <field>
         <name>source_creator_uuid</name>
@@ -593,13 +593,13 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>448</xloc>
-      <yloc>144</yloc>
+      <xloc>784</xloc>
+      <yloc>0</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Get creator Source user uuid</name>
+    <name>Get entity's changed by Source uuid</name>
     <type>DBJoin</type>
     <description/>
     <distribute>Y</distribute>
@@ -613,10 +613,10 @@
     <rowlimit>0</rowlimit>
     <sql>SELECT uuid as source_creator_uuid from users where user_id = ?</sql>
     <outer_join>Y</outer_join>
-    <replace_vars>N</replace_vars>
+    <replace_vars>Y</replace_vars>
     <parameter>
       <field>
-        <name>mapping_source_creator_user_id</name>
+        <name>mapping_source_changed_by_entity_id</name>
         <type>Integer</type>
       </field>
     </parameter>
@@ -629,13 +629,13 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>336</xloc>
-      <yloc>32</yloc>
+      <xloc>320</xloc>
+      <yloc>16</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Read creators from mappings</name>
+    <name>Read changed by from mappings</name>
     <type>TableInput</type>
     <description/>
     <distribute>Y</distribute>
@@ -646,11 +646,11 @@
       <schema_name/>
     </partitioning>
     <connection>destination/merge</connection>
-    <sql>SELECT uuid AS mapping_source_user_uuid, answer AS mapping_source_creator_user_id FROM migrator_merge_mappings WHERE entity = 'users' AND attribute = 'creator';</sql>
+    <sql>SELECT uuid AS mapping_source_entity_uuid, answer AS mapping_source_changed_by_entity_id FROM migrator_merge_mappings WHERE entity = '${ENTITY}' AND attribute = 'changed_by';</sql>
     <limit>0</limit>
     <lookup/>
     <execute_each_row>N</execute_each_row>
-    <variables_active>N</variables_active>
+    <variables_active>Y</variables_active>
     <lazy_conversion_active>N</lazy_conversion_active>
     <attributes/>
     <cluster_schema/>
@@ -661,13 +661,13 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>144</xloc>
-      <yloc>128</yloc>
+      <xloc>768</xloc>
+      <yloc>256</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Update user creator to mapped in destination</name>
+    <name>Update entity's changed by to mapped in destination</name>
     <type>InsertUpdate</type>
     <description/>
     <distribute>Y</distribute>
@@ -682,16 +682,16 @@
     <update_bypassed>N</update_bypassed>
     <lookup>
       <schema/>
-      <table>users</table>
+      <table>${ENTITY}</table>
       <key>
-        <name>mapping_source_user_uuid</name>
+        <name>mapping_source_entity_uuid</name>
         <field>uuid</field>
         <condition>=</condition>
         <name2/>
       </key>
       <value>
-        <name>creator</name>
-        <rename>mapping_destination_creator_user_id</rename>
+        <name>changed_by</name>
+        <rename>mapping_destination_changed_by_entity_id</rename>
         <update>Y</update>
       </value>
     </lookup>
@@ -704,8 +704,8 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>848</xloc>
-      <yloc>64</yloc>
+      <xloc>272</xloc>
+      <yloc>240</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
