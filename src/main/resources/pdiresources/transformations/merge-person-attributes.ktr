@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <transformation>
   <info>
-    <name>merge-persons</name>
+    <name>merge-person-attributes</name>
     <description/>
     <extended_description/>
     <trans_version/>
@@ -548,17 +548,17 @@
   </connection>
   <order>
     <hop>
-      <from>Load Persons from Source</from>
-      <to>Persons In Both Source &amp; Destination</to>
+      <from>Load Person Attibutes from Source</from>
+      <to>Person Attibutes In Both Source &amp; Destination</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Persons In Both Source &amp; Destination</from>
-      <to>Persons in Source Not Destination</to>
+      <from>Person Attibutes In Both Source &amp; Destination</from>
+      <to>Person Attibutes in Source Not Destination</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>insert merge mapping for persons</from>
+      <from>insert merge mapping for person attribute</from>
       <to>Creator Exists on Destination</to>
       <enabled>Y</enabled>
     </hop>
@@ -573,18 +573,13 @@
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Persons in Source Not Destination</from>
-      <to>Person Creator uuid From Destination</to>
+      <from>Person Attibutes in Source Not Destination</from>
+      <to>Person Attibute Creator uuid From Destination</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Person Creator uuid From Destination</from>
-      <to>Person voided by uuid From Destination</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Person Changed by uuid From Destination</from>
-      <to>Daemon user</to>
+      <from>Person Attibute Creator uuid From Destination</from>
+      <to>Person Attibute voided by uuid From Destination</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
@@ -628,58 +623,88 @@
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Person voided by uuid From Destination</from>
-      <to>Person Cause of death uuid From Destination</to>
+      <from>Person Attibute voided by uuid From Destination</from>
+      <to>Person Attibute Type uuid From Destination</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Person Cause of death uuid From Destination</from>
+      <from>Person Attibute Type uuid From Destination</from>
       <to>Person Changed by uuid From Destination</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
       <from>Voided By Exists on Destination</from>
-      <to>Cause of death Exists on Destination</to>
+      <to>Person Attribute Type Exists on Destination</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
       <from>Set voided by to daemon id</from>
-      <to>Cause of death Exists on Destination</to>
+      <to>Person Attribute Type Exists on Destination</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Cause of death Exists on Destination</from>
-      <to>Save Missing persons into Destination</to>
+      <from>Person Attribute Type Exists on Destination</from>
+      <to>insert merge mapping for missing person attribute type</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Cause of death Exists on Destination</from>
-      <to>insert merge mapping for missing cause of death</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>insert merge mapping for missing cause of death</from>
+      <from>insert merge mapping for missing person attribute type</from>
       <to>Set cause of death to none concept id</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
+      <from>Daemon user</from>
+      <to>Daemon person attribute type</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Daemon person attribute type</from>
+      <to>insert merge mapping for person attribute</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Person Changed by uuid From Destination</from>
+      <to>Person Person uuid From Destination</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Person Person uuid From Destination</from>
+      <to>Daemon user</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Person Attribute Type Exists on Destination</from>
+      <to>Person id on Destination</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
       <from>Set cause of death to none concept id</from>
+      <to>Person id on Destination</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Person id on Destination</from>
       <to>Save Missing persons into Destination</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Daemon user</from>
-      <to>Daemon concept</to>
+      <from>Person id on Destination</from>
+      <to>insert merge mapping for missing person</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Daemon concept</from>
-      <to>insert merge mapping for persons</to>
+      <from>insert merge mapping for missing person</from>
+      <to>Set person id to daemon person</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Set person id to daemon person</from>
+      <to>Save Missing persons into Destination</to>
       <enabled>Y</enabled>
     </hop>
   </order>
   <step>
-    <name>Cause of death Exists on Destination</name>
+    <name>Person Attribute Type Exists on Destination</name>
     <type>FilterRows</type>
     <description/>
     <distribute>Y</distribute>
@@ -689,22 +714,22 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <send_true_to>insert merge mapping for missing cause of death</send_true_to>
-    <send_false_to>Save Missing persons into Destination</send_false_to>
+    <send_true_to>insert merge mapping for missing person attribute type</send_true_to>
+    <send_false_to>Person id on Destination</send_false_to>
     <compare>
       <condition>
         <negated>N</negated>
         <conditions>
           <condition>
             <negated>N</negated>
-            <leftvalue>destination_cause_of_death_uuid</leftvalue>
+            <leftvalue>destination_person_attribute_type_uuid</leftvalue>
             <function>IS NULL</function>
             <rightvalue/>
           </condition>
           <condition>
             <negated>N</negated>
             <operator>AND</operator>
-            <leftvalue>cause_of_death</leftvalue>
+            <leftvalue>person_attribute_type_id</leftvalue>
             <function>IS NOT NULL</function>
             <rightvalue/>
           </condition>
@@ -721,7 +746,7 @@
     </remotesteps>
     <GUI>
       <xloc>944</xloc>
-      <yloc>128</yloc>
+      <yloc>112</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -820,7 +845,7 @@
     </GUI>
   </step>
   <step>
-    <name>Daemon concept</name>
+    <name>Daemon person attribute type</name>
     <type>DBJoin</type>
     <description/>
     <distribute>Y</distribute>
@@ -832,7 +857,7 @@
     </partitioning>
     <connection>OpenMRS destination</connection>
     <rowlimit>0</rowlimit>
-    <sql>select concept_id as daemon_concept_id from concept limit 1;</sql>
+    <sql>select person_attribute_type_id as daemon_person_attribute_type from person_attribute_type limit 1;</sql>
     <outer_join>Y</outer_join>
     <replace_vars>N</replace_vars>
     <parameter>
@@ -846,7 +871,7 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>384</xloc>
+      <xloc>432</xloc>
       <yloc>0</yloc>
       <draw>Y</draw>
     </GUI>
@@ -864,7 +889,7 @@
     </partitioning>
     <connection>OpenMRS destination</connection>
     <rowlimit>0</rowlimit>
-    <sql>select user_id as daemon_user_id from users where system_id = 'daemon';</sql>
+    <sql>select user_id as daemon_user_id, person_id as daemon_person_id from users where system_id = 'daemon';</sql>
     <outer_join>Y</outer_join>
     <replace_vars>N</replace_vars>
     <parameter>
@@ -878,13 +903,13 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>304</xloc>
+      <xloc>352</xloc>
       <yloc>16</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Load Persons from Source</name>
+    <name>Load Person Attibutes from Source</name>
     <type>TableInput</type>
     <description/>
     <distribute>N</distribute>
@@ -895,7 +920,7 @@
       <schema_name/>
     </partitioning>
     <connection>OpenMRS source</connection>
-    <sql>SELECT * FROM person</sql>
+    <sql>SELECT * FROM person_attribute</sql>
     <limit>0</limit>
     <lookup/>
     <execute_each_row>N</execute_each_row>
@@ -910,13 +935,13 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>64</xloc>
-      <yloc>16</yloc>
+      <xloc>80</xloc>
+      <yloc>144</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Person Cause of death uuid From Destination</name>
+    <name>Person Attibute Type uuid From Destination</name>
     <type>DBJoin</type>
     <description/>
     <distribute>Y</distribute>
@@ -928,12 +953,12 @@
     </partitioning>
     <connection>OpenMRS destination</connection>
     <rowlimit>0</rowlimit>
-    <sql>SELECT uuid as destination_cause_of_death_uuid from concept where concept_id = ?</sql>
+    <sql>SELECT uuid as destination_person_attribute_type_uuid from person_attribute_type where person_attribute_type_id = ?</sql>
     <outer_join>Y</outer_join>
     <replace_vars>N</replace_vars>
     <parameter>
       <field>
-        <name>cause_of_death</name>
+        <name>person_attribute_type_id</name>
         <type>Integer</type>
       </field>
     </parameter>
@@ -982,13 +1007,13 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>192</xloc>
-      <yloc>0</yloc>
+      <xloc>80</xloc>
+      <yloc>16</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Person Creator uuid From Destination</name>
+    <name>Person Attibute Creator uuid From Destination</name>
     <type>DBJoin</type>
     <description/>
     <distribute>Y</distribute>
@@ -1024,7 +1049,7 @@
     </GUI>
   </step>
   <step>
-    <name>Person voided by uuid From Destination</name>
+    <name>Person Attibute voided by uuid From Destination</name>
     <type>DBJoin</type>
     <description/>
     <distribute>Y</distribute>
@@ -1060,7 +1085,7 @@
     </GUI>
   </step>
   <step>
-    <name>Persons In Both Source &amp; Destination</name>
+    <name>Person Attibutes In Both Source &amp; Destination</name>
     <type>DBJoin</type>
     <description/>
     <distribute>Y</distribute>
@@ -1072,7 +1097,7 @@
     </partitioning>
     <connection>OpenMRS destination</connection>
     <rowlimit>0</rowlimit>
-    <sql>select person_id as destination_person_id from person where uuid = ?</sql>
+    <sql>select person_attribute_id as destination_person_attribute_id from person_attribute where uuid = ?</sql>
     <outer_join>Y</outer_join>
     <replace_vars>N</replace_vars>
     <parameter>
@@ -1096,7 +1121,7 @@
     </GUI>
   </step>
   <step>
-    <name>Persons in Source Not Destination</name>
+    <name>Person Attibutes in Source Not Destination</name>
     <type>FilterRows</type>
     <description/>
     <distribute>Y</distribute>
@@ -1106,12 +1131,12 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <send_true_to>Person Creator uuid From Destination</send_true_to>
+    <send_true_to/>
     <send_false_to/>
     <compare>
       <condition>
         <negated>N</negated>
-        <leftvalue>destination_person_id</leftvalue>
+        <leftvalue>destination_person_attribute_id</leftvalue>
         <function>IS NULL</function>
         <rightvalue/>
       </condition>
@@ -1126,7 +1151,7 @@
     </remotesteps>
     <GUI>
       <xloc>144</xloc>
-      <yloc>240</yloc>
+      <yloc>224</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1143,7 +1168,7 @@
     </partitioning>
     <connection>OpenMRS destination</connection>
     <schema/>
-    <table>person</table>
+    <table>person_attribute</table>
     <commit>1000</commit>
     <truncate>N</truncate>
     <ignore_errors>N</ignore_errors>
@@ -1160,32 +1185,16 @@
     <return_field/>
     <fields>
       <field>
-        <column_name>uuid</column_name>
-        <stream_name>uuid</stream_name>
+        <column_name>person_id</column_name>
+        <stream_name>person_id</stream_name>
       </field>
       <field>
-        <column_name>birthdate</column_name>
-        <stream_name>birthdate</stream_name>
+        <column_name>value</column_name>
+        <stream_name>value</stream_name>
       </field>
       <field>
-        <column_name>gender</column_name>
-        <stream_name>gender</stream_name>
-      </field>
-      <field>
-        <column_name>birthdate_estimated</column_name>
-        <stream_name>birthdate_estimated</stream_name>
-      </field>
-      <field>
-        <column_name>dead</column_name>
-        <stream_name>dead</stream_name>
-      </field>
-      <field>
-        <column_name>death_date</column_name>
-        <stream_name>death_date</stream_name>
-      </field>
-      <field>
-        <column_name>cause_of_death</column_name>
-        <stream_name>cause_of_death</stream_name>
+        <column_name>person_attribute_type_id</column_name>
+        <stream_name>person_attribute_type_id</stream_name>
       </field>
       <field>
         <column_name>creator</column_name>
@@ -1220,12 +1229,8 @@
         <stream_name>void_reason</stream_name>
       </field>
       <field>
-        <column_name>deathdate_estimated</column_name>
-        <stream_name>deathdate_estimated</stream_name>
-      </field>
-      <field>
-        <column_name>birthtime</column_name>
-        <stream_name>birthtime</stream_name>
+        <column_name>uuid</column_name>
+        <stream_name>uuid</stream_name>
       </field>
     </fields>
     <attributes/>
@@ -1237,8 +1242,8 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>720</xloc>
-      <yloc>320</yloc>
+      <xloc>464</xloc>
+      <yloc>336</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1246,7 +1251,7 @@
     <name>Set cause of death to none concept id</name>
     <type>SetValueField</type>
     <description/>
-    <distribute>Y</distribute>
+    <distribute>N</distribute>
     <custom_distribution/>
     <copies>1</copies>
     <partitioning>
@@ -1255,8 +1260,8 @@
     </partitioning>
     <fields>
       <field>
-        <name>cause_of_death</name>
-        <replaceby>daemon_concept_id</replaceby>
+        <name>person_attribute_type_id</name>
+        <replaceby>daemon_person_attribute_type</replaceby>
       </field>
     </fields>
     <attributes/>
@@ -1361,8 +1366,8 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>800</xloc>
-      <yloc>192</yloc>
+      <xloc>736</xloc>
+      <yloc>176</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1378,7 +1383,7 @@
       <schema_name/>
     </partitioning>
     <send_true_to>insert merge mapping for missing voided by</send_true_to>
-    <send_false_to>Cause of death Exists on Destination</send_false_to>
+    <send_false_to>Person Attribute Type Exists on Destination</send_false_to>
     <compare>
       <condition>
         <negated>N</negated>
@@ -1414,7 +1419,7 @@
     </GUI>
   </step>
   <step>
-    <name>insert merge mapping for missing cause of death</name>
+    <name>insert merge mapping for missing person attribute type</name>
     <type>ExecSQL</type>
     <description/>
     <distribute>Y</distribute>
@@ -1429,7 +1434,7 @@
     <single_statement>N</single_statement>
     <replace_variables>Y</replace_variables>
     <quoteString>N</quoteString>
-    <sql>INSERT INTO migrator_merge_mappings(entity, attribute, answer, uuid) VALUES('person', 'cause_of_death', ?, ?);</sql>
+    <sql>INSERT INTO migrator_merge_mappings(entity, attribute, answer, uuid) VALUES('person_attribute', 'person_attribute_type_id', ?, ?);</sql>
     <set_params>Y</set_params>
     <insert_field/>
     <update_field/>
@@ -1437,7 +1442,7 @@
     <read_field/>
     <arguments>
       <argument>
-        <name>cause_of_death</name>
+        <name>person_attribute_type_id</name>
       </argument>
       <argument>
         <name>uuid</name>
@@ -1473,7 +1478,7 @@
     <single_statement>N</single_statement>
     <replace_variables>Y</replace_variables>
     <quoteString>N</quoteString>
-    <sql>INSERT INTO migrator_merge_mappings(entity, attribute, answer, uuid) VALUES('person', 'changed_by', ?, ?);</sql>
+    <sql>INSERT INTO migrator_merge_mappings(entity, attribute, answer, uuid) VALUES('person_attribute', 'changed_by', ?, ?);</sql>
     <set_params>Y</set_params>
     <insert_field/>
     <update_field/>
@@ -1517,7 +1522,7 @@
     <single_statement>N</single_statement>
     <replace_variables>Y</replace_variables>
     <quoteString>N</quoteString>
-    <sql>INSERT INTO migrator_merge_mappings(entity, attribute, answer, uuid) VALUES('person', 'creator', ?, ?);</sql>
+    <sql>INSERT INTO migrator_merge_mappings(entity, attribute, answer, uuid) VALUES('person_attribute', 'creator', ?, ?);</sql>
     <set_params>Y</set_params>
     <insert_field/>
     <update_field/>
@@ -1541,7 +1546,7 @@
     </remotesteps>
     <GUI>
       <xloc>384</xloc>
-      <yloc>224</yloc>
+      <yloc>256</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1561,7 +1566,7 @@
     <single_statement>N</single_statement>
     <replace_variables>Y</replace_variables>
     <quoteString>N</quoteString>
-    <sql>INSERT INTO migrator_merge_mappings(entity, attribute, answer, uuid) VALUES('person', 'voided_by', ?, ?);</sql>
+    <sql>INSERT INTO migrator_merge_mappings(entity, attribute, answer, uuid) VALUES('person_attribute', 'voided_by', ?, ?);</sql>
     <set_params>Y</set_params>
     <insert_field/>
     <update_field/>
@@ -1584,13 +1589,13 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>656</xloc>
+      <xloc>640</xloc>
       <yloc>208</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>insert merge mapping for persons</name>
+    <name>insert merge mapping for person attribute</name>
     <type>ExecSQL</type>
     <description/>
     <distribute>Y</distribute>
@@ -1605,7 +1610,134 @@
     <single_statement>N</single_statement>
     <replace_variables>Y</replace_variables>
     <quoteString>N</quoteString>
-    <sql>INSERT INTO migrator_merge_mappings(entity, attribute, answer, uuid) VALUES('person', 'person_id', ?, ?);</sql>
+    <sql>INSERT INTO migrator_merge_mappings(entity, attribute, answer, uuid) VALUES('person_attribute', 'person_attribute_id', ?, ?);</sql>
+    <set_params>Y</set_params>
+    <insert_field/>
+    <update_field/>
+    <delete_field/>
+    <read_field/>
+    <arguments>
+      <argument>
+        <name>person_attribute_id</name>
+      </argument>
+      <argument>
+        <name>uuid</name>
+      </argument>
+    </arguments>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>544</xloc>
+      <yloc>16</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Person id on Destination</name>
+    <type>FilterRows</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <send_true_to>insert merge mapping for missing person</send_true_to>
+    <send_false_to>Save Missing persons into Destination</send_false_to>
+    <compare>
+      <condition>
+        <negated>N</negated>
+        <conditions>
+          <condition>
+            <negated>N</negated>
+            <leftvalue>destination_person_uuid</leftvalue>
+            <function>IS NULL</function>
+            <rightvalue/>
+          </condition>
+          <condition>
+            <negated>N</negated>
+            <operator>AND</operator>
+            <leftvalue>person_id</leftvalue>
+            <function>IS NOT NULL</function>
+            <rightvalue/>
+          </condition>
+        </conditions>
+      </condition>
+    </compare>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>688</xloc>
+      <yloc>288</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Person Person uuid From Destination</name>
+    <type>DBJoin</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>OpenMRS destination</connection>
+    <rowlimit>0</rowlimit>
+    <sql>SELECT uuid as destination_person_uuid from person where person_id = ?</sql>
+    <outer_join>Y</outer_join>
+    <replace_vars>N</replace_vars>
+    <parameter>
+      <field>
+        <name>person_id</name>
+        <type>Integer</type>
+      </field>
+    </parameter>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>176</xloc>
+      <yloc>0</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>insert merge mapping for missing person</name>
+    <type>ExecSQL</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>OpenMRS destination</connection>
+    <execute_each_row>Y</execute_each_row>
+    <single_statement>N</single_statement>
+    <replace_variables>Y</replace_variables>
+    <quoteString>N</quoteString>
+    <sql>INSERT INTO migrator_merge_mappings(entity, attribute, answer, uuid) VALUES('person_attribute', 'person_id', ?, ?);</sql>
     <set_params>Y</set_params>
     <insert_field/>
     <update_field/>
@@ -1628,8 +1760,39 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>480</xloc>
-      <yloc>16</yloc>
+      <xloc>864</xloc>
+      <yloc>368</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Set person id to daemon person</name>
+    <type>SetValueField</type>
+    <description/>
+    <distribute>N</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <fields>
+      <field>
+        <name>person_id</name>
+        <replaceby>daemon_person_id</replaceby>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>672</xloc>
+      <yloc>400</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

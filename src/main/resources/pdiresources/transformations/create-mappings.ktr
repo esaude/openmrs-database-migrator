@@ -493,7 +493,7 @@
   <order>
   </order>
   <step>
-    <name>create mappings table if missing</name>
+    <name>create or replace mappings table</name>
     <type>ExecSQL</type>
     <description/>
     <distribute>Y</distribute>
@@ -508,11 +508,13 @@
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>CREATE TABLE IF NOT EXISTS migrator_merge_mappings(
+    <sql>DROP TABLE IF EXISTS migrator_merge_mappings;
+CREATE TABLE migrator_merge_mappings(
   mapping_id int(11) NOT NULL AUTO_INCREMENT,
   entity VARCHAR(38) NOT NULL,
   attribute VARCHAR(38) NOT NULL,
-  answer int(11) NOT NULL,
+  answer int(11),
+  text_answer VARCHAR(255),
   uuid VARCHAR(38),
   PRIMARY KEY (mapping_id)
 ) ENGINE=INNODB;</sql>

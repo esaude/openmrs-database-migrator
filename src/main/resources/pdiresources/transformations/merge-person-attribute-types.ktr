@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <transformation>
   <info>
-    <name>merge-concept-datatypes</name>
+    <name>merge-person-attribute-types</name>
     <description/>
     <extended_description/>
     <trans_version/>
@@ -548,17 +548,17 @@
   </connection>
   <order>
     <hop>
-      <from>Load concept datatypes from Source</from>
-      <to>Concept datatypes In Both Source &amp; Destination</to>
+      <from>Load Person Attibute Types from Source</from>
+      <to>Person Attibute Types In Both Source &amp; Destination</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Concept datatypes In Both Source &amp; Destination</from>
-      <to>Concept datatype in Source Not Destination</to>
+      <from>Person Attibute Types In Both Source &amp; Destination</from>
+      <to>Person Attibute Types in Source Not Destination</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>insert merge mapping for concept datatype</from>
+      <from>insert merge mapping for person Attibute Types</from>
       <to>Creator Exists on Destination</to>
       <enabled>Y</enabled>
     </hop>
@@ -568,99 +568,118 @@
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Daemon user</from>
-      <to>insert merge mapping for concept datatype</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
       <from>insert merge mapping for missing creator</from>
       <to>Set creator to daemon user</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Concept datatype in Source Not Destination</from>
-      <to>Concept datatype Creator uuid From Destination</to>
+      <from>Person Attibute Types in Source Not Destination</from>
+      <to>Person Attibute Type Creator uuid From Destination</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Concept datatype Creator uuid From Destination</from>
-      <to>User retired by uuid From Destination</to>
+      <from>Person Attibute Type Creator uuid From Destination</from>
+      <to>Person Attibute Type retired by uuid From Destination</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>User retired by uuid From Destination</from>
-      <to>Daemon user</to>
+      <from>Changed by Exists on Destination</from>
+      <to>Retired By Exists on Destination</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Creator Exists on Destination</from>
-      <to>Retired by Exists on Destination</to>
+      <from>Changed by Exists on Destination</from>
+      <to>insert merge mapping for missing changed by</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Retired by Exists on Destination</from>
-      <to>Save Missing concept datatype into Destination</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Set creator to daemon user</from>
-      <to>Retired by Exists on Destination</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Retired by Exists on Destination</from>
+      <from>Retired By Exists on Destination</from>
       <to>insert merge mapping for missing retired by</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>insert merge mapping for missing retired by</from>
-      <to>Set retired by to daemon user</to>
+      <from>Set changed by to daemon id</from>
+      <to>Retired By Exists on Destination</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Set retired by to daemon user</from>
-      <to>Save Missing concept datatype into Destination</to>
+      <from>insert merge mapping for missing changed by</from>
+      <to>Set changed by to daemon id</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>insert merge mapping for missing retired by</from>
+      <to>Set retired by to daemon id</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Set creator to daemon user</from>
+      <to>Changed by Exists on Destination</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Creator Exists on Destination</from>
+      <to>Changed by Exists on Destination</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Person Attibute Type retired by uuid From Destination</from>
+      <to>Person Attibute Type Changed by uuid From Destination</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Daemon user</from>
+      <to>insert merge mapping for person Attibute Types</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Person Attibute Type Changed by uuid From Destination</from>
+      <to>Person Attibute Type Privilege uuid From Destination</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Retired By Exists on Destination</from>
+      <to>Privilege Exists on Destination</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Set retired by to daemon id</from>
+      <to>Privilege Exists on Destination</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Privilege Exists on Destination</from>
+      <to>Save Missing person Attibute Types into Destination</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Privilege Exists on Destination</from>
+      <to>insert merge mapping for missing privilege</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>insert merge mapping for missing privilege</from>
+      <to>Set edit_privilege to daemon privilege</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Set edit_privilege to daemon privilege</from>
+      <to>Save Missing person Attibute Types into Destination</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Person Attibute Type Privilege uuid From Destination</from>
+      <to>Daemon privilege</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Daemon privilege</from>
+      <to>Daemon user</to>
       <enabled>Y</enabled>
     </hop>
   </order>
   <step>
-    <name>Concept datatype Creator uuid From Destination</name>
-    <type>DBJoin</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <connection>OpenMRS destination</connection>
-    <rowlimit>0</rowlimit>
-    <sql>SELECT uuid as destination_creator_uuid from users where user_id = ?</sql>
-    <outer_join>Y</outer_join>
-    <replace_vars>N</replace_vars>
-    <parameter>
-      <field>
-        <name>creator</name>
-        <type>Integer</type>
-      </field>
-    </parameter>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>208</xloc>
-      <yloc>240</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Concept datatype in Source Not Destination</name>
+    <name>Changed by Exists on Destination</name>
     <type>FilterRows</type>
     <description/>
     <distribute>Y</distribute>
@@ -670,14 +689,26 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <send_true_to>Concept datatype Creator uuid From Destination</send_true_to>
-    <send_false_to/>
+    <send_true_to>insert merge mapping for missing changed by</send_true_to>
+    <send_false_to>Retired By Exists on Destination</send_false_to>
     <compare>
       <condition>
         <negated>N</negated>
-        <leftvalue>destination_concept_datatype_id</leftvalue>
-        <function>IS NULL</function>
-        <rightvalue/>
+        <conditions>
+          <condition>
+            <negated>N</negated>
+            <leftvalue>destination_changed_by</leftvalue>
+            <function>IS NULL</function>
+            <rightvalue/>
+          </condition>
+          <condition>
+            <negated>N</negated>
+            <operator>AND</operator>
+            <leftvalue>changed_by</leftvalue>
+            <function>IS NOT NULL</function>
+            <rightvalue/>
+          </condition>
+        </conditions>
       </condition>
     </compare>
     <attributes/>
@@ -689,44 +720,8 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>336</xloc>
-      <yloc>368</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Concept datatypes In Both Source &amp; Destination</name>
-    <type>DBJoin</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <connection>OpenMRS destination</connection>
-    <rowlimit>0</rowlimit>
-    <sql>select concept_datatype_id as destination_concept_datatype_id from concept_datatype where uuid = ?</sql>
-    <outer_join>Y</outer_join>
-    <replace_vars>N</replace_vars>
-    <parameter>
-      <field>
-        <name>uuid</name>
-        <type>String</type>
-      </field>
-    </parameter>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>144</xloc>
-      <yloc>336</yloc>
+      <xloc>576</xloc>
+      <yloc>80</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -741,14 +736,26 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <send_true_to>Retired by Exists on Destination</send_true_to>
-    <send_false_to>insert merge mapping for missing creator</send_false_to>
+    <send_true_to>insert merge mapping for missing creator</send_true_to>
+    <send_false_to>Changed by Exists on Destination</send_false_to>
     <compare>
       <condition>
         <negated>N</negated>
-        <leftvalue>destination_creator_uuid</leftvalue>
-        <function>IS NOT NULL</function>
-        <rightvalue/>
+        <conditions>
+          <condition>
+            <negated>N</negated>
+            <leftvalue>destination_creator_uuid</leftvalue>
+            <function>IS NULL</function>
+            <rightvalue/>
+          </condition>
+          <condition>
+            <negated>N</negated>
+            <operator>AND</operator>
+            <leftvalue>creator</leftvalue>
+            <function>IS NOT NULL</function>
+            <rightvalue/>
+          </condition>
+        </conditions>
       </condition>
     </compare>
     <attributes/>
@@ -760,7 +767,7 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>352</xloc>
+      <xloc>400</xloc>
       <yloc>96</yloc>
       <draw>Y</draw>
     </GUI>
@@ -792,13 +799,13 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>256</xloc>
-      <yloc>16</yloc>
+      <xloc>416</xloc>
+      <yloc>0</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Load concept datatypes from Source</name>
+    <name>Load Person Attibute Types from Source</name>
     <type>TableInput</type>
     <description/>
     <distribute>N</distribute>
@@ -809,7 +816,7 @@
       <schema_name/>
     </partitioning>
     <connection>OpenMRS source</connection>
-    <sql>SELECT * FROM concept_datatype</sql>
+    <sql>SELECT * FROM person_attribute_type</sql>
     <limit>0</limit>
     <lookup/>
     <execute_each_row>N</execute_each_row>
@@ -824,13 +831,121 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>112</xloc>
-      <yloc>32</yloc>
+      <xloc>0</xloc>
+      <yloc>192</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Retired by Exists on Destination</name>
+    <name>Person Attibute Type Creator uuid From Destination</name>
+    <type>DBJoin</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>OpenMRS destination</connection>
+    <rowlimit>0</rowlimit>
+    <sql>SELECT uuid as destination_creator_uuid from users where user_id = ?</sql>
+    <outer_join>Y</outer_join>
+    <replace_vars>N</replace_vars>
+    <parameter>
+      <field>
+        <name>creator</name>
+        <type>Integer</type>
+      </field>
+    </parameter>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>224</xloc>
+      <yloc>176</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Person Attibute Type retired by uuid From Destination</name>
+    <type>DBJoin</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>OpenMRS destination</connection>
+    <rowlimit>0</rowlimit>
+    <sql>SELECT uuid as destination_retired_by from users where user_id = ?</sql>
+    <outer_join>Y</outer_join>
+    <replace_vars>N</replace_vars>
+    <parameter>
+      <field>
+        <name>retired_by</name>
+        <type>Integer</type>
+      </field>
+    </parameter>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>176</xloc>
+      <yloc>144</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Person Attibute Types In Both Source &amp; Destination</name>
+    <type>DBJoin</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>OpenMRS destination</connection>
+    <rowlimit>0</rowlimit>
+    <sql>select person_attribute_type_id as destination_person_attribute_type_id from person_attribute_type where uuid = ?</sql>
+    <outer_join>Y</outer_join>
+    <replace_vars>N</replace_vars>
+    <parameter>
+      <field>
+        <name>uuid</name>
+        <type>String</type>
+      </field>
+    </parameter>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>112</xloc>
+      <yloc>304</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Person Attibute Types in Source Not Destination</name>
     <type>FilterRows</type>
     <description/>
     <distribute>Y</distribute>
@@ -840,13 +955,13 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <send_true_to>Save Missing concept datatype into Destination</send_true_to>
-    <send_false_to>insert merge mapping for missing retired by</send_false_to>
+    <send_true_to>Person Attibute Type Creator uuid From Destination</send_true_to>
+    <send_false_to/>
     <compare>
       <condition>
         <negated>N</negated>
-        <leftvalue>destination_retired_by_uuid</leftvalue>
-        <function>IS NOT NULL</function>
+        <leftvalue>destination_person_attribute_type_id</leftvalue>
+        <function>IS NULL</function>
         <rightvalue/>
       </condition>
     </compare>
@@ -859,13 +974,49 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>720</xloc>
-      <yloc>16</yloc>
+      <xloc>144</xloc>
+      <yloc>240</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Save Missing concept datatype into Destination</name>
+    <name>Person Attibute Type Changed by uuid From Destination</name>
+    <type>DBJoin</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>OpenMRS destination</connection>
+    <rowlimit>0</rowlimit>
+    <sql>SELECT uuid as destination_changed_by from users where user_id = ?</sql>
+    <outer_join>Y</outer_join>
+    <replace_vars>N</replace_vars>
+    <parameter>
+      <field>
+        <name>changed_by</name>
+        <type>Integer</type>
+      </field>
+    </parameter>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>176</xloc>
+      <yloc>80</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Save Missing person Attibute Types into Destination</name>
     <type>TableOutput</type>
     <description/>
     <distribute>Y</distribute>
@@ -877,7 +1028,7 @@
     </partitioning>
     <connection>OpenMRS destination</connection>
     <schema/>
-    <table>concept_datatype</table>
+    <table>person_attribute_type</table>
     <commit>1000</commit>
     <truncate>N</truncate>
     <ignore_errors>N</ignore_errors>
@@ -898,12 +1049,20 @@
         <stream_name>name</stream_name>
       </field>
       <field>
-        <column_name>hl7_abbreviation</column_name>
-        <stream_name>hl7_abbreviation</stream_name>
-      </field>
-      <field>
         <column_name>description</column_name>
         <stream_name>description</stream_name>
+      </field>
+      <field>
+        <column_name>format</column_name>
+        <stream_name>format</stream_name>
+      </field>
+      <field>
+        <column_name>foreign_key</column_name>
+        <stream_name>foreign_key</stream_name>
+      </field>
+      <field>
+        <column_name>searchable</column_name>
+        <stream_name>searchable</stream_name>
       </field>
       <field>
         <column_name>creator</column_name>
@@ -912,6 +1071,14 @@
       <field>
         <column_name>date_created</column_name>
         <stream_name>date_created</stream_name>
+      </field>
+      <field>
+        <column_name>changed_by</column_name>
+        <stream_name>changed_by</stream_name>
+      </field>
+      <field>
+        <column_name>date_changed</column_name>
+        <stream_name>date_changed</stream_name>
       </field>
       <field>
         <column_name>retired</column_name>
@@ -930,8 +1097,16 @@
         <stream_name>retire_reason</stream_name>
       </field>
       <field>
+        <column_name>edit_privilege</column_name>
+        <stream_name>edit_privilege</stream_name>
+      </field>
+      <field>
         <column_name>uuid</column_name>
         <stream_name>uuid</stream_name>
+      </field>
+      <field>
+        <column_name>sort_weight</column_name>
+        <stream_name>sort_weight</stream_name>
       </field>
     </fields>
     <attributes/>
@@ -943,8 +1118,39 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>944</xloc>
-      <yloc>48</yloc>
+      <xloc>1008</xloc>
+      <yloc>288</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Set changed by to daemon id</name>
+    <type>SetValueField</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <fields>
+      <field>
+        <name>changed_by</name>
+        <replaceby>daemon_user_id</replaceby>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>832</xloc>
+      <yloc>64</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -974,13 +1180,13 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>608</xloc>
-      <yloc>144</yloc>
+      <xloc>528</xloc>
+      <yloc>160</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Set retired by to daemon user</name>
+    <name>Set retired by to daemon id</name>
     <type>SetValueField</type>
     <description/>
     <distribute>Y</distribute>
@@ -1005,14 +1211,14 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>809</xloc>
-      <yloc>174</yloc>
+      <xloc>800</xloc>
+      <yloc>192</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>User retired by uuid From Destination</name>
-    <type>DBJoin</type>
+    <name>Retired By Exists on Destination</name>
+    <type>FilterRows</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -1021,17 +1227,28 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <connection>OpenMRS destination</connection>
-    <rowlimit>0</rowlimit>
-    <sql>SELECT uuid as destination_retired_by_uuid from users where user_id = ?</sql>
-    <outer_join>Y</outer_join>
-    <replace_vars>N</replace_vars>
-    <parameter>
-      <field>
-        <name>retired_by</name>
-        <type>Integer</type>
-      </field>
-    </parameter>
+    <send_true_to>insert merge mapping for missing retired by</send_true_to>
+    <send_false_to>Privilege Exists on Destination</send_false_to>
+    <compare>
+      <condition>
+        <negated>N</negated>
+        <conditions>
+          <condition>
+            <negated>N</negated>
+            <leftvalue>destination_retired_by</leftvalue>
+            <function>IS NULL</function>
+            <rightvalue/>
+          </condition>
+          <condition>
+            <negated>N</negated>
+            <operator>AND</operator>
+            <leftvalue>retired_by</leftvalue>
+            <function>IS NOT NULL</function>
+            <rightvalue/>
+          </condition>
+        </conditions>
+      </condition>
+    </compare>
     <attributes/>
     <cluster_schema/>
     <remotesteps>
@@ -1041,13 +1258,13 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>224</xloc>
-      <yloc>160</yloc>
+      <xloc>704</xloc>
+      <yloc>112</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>insert merge mapping for concept datatype</name>
+    <name>insert merge mapping for missing changed by</name>
     <type>ExecSQL</type>
     <description/>
     <distribute>Y</distribute>
@@ -1062,7 +1279,7 @@
     <single_statement>N</single_statement>
     <replace_variables>Y</replace_variables>
     <quoteString>N</quoteString>
-    <sql>INSERT INTO migrator_merge_mappings(entity, attribute, answer, uuid) VALUES('concept_datatype', 'concept_datatype_id', ?, ?);</sql>
+    <sql>INSERT INTO migrator_merge_mappings(entity, attribute, answer, uuid) VALUES('person_attribute_type', 'changed_by', ?, ?);</sql>
     <set_params>Y</set_params>
     <insert_field/>
     <update_field/>
@@ -1070,7 +1287,7 @@
     <read_field/>
     <arguments>
       <argument>
-        <name>concept_datatype_id</name>
+        <name>changed_by</name>
       </argument>
       <argument>
         <name>uuid</name>
@@ -1085,8 +1302,8 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>464</xloc>
-      <yloc>16</yloc>
+      <xloc>912</xloc>
+      <yloc>0</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1106,7 +1323,7 @@
     <single_statement>N</single_statement>
     <replace_variables>Y</replace_variables>
     <quoteString>N</quoteString>
-    <sql>INSERT INTO migrator_merge_mappings(entity, attribute, answer, uuid) VALUES('concept_datatype', 'creator', ?, ?);</sql>
+    <sql>INSERT INTO migrator_merge_mappings(entity, attribute, answer, uuid) VALUES('person_attribute_type', 'creator', ?, ?);</sql>
     <set_params>Y</set_params>
     <insert_field/>
     <update_field/>
@@ -1129,8 +1346,8 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>416</xloc>
-      <yloc>288</yloc>
+      <xloc>384</xloc>
+      <yloc>224</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1150,7 +1367,7 @@
     <single_statement>N</single_statement>
     <replace_variables>Y</replace_variables>
     <quoteString>N</quoteString>
-    <sql>INSERT INTO migrator_merge_mappings(entity, attribute, answer, uuid) VALUES('concept_datatype', 'retired_by', ?, ?);</sql>
+    <sql>INSERT INTO migrator_merge_mappings(entity, attribute, answer, uuid) VALUES('person_attribute_type', 'retired_by', ?, ?);</sql>
     <set_params>Y</set_params>
     <insert_field/>
     <update_field/>
@@ -1174,7 +1391,241 @@
     </remotesteps>
     <GUI>
       <xloc>656</xloc>
+      <yloc>208</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>insert merge mapping for person Attibute Types</name>
+    <type>ExecSQL</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>OpenMRS destination</connection>
+    <execute_each_row>Y</execute_each_row>
+    <single_statement>N</single_statement>
+    <replace_variables>Y</replace_variables>
+    <quoteString>N</quoteString>
+    <sql>INSERT INTO migrator_merge_mappings(entity, attribute, answer, uuid) VALUES('person_attribute_type', 'person_attribute_type_id', ?, ?);</sql>
+    <set_params>Y</set_params>
+    <insert_field/>
+    <update_field/>
+    <delete_field/>
+    <read_field/>
+    <arguments>
+      <argument>
+        <name>person_attribute_type_id</name>
+      </argument>
+      <argument>
+        <name>uuid</name>
+      </argument>
+    </arguments>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>592</xloc>
+      <yloc>16</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Person Attibute Type Privilege uuid From Destination</name>
+    <type>DBJoin</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>OpenMRS destination</connection>
+    <rowlimit>0</rowlimit>
+    <sql>SELECT uuid as destination_privilege from privilege where privilege = ?</sql>
+    <outer_join>Y</outer_join>
+    <replace_vars>N</replace_vars>
+    <parameter>
+      <field>
+        <name>edit_privilege</name>
+        <type>String</type>
+      </field>
+    </parameter>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>208</xloc>
+      <yloc>16</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Privilege Exists on Destination</name>
+    <type>FilterRows</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <send_true_to>insert merge mapping for missing privilege</send_true_to>
+    <send_false_to>Save Missing person Attibute Types into Destination</send_false_to>
+    <compare>
+      <condition>
+        <negated>N</negated>
+        <conditions>
+          <condition>
+            <negated>N</negated>
+            <leftvalue>destination_privilege</leftvalue>
+            <function>IS NULL</function>
+            <rightvalue/>
+          </condition>
+          <condition>
+            <negated>N</negated>
+            <operator>AND</operator>
+            <leftvalue>edit_privilege</leftvalue>
+            <function>IS NOT NULL</function>
+            <rightvalue/>
+          </condition>
+        </conditions>
+      </condition>
+    </compare>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>928</xloc>
+      <yloc>112</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Set edit_privilege to daemon privilege</name>
+    <type>SetValueField</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <fields>
+      <field>
+        <name>edit_privilege</name>
+        <replaceby>daemon_privilege</replaceby>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>624</xloc>
+      <yloc>272</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>insert merge mapping for missing privilege</name>
+    <type>ExecSQL</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>OpenMRS destination</connection>
+    <execute_each_row>Y</execute_each_row>
+    <single_statement>N</single_statement>
+    <replace_variables>Y</replace_variables>
+    <quoteString>N</quoteString>
+    <sql>INSERT INTO migrator_merge_mappings(entity, attribute, text_answer, uuid) VALUES('person_attribute_type', 'edit_privilege', ?, ?);</sql>
+    <set_params>Y</set_params>
+    <insert_field/>
+    <update_field/>
+    <delete_field/>
+    <read_field/>
+    <arguments>
+      <argument>
+        <name>edit_privilege</name>
+      </argument>
+      <argument>
+        <name>uuid</name>
+      </argument>
+    </arguments>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>832</xloc>
       <yloc>240</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Daemon privilege</name>
+    <type>DBJoin</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>OpenMRS destination</connection>
+    <rowlimit>0</rowlimit>
+    <sql>select privilege as daemon_privilege from privilege limit 1;</sql>
+    <outer_join>Y</outer_join>
+    <replace_vars>N</replace_vars>
+    <parameter>
+    </parameter>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>304</xloc>
+      <yloc>0</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
