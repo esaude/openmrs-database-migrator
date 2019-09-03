@@ -395,7 +395,7 @@
       <yloc>64</yloc>
       <attributes_kjc/>
     </entry>
-<entry>
+    <entry>
       <name>merge</name>
       <description/>
       <type>JOB</type>
@@ -466,7 +466,7 @@
       <to>merge</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
-      <enabled>Y</enabled>
+      <enabled>N</enabled>
       <evaluation>Y</evaluation>
       <unconditional>N</unconditional>
     </hop>
