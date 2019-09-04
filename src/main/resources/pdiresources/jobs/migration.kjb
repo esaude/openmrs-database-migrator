@@ -315,7 +315,7 @@
       <attributes/>
       <specification_method>filename</specification_method>
       <job_object_id/>
-      <filename>${Internal.Entry.Current.Directory}/visit_type_job.kjb</filename>
+      <filename>${Internal.Entry.Current.Directory}/migration-jobs/visit_type_job.kjb</filename>
       <jobname/>
       <directory/>
       <arg_from_previous>N</arg_from_previous>
@@ -352,7 +352,7 @@
       <attributes/>
       <specification_method>filename</specification_method>
       <job_object_id/>
-      <filename>${Internal.Entry.Current.Directory}/program-job.kjb</filename>
+      <filename>${Internal.Entry.Current.Directory}/migration-jobs/program-job.kjb</filename>
       <jobname/>
       <directory/>
       <arg_from_previous>N</arg_from_previous>
@@ -378,7 +378,7 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>576</xloc>
+      <xloc>640</xloc>
       <yloc>144</yloc>
       <attributes_kjc/>
     </entry>
