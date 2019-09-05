@@ -1,0 +1,13 @@
+patient_identifier_type_id,name,description,format,check_digit,creator,date_created,required,format_description,validator,retired,retired_by,date_retired,retire_reason,uuid,location_behavior,uniqueness_behavior
+1,OpenMRS Identification Number,Unique number used in OpenMRS,,1,1,2005-09-22,0,\N,org.openmrs.patient.impl.LuhnIdentifierValidator,0,1, ,\N,8d793bee-c2cc-11de-8d13-0010c6dffd0f,\N,\N
+18,NID (SERVICO TARV),"Numero de Identificaçao de Doente, serviço TARV",[0-9]{8}/[0-9]{2}/[0-9]{4},0,1,2005-09-22,0,PPDDUUSS/AA/NNNNN,\N,0,1, ,\N,e2b966d0-1d5f-11e0-b929-000c29ad1d07,\N,\N
+3,BILHETE DE IDENTIDADE (BI),O Bilhete de Identidade referido no artigo anterior é válido em todo o território nacional e é documento bastante para prova de identidade do deu possuidor.,[0-9]{9}[A-Z]{1},0,2,2008-10-22,0,000000000X,,0,1, ,\N,e2b9682e-1d5f-11e0-b929-000c29ad1d07,\N,\N
+5,CODIGO ATS/UATS,Codigo do paciente no serviço de ATS/UATS,,0,9,2008-11-14,0,YY/####,,0,1, ,\N,e2b9698c-1d5f-11e0-b929-000c29ad1d07,\N,\N
+6,CODIGO PTV (PRE-NATAL),Number used to track PTV participants,,0,9,2008-11-14,0,YY/####,,0,1, ,\N,e2b96ad6-1d5f-11e0-b929-000c29ad1d07,\N,\N
+7,CODIGO ITS,ITS Codigo Infecção de Transmissão Sexual STI Codigo Sexually transmitted infection,,0,9,2008-11-14,0,YY/####,,0,1, ,\N,e2b96c16-1d5f-11e0-b929-000c29ad1d07,\N,\N
+8,CODIGO PTV (MATERNIDADE),Codigo PTV Maternidade,,0,9,2008-11-17,0,YY/####,,0,1, ,\N,e2b96d56-1d5f-11e0-b929-000c29ad1d07,\N,\N
+9,NID (CCR),Child at risk NID,,0,9,2008-11-17,0,YY/####CE,,0,1,  ,\N,e2b97b70-1d5f-11e0-b929-000c29ad1d07,\N,\N
+10,PCR (NUMERO DE REGISTO),PCR Registration number,,0,9,2008-12-10,0,,,0,1,  ,\N,e2b97cec-1d5f-11e0-b929-000c29ad1d07,\N,\N
+11,NID (SECTOR DE TB),Numero de identificacao do doente no sector de tuberculose,\N,0,13,2009-05-08,0,\N,\N,0,1,  ,\N,e2b97e40-1d5f-11e0-b929-000c29ad1d07,\N,\N
+13,CARTAO DE ELEITOR,BILHETE DO CARTAO ELEITORAL,[0-9]/[0-9]{4},0,13,2010-02-15,0,NNNNNN/20_ _,,0,1,  ,\N,bbc9e29e-c8c7-11e9-8629-a3156f6b3597,\N,\N
+17,NUMERO CANCRO CERVICAL,Numero de registo de paciente para rastreio do cancro do colo uterino,[0-9]/[0-9]{4},0,13,2010-02-15,0,NNNNNN/20_ _,,0,1, ,\N,e2b97f8a-1d5f-11e0-b929-000c29ad1d07,\N,\N
