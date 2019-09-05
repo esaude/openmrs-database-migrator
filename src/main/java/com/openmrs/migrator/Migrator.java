@@ -1,11 +1,11 @@
 package com.openmrs.migrator;
 
 import com.openmrs.migrator.core.exceptions.SettingsException;
+import com.openmrs.migrator.core.model.MySQLProps;
 import com.openmrs.migrator.core.services.BootstrapService;
 import com.openmrs.migrator.core.services.DataBaseService;
 import com.openmrs.migrator.core.services.PDIService;
 import com.openmrs.migrator.core.services.SettingsService;
-import com.openmrs.migrator.core.services.impl.MySQLProps;
 import com.openmrs.migrator.core.utilities.ConsoleUtils;
 import com.openmrs.migrator.core.utilities.FileIOUtilities;
 import java.io.Console;

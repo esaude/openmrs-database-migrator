@@ -248,4 +248,10 @@ public class FileIOUtilities {
     }
     return value;
   }
+  
+  public List<String> getListOfPDIFilesInResources(String folder){
+	  List<String> list = new ArrayList<>();
+	  
+	  return list;
+  }
 }
