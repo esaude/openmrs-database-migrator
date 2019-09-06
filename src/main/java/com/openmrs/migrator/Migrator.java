@@ -145,6 +145,12 @@ public class Migrator implements Callable<Optional<Void>> {
     pdiFiles.add(
         SettingsService.PDI_RESOURCES_DIR + "/transformations/validate-visit-attribute-types.ktr");
     pdiFiles.add(SettingsService.PDI_RESOURCES_DIR + "/transformations/validate-visit-types.ktr");
+    pdiFiles.add(SettingsService.PDI_RESOURCES_DIR + "/transformations/merge-persons.ktr");
+    pdiFiles.add(SettingsService.PDI_RESOURCES_DIR + "/transformations/merge-users.ktr");
+    pdiFiles.add(
+        SettingsService.PDI_RESOURCES_DIR + "/transformations/merge-concept-datatypes.ktr");
+    pdiFiles.add(SettingsService.PDI_RESOURCES_DIR + "/transformations/merge-concept-classes.ktr");
+    pdiFiles.add(SettingsService.PDI_RESOURCES_DIR + "/transformations/merge-concepts.ktr");
     pdiFiles.add(SettingsService.SETTINGS_PROPERTIES);
     pdiFiles.add(SettingsService.PDI_PLUGINS_DIR + "/pdi-core-plugins-impl-8.2.0.7-719.jar");
 
