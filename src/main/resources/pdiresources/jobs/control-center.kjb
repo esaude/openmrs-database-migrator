@@ -395,10 +395,10 @@
       <yloc>64</yloc>
       <attributes_kjc/>
     </entry>
-<entry>
-      <name>merge</name>
+    <entry>
+      <name>Success</name>
       <description/>
-      <type>JOB</type>
+      <type>SUCCESS</type>
       <attributes/>
       <specification_method>filename</specification_method>
       <job_object_id/>
@@ -463,7 +463,7 @@
     </hop>
     <hop>
       <from>migrate</from>
-      <to>merge</to>
+      <to>Success</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
