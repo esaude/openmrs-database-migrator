@@ -56,7 +56,11 @@ public class Migrator implements Callable<Optional<Void>> {
           "plugins",
           SettingsService.PDI_RESOURCES_DIR + "/",
           SettingsService.PDI_RESOURCES_DIR + "/transformations/",
-          SettingsService.PDI_RESOURCES_DIR + "/jobs/");
+          SettingsService.PDI_RESOURCES_DIR + "/jobs/",
+          SettingsService.PDI_RESOURCES_DIR + "/jobs/migration-jobs/",
+          SettingsService.PDI_RESOURCES_DIR + "/transformations/merge-transformations/",
+          SettingsService.PDI_RESOURCES_DIR + "/transformations/migration-transformations/",
+          SettingsService.PDI_RESOURCES_DIR + "/transformations/validation-transformations/");
 
   @Option(
       names = {"run"},
@@ -121,17 +125,35 @@ public class Migrator implements Callable<Optional<Void>> {
 
     Map<String, InputStream> jobFiles =
         fileIOUtilities.getListOfPDIFiles("classpath:pdiresources/jobs/*.kjb");
-    Map<String, InputStream> transformationFiles =
-        fileIOUtilities.getListOfPDIFiles("classpath:pdiresources/transformations/*.ktr");
+    Map<String, InputStream> migrationJobs =
+        fileIOUtilities.getListOfPDIFiles("classpath:pdiresources/jobs/migration-jobs/*.kjb");
+
+    Map<String, InputStream> mergeTransformations =
+        fileIOUtilities.getListOfPDIFiles(
+            "classpath:pdiresources/transformations/merge-transformations/*.ktr");
+    Map<String, InputStream> migrationTransformations =
+        fileIOUtilities.getListOfPDIFiles(
+            "classpath:pdiresources/transformations/migration-transformations/*.ktr");
+    Map<String, InputStream> validationTransformations =
+        fileIOUtilities.getListOfPDIFiles(
+            "classpath:pdiresources/transformations/validation-transformations/*.ktr");
 
     Map<String, InputStream> settingsFile =
         fileIOUtilities.getListOfPDIFiles("classpath:settings.properties");
 
     bootstrapService.createDirectoryStructure(dirList);
-
+    // jobs
     bootstrapService.populateDefaultResources(jobFiles, "pdiresources/jobs/");
 
-    bootstrapService.populateDefaultResources(transformationFiles, "pdiresources/transformations/");
+    bootstrapService.populateDefaultResources(migrationJobs, "pdiresources/jobs/migration-jobs/");
+
+    // tranformations
+    bootstrapService.populateDefaultResources(
+        mergeTransformations, "pdiresources/transformations/merge-transformations/");
+    bootstrapService.populateDefaultResources(
+        migrationTransformations, "pdiresources/transformations/migration-transformations/");
+    bootstrapService.populateDefaultResources(
+        validationTransformations, "pdiresources/transformations/validation-transformations/");
 
     bootstrapService.populateDefaultResources(settingsFile, "");
   }
