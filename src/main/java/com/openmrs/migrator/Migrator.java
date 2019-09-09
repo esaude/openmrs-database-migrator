@@ -12,11 +12,11 @@ import java.io.Console;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -44,7 +44,7 @@ public class Migrator implements Callable<Optional<Void>> {
 
   private Console console;
 
-  private String[] jobs = {SettingsService.PDI_RESOURCES_DIR + "/jobs/merge-patient-job.kjb"};
+  private String[] jobs = {SettingsService.PDI_RESOURCES_DIR + "/jobs/control-center.kjb"};
 
   private Path settingProperties = Paths.get(SettingsService.SETTINGS_PROPERTIES);
 
@@ -87,7 +87,8 @@ public class Migrator implements Callable<Optional<Void>> {
   }
 
   @Override
-  public Optional<Void> call() throws IOException, SQLException, SettingsException {
+  public Optional<Void> call()
+      throws IOException, SQLException, SettingsException, URISyntaxException {
     if (setup) {
       executeSetupCommand();
     }
@@ -115,41 +116,19 @@ public class Migrator implements Callable<Optional<Void>> {
     }
   }
 
-  private void executeSetupCommand() throws IOException, SQLException, SettingsException {
-    List<String> pdiFiles = new ArrayList<>();
+  private void executeSetupCommand()
+      throws IOException, SQLException, SettingsException, URISyntaxException {
 
-    pdiFiles.add(SettingsService.PDI_RESOURCES_DIR + "/jobs/merge-patient-job.kjb");
-    pdiFiles.add(SettingsService.PDI_RESOURCES_DIR + "/jobs/validations.kjb");
-    pdiFiles.add(SettingsService.PDI_RESOURCES_DIR + "/transformations/merge-patient.ktr");
-    pdiFiles.add(SettingsService.PDI_RESOURCES_DIR + "/transformations/validate-concepts.ktr");
-    pdiFiles.add(
-        SettingsService.PDI_RESOURCES_DIR + "/transformations/validate-encounter-types.ktr");
-    pdiFiles.add(SettingsService.PDI_RESOURCES_DIR + "/transformations/validate-forms.ktr");
-    pdiFiles.add(SettingsService.PDI_RESOURCES_DIR + "/transformations/validate-order-types.ktr");
-    pdiFiles.add(
-        SettingsService.PDI_RESOURCES_DIR
-            + "/transformations/validate-patient-identifier-types.ktr");
-    pdiFiles.add(
-        SettingsService.PDI_RESOURCES_DIR + "/transformations/validate-person-attribute-types.ktr");
-    pdiFiles.add(SettingsService.PDI_RESOURCES_DIR + "/transformations/validate-programs.ktr");
-    pdiFiles.add(
-        SettingsService.PDI_RESOURCES_DIR + "/transformations/validate-program-workflows.ktr");
-    pdiFiles.add(
-        SettingsService.PDI_RESOURCES_DIR
-            + "/transformations/validate-program-workflow-states.ktr");
-    pdiFiles.add(
-        SettingsService.PDI_RESOURCES_DIR + "/transformations/validate-relationship-types.ktr");
-    pdiFiles.add(SettingsService.PDI_RESOURCES_DIR + "/transformations/validate-roles.ktr");
-    pdiFiles.add(
-        SettingsService.PDI_RESOURCES_DIR + "/transformations/validate-scheduler-task-config.ktr");
-    pdiFiles.add(
-        SettingsService.PDI_RESOURCES_DIR + "/transformations/validate-visit-attribute-types.ktr");
-    pdiFiles.add(SettingsService.PDI_RESOURCES_DIR + "/transformations/validate-visit-types.ktr");
-    pdiFiles.add(SettingsService.SETTINGS_PROPERTIES);
-    pdiFiles.add(SettingsService.PDI_PLUGINS_DIR + "/pdi-core-plugins-impl-8.2.0.7-719.jar");
+    Map<String, InputStream> jobFiles =
+        fileIOUtilities.getListOfPDIFiles("classpath:pdiresources/jobs/*.kjb");
+    Map<String, InputStream> transformationFiles =
+        fileIOUtilities.getListOfPDIFiles("classpath:pdiresources/transformations/*.ktr");
 
     bootstrapService.createDirectoryStructure(dirList);
-    bootstrapService.populateDefaultResources(pdiFiles);
+
+    bootstrapService.populateDefaultResources(jobFiles, "pdiresources/jobs/");
+
+    bootstrapService.populateDefaultResources(transformationFiles, "pdiresources/transformations/");
 
     Map<String, String> connDB = ConsoleUtils.readSettingsFromConsole(console);
 

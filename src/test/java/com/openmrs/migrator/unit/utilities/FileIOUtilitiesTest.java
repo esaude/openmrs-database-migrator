@@ -13,12 +13,14 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 import org.junit.Test;
@@ -327,5 +329,14 @@ public class FileIOUtilitiesTest {
 
     assertNotNull(kettleFile);
     assertTrue(kettleFile.exists());
+  }
+
+  @Test
+  public void getListOfPDIFilesInResources_ShouldReturnListofFiles()
+      throws URISyntaxException, IOException {
+    Map<String, InputStream> jobs =
+        fileIOUtilities.getListOfPDIFiles("classpath:pdiresources/jobs/*.kjb");
+
+    assertFalse(jobs.isEmpty());
   }
 }

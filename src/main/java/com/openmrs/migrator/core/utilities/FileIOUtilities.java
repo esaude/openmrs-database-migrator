@@ -11,16 +11,21 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -248,10 +253,25 @@ public class FileIOUtilities {
     }
     return value;
   }
-  
-  public List<String> getListOfPDIFilesInResources(String folder){
-	  List<String> list = new ArrayList<>();
-	  
-	  return list;
+  /**
+   * @param should be any relative path of folder under the src/main/resources/ for example:
+   *     pdiresources/jobs
+   * @return List<String>
+   * @throws URISyntaxException
+   * @throws IOException
+   */
+  public Map<String, InputStream> getListOfPDIFiles(String folder)
+      throws URISyntaxException, IOException {
+
+    Map<String, InputStream> listPDIFiles = new HashMap<>();
+
+    PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
+    Resource[] resources = resolver.getResources(folder);
+
+    for (Resource resource : resources) {
+      listPDIFiles.put(resource.getFilename(), resource.getInputStream());
+    }
+
+    return listPDIFiles;
   }
 }
