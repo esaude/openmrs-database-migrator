@@ -274,4 +274,26 @@ public class FileIOUtilities {
 
     return listPDIFiles;
   }
+
+  public boolean isSettingsFilesMissingSomeValue() throws IOException {
+
+    try (BufferedReader br = new BufferedReader(new FileReader(new File("settings.properties")))) {
+      String line = null;
+      while ((line = br.readLine()) != null) {
+
+        String value = line.split("=")[1];
+        if (("ETL_DATABASE_HOST".equals(line.split("=")[0])
+                || "ETL_DATABASE_PORT".equals(line.split("=")[0])
+                || "ETL_DATABASE_USER".equals(line.split("=")[0])
+                || "ETL_DATABASE_PASSWORD".equals(line.split("=")[0])
+                || "ETL_SOURCE_DATABASE".equals(line.split("=")[0]))
+            && ("".equals(value.trim()))) {
+          return true;
+        }
+      }
+    } catch (ArrayIndexOutOfBoundsException e) {
+      return true;
+    }
+    return false;
+  }
 }

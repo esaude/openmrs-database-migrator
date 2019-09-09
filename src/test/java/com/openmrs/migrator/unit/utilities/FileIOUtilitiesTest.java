@@ -9,8 +9,10 @@ import static org.junit.Assert.assertTrue;
 import com.openmrs.migrator.core.exceptions.InvalidParameterException;
 import com.openmrs.migrator.core.services.SettingsService;
 import com.openmrs.migrator.core.utilities.FileIOUtilities;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
@@ -338,5 +340,45 @@ public class FileIOUtilitiesTest {
         fileIOUtilities.getListOfPDIFiles("classpath:pdiresources/jobs/*.kjb");
 
     assertFalse(jobs.isEmpty());
+  }
+
+  @Test
+  public void isSettingsFilesMissingSomeValue_shouldReturnTrue() throws IOException {
+
+    File file = new File("settings.properties");
+    file.createNewFile();
+
+    try (BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
+      bw.write("ETL_SOURCE_DATABASE=");
+      bw.flush();
+    }
+    ;
+    boolean value = fileIOUtilities.isSettingsFilesMissingSomeValue();
+
+    assertTrue(value);
+  }
+
+  @Test
+  public void isSettingsFilesMissingSomeValue_shouldReturnfalse() throws IOException {
+
+    File file = new File("settings.properties");
+    file.createNewFile();
+
+    try (BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
+      bw.write("ETL_SOURCE_DATABASE=fgh\n");
+      bw.flush();
+      bw.write("ETL_DATABASE_HOST=127.0.0.1\n");
+      bw.flush();
+      bw.write("ETL_DATABASE_PORT=3306\n");
+      bw.flush();
+      bw.write("ETL_DATABASE_USER=root\n");
+      bw.flush();
+      bw.write("ETL_DATABASE_PASSWORD=password\n");
+      bw.flush();
+    }
+    ;
+    boolean value = fileIOUtilities.isSettingsFilesMissingSomeValue();
+
+    assertFalse(value);
   }
 }

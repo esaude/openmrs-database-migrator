@@ -124,25 +124,16 @@ public class Migrator implements Callable<Optional<Void>> {
     Map<String, InputStream> transformationFiles =
         fileIOUtilities.getListOfPDIFiles("classpath:pdiresources/transformations/*.ktr");
 
+    Map<String, InputStream> settingsFile =
+        fileIOUtilities.getListOfPDIFiles("classpath:settings.properties");
+
     bootstrapService.createDirectoryStructure(dirList);
 
     bootstrapService.populateDefaultResources(jobFiles, "pdiresources/jobs/");
 
     bootstrapService.populateDefaultResources(transformationFiles, "pdiresources/transformations/");
 
-    Map<String, String> connDB = ConsoleUtils.readSettingsFromConsole(console);
-
-    MySQLProps mysqlConn = getMysqlOptsFromConsoleConn(connDB);
-    while (!dataBaseService.testConnection(mysqlConn, false)) {
-      console.writer().println("You have provided Wrong Connection details, please try again!");
-      connDB = ConsoleUtils.readSettingsFromConsole(console);
-      mysqlConn = getMysqlOptsFromConsoleConn(connDB);
-    }
-
-    settingsService.fillConfigFile(settingProperties, connDB);
-
-    MySQLProps mySQLProps = getMysqlConn();
-    chooseDatabase(mySQLProps);
+    bootstrapService.populateDefaultResources(settingsFile, "");
   }
 
   private MySQLProps getMysqlOptsFromConsoleConn(Map<String, String> connDB) {
@@ -239,7 +230,24 @@ public class Migrator implements Callable<Optional<Void>> {
         fileIOUtilities.getValueFromConfig(SettingsService.SOURCE_DB, "=", settingProperties));
   }
 
-  private void executeRunCommandLogic() throws IOException, SettingsException {
+  private void executeRunCommandLogic() throws IOException, SettingsException, SQLException {
+
+    if (fileIOUtilities.isSettingsFilesMissingSomeValue()) {
+      Map<String, String> connDB = ConsoleUtils.readSettingsFromConsole(console);
+
+      MySQLProps mysqlConn = getMysqlOptsFromConsoleConn(connDB);
+      while (!dataBaseService.testConnection(mysqlConn, false)) {
+        console.writer().println("You have provided Wrong Connection details, please try again!");
+        connDB = ConsoleUtils.readSettingsFromConsole(console);
+        mysqlConn = getMysqlOptsFromConsoleConn(connDB);
+      }
+
+      settingsService.fillConfigFile(settingProperties, connDB);
+
+      MySQLProps mySQLProps = getMysqlConn();
+      chooseDatabase(mySQLProps);
+    }
+
     if (Files.exists(Paths.get(SettingsService.PDI_RESOURCES_DIR))
         && Files.exists(Paths.get(SettingsService.SETTINGS_PROPERTIES))) {
       runAllJobs();
