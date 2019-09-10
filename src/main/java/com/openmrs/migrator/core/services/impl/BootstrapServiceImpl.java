@@ -78,7 +78,7 @@ public class BootstrapServiceImpl implements BootstrapService {
       } catch (IOException ex) {
         log.error("An IOException occurred while copying resource files", ex);
         return false;
-      }  
+      }
     }
 
     return true;
