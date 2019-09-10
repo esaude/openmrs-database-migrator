@@ -68,7 +68,6 @@ public class BootstrapServiceImpl implements BootstrapService {
       // An option is to use a functional interface for this:
       // https://www.baeldung.com/java-lambda-exceptions
       try {
-        // fileIOUtilities.copyFileFromResources(pdiFile);
 
         byte[] buffer = new byte[sourceFiles.get(pdiFile).available()];
         sourceFiles.get(pdiFile).read(buffer);
@@ -76,15 +75,10 @@ public class BootstrapServiceImpl implements BootstrapService {
         File targetFile = new File(targetFolder + pdiFile);
         outStream = new FileOutputStream(targetFile);
         outStream.write(buffer);
-        // Files.copy(sourceFiles.get(pdiFile), Paths.get("pdiresources/jobs/"));
       } catch (IOException ex) {
         log.error("An IOException occurred while copying resource files", ex);
         return false;
-      } // catch (InvalidParameterException paramEx) {
-      //  log.error("An Invalid Parameter Exception occurred while copying resource files",
-      // paramEx);
-      //  return false;
-      // }
+      }  
     }
 
     return true;

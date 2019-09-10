@@ -352,7 +352,7 @@ public class FileIOUtilitiesTest {
       bw.write("ETL_SOURCE_DATABASE=");
       bw.flush();
     }
-    ;
+    
     boolean value = fileIOUtilities.isSettingsFilesMissingSomeValue();
 
     assertTrue(value);
