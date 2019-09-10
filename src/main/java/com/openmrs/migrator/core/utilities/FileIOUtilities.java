@@ -256,7 +256,7 @@ public class FileIOUtilities {
   /**
    * @param should be any relative path of folder under the src/main/resources/ for example:
    *     pdiresources/jobs
-   * @return List<String>
+   * @return Map<String, InputStream>
    * @throws URISyntaxException
    * @throws IOException
    */

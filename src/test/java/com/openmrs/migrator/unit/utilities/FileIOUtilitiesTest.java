@@ -334,7 +334,7 @@ public class FileIOUtilitiesTest {
   }
 
   @Test
-  public void getListOfPDIFilesInResources_ShouldReturnListofFiles()
+  public void getListOfPDIFilesInResourcesShouldReturnListofFiles()
       throws URISyntaxException, IOException {
     Map<String, InputStream> jobs =
         fileIOUtilities.getListOfPDIFiles("classpath:pdiresources/jobs/*.kjb");
@@ -343,7 +343,7 @@ public class FileIOUtilitiesTest {
   }
 
   @Test
-  public void isSettingsFilesMissingSomeValue_shouldReturnTrue() throws IOException {
+  public void isSettingsFilesMissingSomeValueShouldReturnTrue() throws IOException {
 
     File file = new File("settings.properties");
     file.createNewFile();
@@ -359,7 +359,7 @@ public class FileIOUtilitiesTest {
   }
 
   @Test
-  public void isSettingsFilesMissingSomeValue_shouldReturnfalse() throws IOException {
+  public void isSettingsFilesMissingSomeValueShouldReturnfalse() throws IOException {
 
     File file = new File("settings.properties");
     file.createNewFile();
@@ -376,7 +376,7 @@ public class FileIOUtilitiesTest {
       bw.write("ETL_DATABASE_PASSWORD=password\n");
       bw.flush();
     }
-    ;
+
     boolean value = fileIOUtilities.isSettingsFilesMissingSomeValue();
 
     assertFalse(value);

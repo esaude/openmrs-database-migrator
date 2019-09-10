@@ -21,8 +21,6 @@ public class BootstrapServiceImpl implements BootstrapService {
 
   private FileIOUtilities fileIOUtilities;
 
-  private FileOutputStream outStream;
-
   @Autowired
   public BootstrapServiceImpl(FileIOUtilities fileIOUtils) {
     this.fileIOUtilities = fileIOUtils;
@@ -63,7 +61,7 @@ public class BootstrapServiceImpl implements BootstrapService {
   public boolean populateDefaultResources(Map<String, InputStream> sourceFiles, String targetFolder)
       throws IOException {
     log.info("Populating PDI folders with default resources");
-
+    FileOutputStream outStream;
     for (String pdiFile : sourceFiles.keySet()) {
       // Not the cleanest approach
       // TODO: we should write a wrapper class that will handle this for us
