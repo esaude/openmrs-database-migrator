@@ -18,6 +18,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -122,45 +123,36 @@ public class Migrator implements Callable<Optional<Void>> {
 
   private void executeSetupCommand()
       throws IOException, SQLException, SettingsException, URISyntaxException {
-    // jobs
-    Map<String, InputStream> jobFiles =
-        fileIOUtilities.getListOfPDIFiles("classpath:pdiresources/jobs/*.kjb");
-    Map<String, InputStream> migrationJobs =
-        fileIOUtilities.getListOfPDIFiles("classpath:pdiresources/jobs/migration-jobs/*.kjb");
-    // transformations
-    Map<String, InputStream> mergeTransformations =
-        fileIOUtilities.getListOfPDIFiles(
-            "classpath:pdiresources/transformations/merge-transformations/*.ktr");
-    Map<String, InputStream> migrationTransformations =
-        fileIOUtilities.getListOfPDIFiles(
-            "classpath:pdiresources/transformations/migration-transformations/*.ktr");
-    Map<String, InputStream> validationTransformations =
-        fileIOUtilities.getListOfPDIFiles(
-            "classpath:pdiresources/transformations/validation-transformations/*.ktr");
-    // settings
-    Map<String, InputStream> settingsFile =
-        fileIOUtilities.getListOfPDIFiles("classpath:settings.properties");
-    // config
-    Map<String, InputStream> config = fileIOUtilities.getListOfPDIFiles("classpath:config/*");
 
     bootstrapService.createDirectoryStructure(dirList);
-    // jobs
-    bootstrapService.populateDefaultResources(jobFiles, "pdiresources/jobs/");
 
-    bootstrapService.populateDefaultResources(migrationJobs, "pdiresources/jobs/migration-jobs/");
+    Map<String, String> listOfStructureFolders = new HashMap<>();
+    listOfStructureFolders.put("classpath:pdiresources/jobs/*.kjb", "pdiresources/jobs/");
+    listOfStructureFolders.put(
+        "classpath:pdiresources/jobs/migration-jobs/*.kjb", "pdiresources/jobs/migration-jobs/");
+    listOfStructureFolders.put(
+        "classpath:pdiresources/transformations/merge-transformations/*.ktr",
+        "pdiresources/transformations/merge-transformations/");
+    listOfStructureFolders.put(
+        "classpath:pdiresources/transformations/migration-transformations/*.ktr",
+        "pdiresources/transformations/migration-transformations/");
+    listOfStructureFolders.put(
+        "classpath:pdiresources/transformations/validation-transformations/*.ktr",
+        "pdiresources/transformations/validation-transformations/");
+    listOfStructureFolders.put("classpath:settings.properties", "");
+    listOfStructureFolders.put("classpath:config/*", "config/");
 
-    // transformations
-    bootstrapService.populateDefaultResources(
-        mergeTransformations, "pdiresources/transformations/merge-transformations/");
-    bootstrapService.populateDefaultResources(
-        migrationTransformations, "pdiresources/transformations/migration-transformations/");
-    bootstrapService.populateDefaultResources(
-        validationTransformations, "pdiresources/transformations/validation-transformations/");
-
-    // config
-    bootstrapService.populateDefaultResources(config, "config/");
-
-    bootstrapService.populateDefaultResources(settingsFile, "");
+    listOfStructureFolders
+        .keySet()
+        .forEach(
+            x -> {
+              try {
+                bootstrapService.populateDefaultResources(
+                    fileIOUtilities.getListOfPDIFiles(x), listOfStructureFolders.get(x));
+              } catch (URISyntaxException | IOException e) {
+                e.printStackTrace();
+              }
+            });
   }
 
   private MySQLProps getMysqlOptsFromConsoleConn(Map<String, String> connDB) {
