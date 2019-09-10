@@ -122,12 +122,12 @@ public class Migrator implements Callable<Optional<Void>> {
 
   private void executeSetupCommand()
       throws IOException, SQLException, SettingsException, URISyntaxException {
-
+    // jobs
     Map<String, InputStream> jobFiles =
         fileIOUtilities.getListOfPDIFiles("classpath:pdiresources/jobs/*.kjb");
     Map<String, InputStream> migrationJobs =
         fileIOUtilities.getListOfPDIFiles("classpath:pdiresources/jobs/migration-jobs/*.kjb");
-
+    // transformations
     Map<String, InputStream> mergeTransformations =
         fileIOUtilities.getListOfPDIFiles(
             "classpath:pdiresources/transformations/merge-transformations/*.ktr");
@@ -137,9 +137,11 @@ public class Migrator implements Callable<Optional<Void>> {
     Map<String, InputStream> validationTransformations =
         fileIOUtilities.getListOfPDIFiles(
             "classpath:pdiresources/transformations/validation-transformations/*.ktr");
-
+    // settings
     Map<String, InputStream> settingsFile =
         fileIOUtilities.getListOfPDIFiles("classpath:settings.properties");
+    // config
+    Map<String, InputStream> config = fileIOUtilities.getListOfPDIFiles("classpath:config/*");
 
     bootstrapService.createDirectoryStructure(dirList);
     // jobs
@@ -147,13 +149,16 @@ public class Migrator implements Callable<Optional<Void>> {
 
     bootstrapService.populateDefaultResources(migrationJobs, "pdiresources/jobs/migration-jobs/");
 
-    // tranformations
+    // transformations
     bootstrapService.populateDefaultResources(
         mergeTransformations, "pdiresources/transformations/merge-transformations/");
     bootstrapService.populateDefaultResources(
         migrationTransformations, "pdiresources/transformations/migration-transformations/");
     bootstrapService.populateDefaultResources(
         validationTransformations, "pdiresources/transformations/validation-transformations/");
+
+    // config
+    bootstrapService.populateDefaultResources(config, "config/");
 
     bootstrapService.populateDefaultResources(settingsFile, "");
   }
