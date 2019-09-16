@@ -513,7 +513,14 @@ INNER JOIN program_workflow pw ON pw.program_workflow_id = pws.program_workflow_
 INNER JOIN program_workflow_mapping pwm ON pwm.uuid = pw.uuid
 GROUP BY pws.program_workflow_id) pw2
 SET pw1.program_workflow_id = pw2.program_workflow_id
-WHERE pw1.program_workflow_id = pw2.former_program_workflow_id;</sql>
+WHERE pw1.program_workflow_id = pw2.former_program_workflow_id;
+
+UPDATE concept_state_conversion cs1, (SELECT cs.program_workflow_state_id, m.former_program_workflow_id FROM concept_state_conversion cs
+INNER JOIN program_workflow_state pws ON cs.program_workflow_state_id = pws.program_workflow_state_id 
+INNER JOIN program_workflow_mapping m ON m.uuid = cs.uuid
+GROUP BY cs.program_workflow_state_id) cs2
+SET cs1.program_workflow_state_id = cs2.program_workflow_state_id
+WHERE cs1.program_workflow_state_id = cs2.former_program_workflow_id;</sql>
     <set_params>N</set_params>
     <insert_field/>
     <update_field/>
