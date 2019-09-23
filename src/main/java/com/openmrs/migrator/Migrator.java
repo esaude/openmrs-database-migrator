@@ -44,7 +44,7 @@ public class Migrator implements Callable<Optional<Void>> {
 
   private Console console;
 
-  private String[] jobs = {SettingsService.PDI_RESOURCES_DIR + "/jobs/merge-patient-job.kjb"};
+  private String[] jobs = {SettingsService.PDI_RESOURCES_DIR + "/jobs/control-center.kjb"};
 
   private Path settingProperties = Paths.get(SettingsService.SETTINGS_PROPERTIES);
 
@@ -118,6 +118,7 @@ public class Migrator implements Callable<Optional<Void>> {
   private void executeSetupCommand() throws IOException, SQLException, SettingsException {
     List<String> pdiFiles = new ArrayList<>();
 
+    pdiFiles.add(SettingsService.PDI_RESOURCES_DIR + "/jobs/control-center.kjb");
     pdiFiles.add(SettingsService.PDI_RESOURCES_DIR + "/jobs/merge-patient-job.kjb");
     pdiFiles.add(SettingsService.PDI_RESOURCES_DIR + "/jobs/validations.kjb");
     pdiFiles.add(SettingsService.PDI_RESOURCES_DIR + "/transformations/merge-patient.ktr");
