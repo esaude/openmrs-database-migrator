@@ -502,7 +502,7 @@
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>load program workflow states</from>
+      <from>load visit types</from>
       <to>Sort harmonized visit types</to>
       <enabled>Y</enabled>
     </hop>
@@ -953,7 +953,7 @@
     </GUI>
   </step>
   <step>
-    <name>load program workflow states</name>
+    <name>load visit types</name>
     <type>CsvInput</type>
     <description/>
     <distribute>Y</distribute>
