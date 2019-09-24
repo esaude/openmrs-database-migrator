@@ -119,10 +119,23 @@ public class Migrator implements Callable<Optional<Void>> {
     List<String> pdiFiles = new ArrayList<>();
 
     pdiFiles.add(SettingsService.PDI_RESOURCES_DIR + "/jobs/control-center.kjb");
+    pdiFiles.add(SettingsService.PDI_RESOURCES_DIR + "/jobs/preparation.kjb");
+    pdiFiles.add(SettingsService.PDI_RESOURCES_DIR + "/jobs/migration.kjb");
+    pdiFiles.add(SettingsService.PDI_RESOURCES_DIR + "/jobs/verification.kjb");
+    pdiFiles.add(SettingsService.PDI_RESOURCES_DIR + "/jobs/cleanup.kjb");
     pdiFiles.add(SettingsService.PDI_RESOURCES_DIR + "/jobs/merge-patient-job.kjb");
     pdiFiles.add(SettingsService.PDI_RESOURCES_DIR + "/jobs/validations.kjb");
+    pdiFiles.add(SettingsService.PDI_RESOURCES_DIR + "/jobs/visit_type_job.kjb");
     pdiFiles.add(SettingsService.PDI_RESOURCES_DIR + "/transformations/merge-patient.ktr");
     pdiFiles.add(SettingsService.PDI_RESOURCES_DIR + "/transformations/validate-concepts.ktr");
+    pdiFiles.add(SettingsService.PDI_RESOURCES_DIR + "/transformations/visit_type_backup_data.ktr");
+    pdiFiles.add(
+        SettingsService.PDI_RESOURCES_DIR + "/transformations/visit_type_insert_harmonized.ktr");
+    pdiFiles.add(
+        SettingsService.PDI_RESOURCES_DIR
+            + "/transformations/visit_type_update_with_harmonized_visit_type.ktr");
+    pdiFiles.add(
+        SettingsService.PDI_RESOURCES_DIR + "/transformations/visit_type_drop_backup_tables.ktr");
     pdiFiles.add(
         SettingsService.PDI_RESOURCES_DIR + "/transformations/validate-encounter-types.ktr");
     pdiFiles.add(SettingsService.PDI_RESOURCES_DIR + "/transformations/validate-forms.ktr");
