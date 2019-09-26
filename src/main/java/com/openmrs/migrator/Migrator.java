@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.Callable;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
@@ -124,35 +125,15 @@ public class Migrator implements Callable<Optional<Void>> {
   private void executeSetupCommand()
       throws IOException, SQLException, SettingsException, URISyntaxException {
 
-    bootstrapService.createDirectoryStructure(dirList);
+    Set<String> set =
+        fileIOUtilities.prepareResourceFolder(
+            fileIOUtilities.identifyResourceSubFolders(SettingsService.PDI_RESOURCES_DIR + "/"));
 
-    Map<String, String> listOfStructureFolders = new HashMap<>();
-    listOfStructureFolders.put("classpath:pdiresources/jobs/*.kjb", "pdiresources/jobs/");
-    listOfStructureFolders.put(
-        "classpath:pdiresources/jobs/migration-jobs/*.kjb", "pdiresources/jobs/migration-jobs/");
-    listOfStructureFolders.put(
-        "classpath:pdiresources/transformations/merge-transformations/*.ktr",
-        "pdiresources/transformations/merge-transformations/");
-    listOfStructureFolders.put(
-        "classpath:pdiresources/transformations/migration-transformations/*.ktr",
-        "pdiresources/transformations/migration-transformations/");
-    listOfStructureFolders.put(
-        "classpath:pdiresources/transformations/validation-transformations/*.ktr",
-        "pdiresources/transformations/validation-transformations/");
-    listOfStructureFolders.put("classpath:settings.properties", "");
-    listOfStructureFolders.put("classpath:config/*", "config/");
-
-    listOfStructureFolders
-        .keySet()
-        .forEach(
-            x -> {
-              try {
-                bootstrapService.populateDefaultResources(
-                    fileIOUtilities.getListOfPDIFiles(x), listOfStructureFolders.get(x));
-              } catch (URISyntaxException | IOException e) {
-                e.printStackTrace();
-              }
-            });
+    Map<String, InputStream> map = new HashMap<>();
+    for (String s : set) {
+      map = fileIOUtilities.getListOfResourceFiles(s);
+    }
+    bootstrapService.populateDefaultResources(map);
   }
 
   private MySQLProps getMysqlOptsFromConsoleConn(Map<String, String> connDB) {

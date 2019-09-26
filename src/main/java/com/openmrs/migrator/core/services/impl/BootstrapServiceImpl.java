@@ -53,28 +53,27 @@ public class BootstrapServiceImpl implements BootstrapService {
   }
 
   /**
-   * this method copies resources of the app to folder where the app is running
+   * this method receives the stream of resource files and writes to relative path
    *
    * @return boolean indicating success or failure
    */
   @Override
-  public boolean populateDefaultResources(Map<String, InputStream> sourceFiles, String targetFolder)
-      throws IOException {
+  public boolean populateDefaultResources(Map<String, InputStream> sourceFiles) throws IOException {
     log.info("Populating PDI folders with default resources");
     FileOutputStream outStream;
-    for (String pdiFile : sourceFiles.keySet()) {
-      // Not the cleanest approach
-      // TODO: we should write a wrapper class that will handle this for us
-      // An option is to use a functional interface for this:
-      // https://www.baeldung.com/java-lambda-exceptions
-      try {
 
+    for (String pdiFile : sourceFiles.keySet()) {
+
+      try {
+        decomposePath(pdiFile);
         byte[] buffer = new byte[sourceFiles.get(pdiFile).available()];
         sourceFiles.get(pdiFile).read(buffer);
 
-        File targetFile = new File(targetFolder + pdiFile);
+        File targetFile = new File(pdiFile);
         outStream = new FileOutputStream(targetFile);
         outStream.write(buffer);
+        outStream.flush();
+        log.info("File: " + pdiFile + " created");
       } catch (IOException ex) {
         log.error("An IOException occurred while copying resource files", ex);
         return false;
@@ -82,5 +81,25 @@ public class BootstrapServiceImpl implements BootstrapService {
     }
 
     return true;
+  }
+  /**
+   * This helper method support on folder creation
+   *
+   * @param string
+   * @throws IOException
+   */
+  private void decomposePath(String string) throws IOException {
+    if (string.contains("/")) {
+      String[] splitted = string.split("/");
+      StringBuilder acumulator = new StringBuilder("");
+      for (int i = 0; i < splitted.length; i++) {
+        // if it is not the last element
+        if (i < splitted.length - 1) {
+          acumulator.append(splitted[i] + "/");
+          fileIOUtilities.createDirectory(Paths.get(acumulator.toString()));
+          log.info("Folder: " + acumulator.toString() + " created");
+        }
+      }
+    }
   }
 }

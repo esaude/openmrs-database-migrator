@@ -9,6 +9,5 @@ public interface BootstrapService {
 
   boolean createDirectoryStructure(List<String> dirList) throws IOException;
 
-  boolean populateDefaultResources(Map<String, InputStream> sourceFiles, String targetFolder)
-      throws IOException;
+  boolean populateDefaultResources(Map<String, InputStream> sourceFiles) throws IOException;
 }

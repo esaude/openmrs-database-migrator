@@ -24,6 +24,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Stream;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -336,10 +337,12 @@ public class FileIOUtilitiesTest {
   @Test
   public void getListOfPDIFilesInResourcesShouldReturnListofFiles()
       throws URISyntaxException, IOException {
-    Map<String, InputStream> jobs =
-        fileIOUtilities.getListOfPDIFiles("classpath:pdiresources/jobs/*.kjb");
 
-    assertFalse(jobs.isEmpty());
+    String pdiFolder = "classpath:" + SettingsService.PDI_RESOURCES_DIR + "/*";
+    Map<String, InputStream> files = fileIOUtilities.getListOfResourceFiles(pdiFolder);
+
+    files.keySet().forEach(x -> System.out.println(files.get(x) + " ::::: " + x));
+    assertFalse(files.isEmpty());
   }
 
   @Test
@@ -380,5 +383,30 @@ public class FileIOUtilitiesTest {
     boolean value = fileIOUtilities.isSettingsFilesMissingSomeValue();
 
     assertFalse(value);
+  }
+
+  @Test
+  public void identifyResourceSubFoldersShouldRunSuccess() throws IOException, URISyntaxException {
+    List<String> list =
+        fileIOUtilities.identifyResourceSubFolders(SettingsService.PDI_RESOURCES_DIR + "/");
+    list.forEach(System.out::println);
+    assertNotNull(list);
+    assertFalse(list.isEmpty());
+  }
+
+  @Test
+  public void prepareResourceFolderShouldRunSuccess() {
+
+    List<String> dirList =
+        Arrays.asList(
+            SettingsService.PDI_RESOURCES_DIR + "/jobs/dummy1.kjb",
+            SettingsService.PDI_RESOURCES_DIR + "/jobs/migration-jobs/dummy2.kjb*");
+
+    Set<String> set = fileIOUtilities.prepareResourceFolder(dirList);
+    set.forEach(System.out::println);
+
+    assertFalse(set.isEmpty());
+    assertTrue(set.contains("classpath:pdiresources/jobs/migration-jobs/*"));
+    assertTrue(set.contains("classpath:pdiresources/jobs/*"));
   }
 }
