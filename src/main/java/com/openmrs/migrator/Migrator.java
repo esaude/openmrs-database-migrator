@@ -120,6 +120,11 @@ public class Migrator implements Callable<Optional<Void>> {
         fileIOUtilities.prepareResourceFolder(
             fileIOUtilities.identifyResourceSubFolders(SettingsService.PDI_CONFIG + "/"), ".c"));
 
+    set.addAll(
+        fileIOUtilities.prepareResourceFolder(
+            fileIOUtilities.identifyResourceSubFolders(SettingsService.PDI_PLUGINS_DIR + "/"),
+            ".j"));
+
     fileIOUtilities.copyFileFromResources(SettingsService.SETTINGS_PROPERTIES);
 
     Map<String, InputStream> map = new HashMap<>();
