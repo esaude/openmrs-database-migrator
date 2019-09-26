@@ -397,25 +397,13 @@
       <attributes_kjc/>
     </entry>
     <entry>
-      <name>Success</name>
-      <description/>
-      <type>SUCCESS</type>
-      <attributes/>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>352</xloc>
-      <yloc>800</yloc>
-      <attributes_kjc/>
-    </entry>
-    <entry>
       <name>preperation</name>
       <description/>
       <type>JOB</type>
       <attributes/>
       <specification_method>filename</specification_method>
       <job_object_id/>
-      <filename/>
+      <filename>pdiresources/jobs/preparation.kjb</filename>
       <jobname/>
       <directory/>
       <arg_from_previous>N</arg_from_previous>
@@ -452,7 +440,7 @@
       <attributes/>
       <specification_method>filename</specification_method>
       <job_object_id/>
-      <filename/>
+      <filename>pdiresources/jobs/verification.kjb</filename>
       <jobname/>
       <directory/>
       <arg_from_previous>N</arg_from_previous>
@@ -489,7 +477,7 @@
       <attributes/>
       <specification_method>filename</specification_method>
       <job_object_id/>
-      <filename/>
+      <filename>pdiresources/jobs/cleanup.kjb</filename>
       <jobname/>
       <directory/>
       <arg_from_previous>N</arg_from_previous>
@@ -517,6 +505,18 @@
       <nr>0</nr>
       <xloc>352</xloc>
       <yloc>672</yloc>
+      <attributes_kjc/>
+    </entry>
+    <entry>
+      <name>Success</name>
+      <description/>
+      <type>SUCCESS</type>
+      <attributes/>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>352</xloc>
+      <yloc>800</yloc>
       <attributes_kjc/>
     </entry>
   </entries>
