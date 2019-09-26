@@ -1154,7 +1154,7 @@ where person_attribute_type_id=? and uuid=?</sql>
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <filename>config/person_attribute_type.csv</filename>
+    <filename>config/person_attribute_type_mapping.csv</filename>
     <filename_field/>
     <rownum_field/>
     <include_filename>N</include_filename>
