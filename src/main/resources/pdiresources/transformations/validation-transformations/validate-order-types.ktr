@@ -1154,7 +1154,7 @@ where order_type_id=? and uuid=?</sql>
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <filename>config/order_type.csv</filename>
+    <filename>config/order_type_mapping.csv</filename>
     <filename_field/>
     <rownum_field/>
     <include_filename>N</include_filename>

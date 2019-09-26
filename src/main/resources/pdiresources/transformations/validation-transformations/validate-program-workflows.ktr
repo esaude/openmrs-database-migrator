@@ -1169,17 +1169,6 @@ where program_workflow_id=? and uuid=?</sql>
     <encoding/>
     <fields>
       <field>
-        <name>name</name>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <length>-1</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
         <name>old_program_workflow_id</name>
         <type>Integer</type>
         <format/>

@@ -1250,7 +1250,7 @@ where encounter_type_id=? and uuid=?</sql>
       <schema_name/>
     </partitioning>
     <connection>OpenMRS source</connection>
-    <sql>SELECT uuid source_uuid FROM encounter type ORDER BY uuid</sql>
+    <sql>SELECT uuid source_uuid FROM encounter_type ORDER BY uuid</sql>
     <limit>0</limit>
     <lookup/>
     <execute_each_row>N</execute_each_row>
