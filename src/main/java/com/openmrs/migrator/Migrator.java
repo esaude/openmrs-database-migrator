@@ -1,5 +1,6 @@
 package com.openmrs.migrator;
 
+import com.openmrs.migrator.core.exceptions.InvalidParameterException;
 import com.openmrs.migrator.core.exceptions.SettingsException;
 import com.openmrs.migrator.core.model.MySQLProps;
 import com.openmrs.migrator.core.services.BootstrapService;
@@ -10,6 +11,7 @@ import com.openmrs.migrator.core.utilities.ConsoleUtils;
 import com.openmrs.migrator.core.utilities.FileIOUtilities;
 import java.io.Console;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
@@ -46,11 +48,11 @@ public class Migrator implements Callable<Optional<Void>> {
 
   private Console console;
 
-  private String[] jobs = {SettingsService.PDI_RESOURCES_DIR + "/jobs/control-center.kjb"};
-
   private Path settingProperties = Paths.get(SettingsService.SETTINGS_PROPERTIES);
 
   private List<String> dirList = Arrays.asList("input/", "output/");
+
+  private final String CONTROL_CENTER = "pdiresources/jobs/control-center.kjb";
 
   @Option(
       names = {"run"},
@@ -82,7 +84,8 @@ public class Migrator implements Callable<Optional<Void>> {
 
   @Override
   public Optional<Void> call()
-      throws IOException, SQLException, SettingsException, URISyntaxException {
+      throws IOException, SQLException, SettingsException, URISyntaxException,
+          InvalidParameterException {
     if (setup) {
       executeSetupCommand();
     }
@@ -98,20 +101,15 @@ public class Migrator implements Callable<Optional<Void>> {
     return Optional.empty();
   }
 
-  private void runAllJobs() throws IOException {
-    try {
-      for (String t : jobs) {
-
-        InputStream xml = fileIOUtilities.getResourceAsStream(t);
-        pdiService.runJob(xml);
-      }
-    } catch (SettingsException e) {
-      // Do nothing kettle prints stack trace
+  private void runAllJobs() throws IOException, SettingsException {
+    try (InputStream is = new FileInputStream(new File(CONTROL_CENTER))) {
+      pdiService.runJob(is);
     }
   }
 
   private void executeSetupCommand()
-      throws IOException, SQLException, SettingsException, URISyntaxException {
+      throws IOException, SQLException, SettingsException, URISyntaxException,
+          InvalidParameterException {
 
     Set<String> set =
         fileIOUtilities.prepareResourceFolder(
@@ -121,6 +119,8 @@ public class Migrator implements Callable<Optional<Void>> {
     set.addAll(
         fileIOUtilities.prepareResourceFolder(
             fileIOUtilities.identifyResourceSubFolders(SettingsService.PDI_CONFIG + "/"), ".c"));
+
+    fileIOUtilities.copyFileFromResources(SettingsService.SETTINGS_PROPERTIES);
 
     Map<String, InputStream> map = new HashMap<>();
     for (String s : set) {
