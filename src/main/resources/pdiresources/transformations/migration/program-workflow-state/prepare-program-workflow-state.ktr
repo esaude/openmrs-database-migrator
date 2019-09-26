@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <transformation>
   <info>
-    <name>create-program-workflow-state-mapping-table</name>
+    <name>prepare-program-workflow-state</name>
     <description/>
     <extended_description/>
     <trans_version/>
@@ -493,7 +493,7 @@
   <order>
   </order>
   <step>
-    <name>Create program workflow state mappings</name>
+    <name>Add flag columns and backup program workflow states</name>
     <type>ExecSQL</type>
     <description/>
     <distribute>Y</distribute>
@@ -508,12 +508,10 @@
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>CREATE TABLE program_workflow_state_mapping (
-  mapping_id INT(11)  AUTO_INCREMENT,
-  former_id INT(11),
-  uuid VARCHAR(38),
-  PRIMARY KEY (mapping_id)
-) ENGINE = InnoDB; </sql>
+    <sql>ALTER TABLE patient_state ADD column updated INT(1) DEFAULT 0;
+ALTER TABLE concept_state_conversion ADD column updated INT(1) DEFAULT 0;
+CREATE TABLE program_workflow_state_backup LIKE program_workflow_state; 
+INSERT program_workflow_state_backup SELECT * FROM program_workflow_state;</sql>
     <set_params>N</set_params>
     <insert_field/>
     <update_field/>
@@ -531,7 +529,7 @@
     </remotesteps>
     <GUI>
       <xloc>144</xloc>
-      <yloc>32</yloc>
+      <yloc>16</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <transformation>
   <info>
-    <name>delete-program-workflow-state-mapping-table</name>
+    <name>validate-program-workflow-state</name>
     <description/>
     <extended_description/>
     <trans_version/>
@@ -491,10 +491,200 @@
     </attributes>
   </connection>
   <order>
+    <hop>
+      <from>Sort existing workflows states</from>
+      <to>join the existing and  harmonized program workflow states</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Sort harmonized workflow states</from>
+      <to>join the existing and  harmonized program workflow states</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>existing program workflow states</from>
+      <to>Sort existing workflows states</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>join the existing and  harmonized program workflow states</from>
+      <to>Missing program workflow state</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>load program workflow states</from>
+      <to>Sort harmonized workflow states</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Missing program workflow state</from>
+      <to>Abort</to>
+      <enabled>Y</enabled>
+    </hop>
   </order>
   <step>
-    <name>Delete program workflow state mappings</name>
-    <type>ExecSQL</type>
+    <name>Abort</name>
+    <type>Abort</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <row_threshold>0</row_threshold>
+    <message>The above program workflow state in the database is missing in the harmonized</message>
+    <always_log_rows>N</always_log_rows>
+    <abort_option>ABORT</abort_option>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>832</xloc>
+      <yloc>128</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Missing program workflow state</name>
+    <type>FilterRows</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <send_true_to>Abort</send_true_to>
+    <send_false_to>Miss-matched program workflow state ids</send_false_to>
+    <compare>
+      <condition>
+        <negated>N</negated>
+        <conditions>
+          <condition>
+            <negated>N</negated>
+            <leftvalue>program_workflow_state_id</leftvalue>
+            <function>IS NOT NULL</function>
+            <rightvalue/>
+          </condition>
+          <condition>
+            <negated>N</negated>
+            <operator>AND</operator>
+            <leftvalue>program_workflow_state_id_1</leftvalue>
+            <function>IS NULL</function>
+            <rightvalue/>
+          </condition>
+        </conditions>
+      </condition>
+    </compare>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>576</xloc>
+      <yloc>128</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Sort existing workflows states</name>
+    <type>SortRows</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <directory>%%java.io.tmpdir%%</directory>
+    <prefix>out</prefix>
+    <sort_size>1000000</sort_size>
+    <free_memory/>
+    <compress>N</compress>
+    <compress_variable/>
+    <unique_rows>N</unique_rows>
+    <fields>
+      <field>
+        <name>uuid</name>
+        <ascending>Y</ascending>
+        <case_sensitive>Y</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>192</xloc>
+      <yloc>64</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Sort harmonized workflow states</name>
+    <type>SortRows</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <directory>%%java.io.tmpdir%%</directory>
+    <prefix>out</prefix>
+    <sort_size>1000000</sort_size>
+    <free_memory/>
+    <compress>N</compress>
+    <compress_variable/>
+    <unique_rows>N</unique_rows>
+    <fields>
+      <field>
+        <name>uuid</name>
+        <ascending>Y</ascending>
+        <case_sensitive>Y</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>192</xloc>
+      <yloc>240</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>existing program workflow states</name>
+    <type>TableInput</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -504,18 +694,208 @@
       <schema_name/>
     </partitioning>
     <connection>source</connection>
+    <sql>SELECT * FROM  program_workflow_state</sql>
+    <limit>0</limit>
+    <lookup/>
     <execute_each_row>N</execute_each_row>
-    <single_statement>N</single_statement>
-    <replace_variables>N</replace_variables>
-    <quoteString>N</quoteString>
-    <sql>DROP TABLE IF EXISTS program_workflow_state_mapping;</sql>
-    <set_params>N</set_params>
-    <insert_field/>
-    <update_field/>
-    <delete_field/>
-    <read_field/>
-    <arguments>
-    </arguments>
+    <variables_active>N</variables_active>
+    <lazy_conversion_active>N</lazy_conversion_active>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>112</xloc>
+      <yloc>0</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>join the existing and  harmonized program workflow states</name>
+    <type>MergeJoin</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <join_type>FULL OUTER</join_type>
+    <step1>Sort existing workflows states</step1>
+    <step2>Sort harmonized workflow states</step2>
+    <keys_1>
+      <key>uuid</key>
+    </keys_1>
+    <keys_2>
+      <key>uuid</key>
+    </keys_2>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>256</xloc>
+      <yloc>128</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>load program workflow states</name>
+    <type>CsvInput</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <filename>${Internal.Entry.Current.Directory}/../../../../config/program-workflow-states.csv</filename>
+    <filename_field/>
+    <rownum_field/>
+    <include_filename>N</include_filename>
+    <separator>,</separator>
+    <enclosure>"</enclosure>
+    <header>Y</header>
+    <buffer_size>50000</buffer_size>
+    <lazy_conversion>Y</lazy_conversion>
+    <add_filename_result>N</add_filename_result>
+    <parallel>N</parallel>
+    <newline_possible>N</newline_possible>
+    <format>mixed</format>
+    <encoding/>
+    <fields>
+      <field>
+        <name>program_workflow_state_id</name>
+        <type>Integer</type>
+        <format>#</format>
+        <currency>$</currency>
+        <decimal>.</decimal>
+        <group>,</group>
+        <length>15</length>
+        <precision>0</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>program_workflow_id</name>
+        <type>Integer</type>
+        <format>#</format>
+        <currency>$</currency>
+        <decimal>.</decimal>
+        <group>,</group>
+        <length>15</length>
+        <precision>0</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>concept_id</name>
+        <type>Integer</type>
+        <format>#</format>
+        <currency>$</currency>
+        <decimal>.</decimal>
+        <group>,</group>
+        <length>15</length>
+        <precision>0</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>initial</name>
+        <type>Integer</type>
+        <format>#</format>
+        <currency>$</currency>
+        <decimal>.</decimal>
+        <group>,</group>
+        <length>15</length>
+        <precision>0</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>terminal</name>
+        <type>Integer</type>
+        <format>#</format>
+        <currency>$</currency>
+        <decimal>.</decimal>
+        <group>,</group>
+        <length>15</length>
+        <precision>0</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>creator</name>
+        <type>Integer</type>
+        <format>#</format>
+        <currency>$</currency>
+        <decimal>.</decimal>
+        <group>,</group>
+        <length>15</length>
+        <precision>0</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>date_created</name>
+        <type>Date</type>
+        <format>yyyy-MM-dd HH:mm:ss</format>
+        <currency>$</currency>
+        <decimal>.</decimal>
+        <group>,</group>
+        <length>-1</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>retired</name>
+        <type>Integer</type>
+        <format>#</format>
+        <currency>$</currency>
+        <decimal>.</decimal>
+        <group>,</group>
+        <length>15</length>
+        <precision>0</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>changed_by</name>
+        <type>Integer</type>
+        <format>#</format>
+        <currency>$</currency>
+        <decimal>.</decimal>
+        <group>,</group>
+        <length>15</length>
+        <precision>0</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>date_changed</name>
+        <type>Date</type>
+        <format>yyyy-MM-dd HH:mm:ss</format>
+        <currency>$</currency>
+        <decimal>.</decimal>
+        <group>,</group>
+        <length>-1</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>uuid</name>
+        <type>String</type>
+        <format/>
+        <currency>$</currency>
+        <decimal>.</decimal>
+        <group>,</group>
+        <length>36</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+    </fields>
     <attributes/>
     <cluster_schema/>
     <remotesteps>
@@ -526,7 +906,7 @@
     </remotesteps>
     <GUI>
       <xloc>144</xloc>
-      <yloc>32</yloc>
+      <yloc>320</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

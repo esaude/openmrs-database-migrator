@@ -304,7 +304,7 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>192</xloc>
+      <xloc>48</xloc>
       <yloc>144</yloc>
       <attributes_kjc/>
     </entry>
@@ -378,7 +378,7 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>352</xloc>
+      <xloc>272</xloc>
       <yloc>144</yloc>
       <attributes_kjc/>
     </entry>
@@ -398,7 +398,7 @@
       <to>visit type transformation</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
-      <enabled>Y</enabled>
+      <enabled>N</enabled>
       <evaluation>Y</evaluation>
       <unconditional>Y</unconditional>
     </hop>
