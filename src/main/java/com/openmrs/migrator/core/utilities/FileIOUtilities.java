@@ -369,16 +369,16 @@ public class FileIOUtilities {
    * @param listOfPaths
    * @return Set<String>
    */
-  public Set<String> prepareResourceFolder(List<String> listOfPaths) {
+  public Set<String> prepareResourceFolder(List<String> listOfPaths, String partOfFileExtention) {
     Set<String> set =
         listOfPaths.stream()
-            .filter(x -> x.contains(".k"))
+            .filter(x -> x.contains(partOfFileExtention))
             .map(
                 x -> {
                   String[] vect = x.split("/");
                   StringBuilder sb = new StringBuilder();
                   for (String string : vect) {
-                    if (!string.contains(".k")) {
+                    if (!string.contains(partOfFileExtention)) {
                       sb.append(string + "/");
                     }
                   }

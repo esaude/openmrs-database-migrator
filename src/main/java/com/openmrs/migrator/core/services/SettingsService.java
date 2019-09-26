@@ -14,6 +14,8 @@ public interface SettingsService {
 
   String PDI_PLUGINS_DIR = "plugins";
 
+  String PDI_CONFIG = "config";
+
   // settings keys
   String DB_TEST_CONNECTION = "ETL_TEST_DATABASE_CONNECTION";
 

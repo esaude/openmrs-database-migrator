@@ -37,10 +37,7 @@ public class BootstrapServiceImpl implements BootstrapService {
     log.info("Creating folder structure");
 
     for (String dir : dirList) {
-      // Not the cleanest approach
-      // TODO: we should write a wrapper class that will handle this for us
-      // An option is to use a functional interface for this:
-      // https://www.baeldung.com/java-lambda-exceptions
+
       try {
         fileIOUtilities.createDirectory(Paths.get(dir));
       } catch (IOException ex) {
@@ -55,6 +52,7 @@ public class BootstrapServiceImpl implements BootstrapService {
   /**
    * this method receives the stream of resource files and writes to relative path
    *
+   * @param Map<String, InputStream> sourceFiles
    * @return boolean indicating success or failure
    */
   @Override

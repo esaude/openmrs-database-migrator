@@ -50,19 +50,7 @@ public class Migrator implements Callable<Optional<Void>> {
 
   private Path settingProperties = Paths.get(SettingsService.SETTINGS_PROPERTIES);
 
-  private List<String> dirList =
-      Arrays.asList(
-          "input/",
-          "output/",
-          "config/",
-          "plugins",
-          SettingsService.PDI_RESOURCES_DIR + "/",
-          SettingsService.PDI_RESOURCES_DIR + "/transformations/",
-          SettingsService.PDI_RESOURCES_DIR + "/jobs/",
-          SettingsService.PDI_RESOURCES_DIR + "/jobs/migration-jobs/",
-          SettingsService.PDI_RESOURCES_DIR + "/transformations/merge-transformations/",
-          SettingsService.PDI_RESOURCES_DIR + "/transformations/migration-transformations/",
-          SettingsService.PDI_RESOURCES_DIR + "/transformations/validation-transformations/");
+  private List<String> dirList = Arrays.asList("input/", "output/");
 
   @Option(
       names = {"run"},
@@ -127,12 +115,19 @@ public class Migrator implements Callable<Optional<Void>> {
 
     Set<String> set =
         fileIOUtilities.prepareResourceFolder(
-            fileIOUtilities.identifyResourceSubFolders(SettingsService.PDI_RESOURCES_DIR + "/"));
+            fileIOUtilities.identifyResourceSubFolders(SettingsService.PDI_RESOURCES_DIR + "/"),
+            ".k");
+
+    set.addAll(
+        fileIOUtilities.prepareResourceFolder(
+            fileIOUtilities.identifyResourceSubFolders(SettingsService.PDI_CONFIG + "/"), ".c"));
 
     Map<String, InputStream> map = new HashMap<>();
     for (String s : set) {
       map = fileIOUtilities.getListOfResourceFiles(s);
     }
+
+    bootstrapService.createDirectoryStructure(dirList);
     bootstrapService.populateDefaultResources(map);
   }
 

@@ -402,7 +402,7 @@ public class FileIOUtilitiesTest {
             SettingsService.PDI_RESOURCES_DIR + "/jobs/dummy1.kjb",
             SettingsService.PDI_RESOURCES_DIR + "/jobs/migration-jobs/dummy2.kjb*");
 
-    Set<String> set = fileIOUtilities.prepareResourceFolder(dirList);
+    Set<String> set = fileIOUtilities.prepareResourceFolder(dirList, ".k");
     set.forEach(System.out::println);
 
     assertFalse(set.isEmpty());
