@@ -2,6 +2,7 @@ package com.openmrs.migrator.core.services.impl;
 
 import com.ibatis.common.jdbc.ScriptRunner;
 import com.openmrs.migrator.core.exceptions.SettingsException;
+import com.openmrs.migrator.core.model.MySQLProps;
 import com.openmrs.migrator.core.services.CommandService;
 import com.openmrs.migrator.core.services.DataBaseService;
 import java.io.BufferedReader;
