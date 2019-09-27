@@ -1,4 +1,4 @@
-${ETL_SOURCE_DATABASE}# OpenMRS Database Migrator Tool
+# OpenMRS Database Migrator Tool
 
 [![Build Status](https://travis-ci.com/esaude/openmrs-database-migrator.svg?branch=master)](https://travis-ci.com/esaude/openmrs-database-migrator) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/4b76ce9cc36f41abaa078b07182f0a24)](https://app.codacy.com/app/esaude-epts/openmrs-database-migrator?utm_source=github.com&utm_medium=referral&utm_content=esaude/openmrs-database-migrator&utm_campaign=Badge_Grade_Dashboard) [![codecov](https://codecov.io/gh/esaude/openmrs-database-migrator/branch/master/graph/badge.svg)](https://codecov.io/gh/esaude/openmrs-database-migrator)
 
