@@ -56,7 +56,8 @@ public class BootstrapServiceTest {
   }
 
   @Test
-  public void populateDefaultResoucesSuccess() throws IOException, URISyntaxException {
+  public void populateDefaultResoucesSuccess()
+      throws IOException, URISyntaxException, InvalidParameterException {
     String pdiFolder = "classpath:" + SettingsService.PDI_RESOURCES_DIR + "/*";
 
     Map<String, InputStream> files = fileIOUtils.getListOfResourceFiles(pdiFolder);
@@ -69,12 +70,14 @@ public class BootstrapServiceTest {
   }
 
   @Test(expected = NullPointerException.class)
-  public void populateDefaultResoucesFailGivenFoldersUndefined() throws IOException {
+  public void populateDefaultResoucesFailGivenFoldersUndefined()
+      throws IOException, InvalidParameterException {
     bootstrapService.populateDefaultResources(null);
   }
 
   @Test
-  public void populateDefaultResoucesFailGivenFolderStructureDoesntExist() throws IOException {
+  public void populateDefaultResoucesFailGivenFolderStructureDoesntExist()
+      throws IOException, InvalidParameterException {
     List<String> pdiFiles = new ArrayList<>();
     pdiFiles.add("pdiresources/jobs/job.kjb");
     File file = new File("").createTempFile("pdiresources/jobs/job", "kjb");

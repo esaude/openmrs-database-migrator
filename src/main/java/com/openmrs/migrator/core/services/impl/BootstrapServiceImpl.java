@@ -1,5 +1,6 @@
 package com.openmrs.migrator.core.services.impl;
 
+import com.openmrs.migrator.core.exceptions.InvalidParameterException;
 import com.openmrs.migrator.core.services.BootstrapService;
 import com.openmrs.migrator.core.utilities.FileIOUtilities;
 import java.io.File;
@@ -54,9 +55,11 @@ public class BootstrapServiceImpl implements BootstrapService {
    *
    * @param Map<String, InputStream> sourceFiles
    * @return boolean indicating success or failure
+   * @throws InvalidParameterException
    */
   @Override
-  public boolean populateDefaultResources(Map<String, InputStream> sourceFiles) throws IOException {
+  public boolean populateDefaultResources(Map<String, InputStream> sourceFiles)
+      throws IOException, InvalidParameterException {
     log.info("Populating PDI folders with default resources");
     FileOutputStream outStream;
 
@@ -65,6 +68,10 @@ public class BootstrapServiceImpl implements BootstrapService {
       try {
         decomposePath(pdiFile);
         byte[] buffer = new byte[sourceFiles.get(pdiFile).available()];
+        if (pdiFile.contains(".jar")) {
+          fileIOUtilities.copyFileFromResources(pdiFile);
+          continue;
+        }
         sourceFiles.get(pdiFile).read(buffer);
 
         File targetFile = new File(pdiFile);
@@ -81,7 +88,7 @@ public class BootstrapServiceImpl implements BootstrapService {
     return true;
   }
   /**
-   * This helper method support on folder creation
+   * This helper method supports on folder creation
    *
    * @param string
    * @throws IOException
