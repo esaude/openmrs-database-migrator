@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <transformation>
   <info>
-    <name>visit_type_insert_harmonized</name>
+    <name>program-load-harmonized-data</name>
     <description/>
     <extended_description/>
     <trans_version/>
@@ -427,16 +427,16 @@
     <clusterschemas>
     </clusterschemas>
     <created_user>-</created_user>
-    <created_date>2019/08/23 10:06:24.333</created_date>
+    <created_date>2019/08/28 15:27:06.465</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2019/08/23 10:06:24.333</modified_date>
+    <modified_date>2019/08/28 15:27:06.465</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
   </notepads>
   <connection>
-    <name>OpenMRS Target DB</name>
+    <name>OpenMRS target DB</name>
     <server>${ETL_DATABASE_HOST}</server>
     <type>MYSQL</type>
     <access>Native</access>
@@ -492,13 +492,13 @@
   </connection>
   <order>
     <hop>
-      <from>load harmonized visit type</from>
-      <to>write harmonized visit_type</to>
+      <from>load harmonized programs</from>
+      <to>write harmonized data programs</to>
       <enabled>Y</enabled>
     </hop>
   </order>
   <step>
-    <name>load harmonized visit type</name>
+    <name>load harmonized programs</name>
     <type>CsvInput</type>
     <description/>
     <distribute>Y</distribute>
@@ -508,7 +508,7 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <filename>config/sample-of-harmonized-visit-types.csv</filename>
+    <filename>config/program.csv</filename>
     <filename_field/>
     <rownum_field/>
     <include_filename>N</include_filename>
@@ -523,7 +523,7 @@
     <encoding/>
     <fields>
       <field>
-        <name>visit_type_id</name>
+        <name>program_id</name>
         <type>Integer</type>
         <format>#</format>
         <currency>$</currency>
@@ -534,18 +534,7 @@
         <trim_type>none</trim_type>
       </field>
       <field>
-        <name>name</name>
-        <type>String</type>
-        <format/>
-        <currency>$</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>27</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>retired</name>
+        <name>concept_id</name>
         <type>Integer</type>
         <format>#</format>
         <currency>$</currency>
@@ -553,17 +542,6 @@
         <group>,</group>
         <length>15</length>
         <precision>0</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>uuid</name>
-        <type>String</type>
-        <format/>
-        <currency>$</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>36</length>
-        <precision>-1</precision>
         <trim_type>none</trim_type>
       </field>
       <field>
@@ -588,6 +566,83 @@
         <precision>-1</precision>
         <trim_type>none</trim_type>
       </field>
+      <field>
+        <name>changed_by</name>
+        <type>Number</type>
+        <format>#.#</format>
+        <currency>$</currency>
+        <decimal>.</decimal>
+        <group>,</group>
+        <length>15</length>
+        <precision>0</precision>
+        <trim_type>both</trim_type>
+      </field>
+      <field>
+        <name>date_changed</name>
+        <type>String</type>
+        <format/>
+        <currency>$</currency>
+        <decimal>.</decimal>
+        <group>,</group>
+        <length>15</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>retired</name>
+        <type>Integer</type>
+        <format>#</format>
+        <currency>$</currency>
+        <decimal>.</decimal>
+        <group>,</group>
+        <length>15</length>
+        <precision>0</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>name</name>
+        <type>String</type>
+        <format/>
+        <currency>$</currency>
+        <decimal>.</decimal>
+        <group>,</group>
+        <length>25</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>description</name>
+        <type>String</type>
+        <format/>
+        <currency>$</currency>
+        <decimal>.</decimal>
+        <group>,</group>
+        <length>66</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>uuid</name>
+        <type>String</type>
+        <format/>
+        <currency>$</currency>
+        <decimal>.</decimal>
+        <group>,</group>
+        <length>36</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>outcomes_concept_id</name>
+        <type>Number</type>
+        <format>#.#</format>
+        <currency>$</currency>
+        <decimal>.</decimal>
+        <group>,</group>
+        <length>15</length>
+        <precision>0</precision>
+        <trim_type>both</trim_type>
+      </field>
     </fields>
     <attributes/>
     <cluster_schema/>
@@ -598,13 +653,13 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>176</xloc>
-      <yloc>128</yloc>
+      <xloc>144</xloc>
+      <yloc>112</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>write harmonized visit_type</name>
+    <name>write harmonized data programs</name>
     <type>TableOutput</type>
     <description/>
     <distribute>Y</distribute>
@@ -614,9 +669,9 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <connection>OpenMRS Target DB</connection>
+    <connection>OpenMRS target DB</connection>
     <schema/>
-    <table>visit_type</table>
+    <table>program</table>
     <commit>1000</commit>
     <truncate>N</truncate>
     <ignore_errors>N</ignore_errors>
@@ -642,8 +697,8 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>448</xloc>
-      <yloc>128</yloc>
+      <xloc>400</xloc>
+      <yloc>112</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

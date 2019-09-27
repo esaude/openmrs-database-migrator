@@ -3,9 +3,13 @@ package com.openmrs.migrator.core.services.impl;
 import com.openmrs.migrator.core.exceptions.InvalidParameterException;
 import com.openmrs.migrator.core.services.BootstrapService;
 import com.openmrs.migrator.core.utilities.FileIOUtilities;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,10 +38,7 @@ public class BootstrapServiceImpl implements BootstrapService {
     log.info("Creating folder structure");
 
     for (String dir : dirList) {
-      // Not the cleanest approach
-      // TODO: we should write a wrapper class that will handle this for us
-      // An option is to use a functional interface for this:
-      // https://www.baeldung.com/java-lambda-exceptions
+
       try {
         fileIOUtilities.createDirectory(Paths.get(dir));
       } catch (IOException ex) {
@@ -50,30 +51,60 @@ public class BootstrapServiceImpl implements BootstrapService {
   }
 
   /**
-   * this method copies resources of the app to folder where the app is running
+   * this method receives the stream of resource files and writes to relative path
    *
+   * @param Map<String, InputStream> sourceFiles
    * @return boolean indicating success or failure
+   * @throws InvalidParameterException
    */
   @Override
-  public boolean populateDefaultResources(List<String> sourceFiles) throws IOException {
+  public boolean populateDefaultResources(Map<String, InputStream> sourceFiles)
+      throws IOException, InvalidParameterException {
     log.info("Populating PDI folders with default resources");
+    FileOutputStream outStream;
 
-    for (String pdiFile : sourceFiles) {
-      // Not the cleanest approach
-      // TODO: we should write a wrapper class that will handle this for us
-      // An option is to use a functional interface for this:
-      // https://www.baeldung.com/java-lambda-exceptions
+    for (String pdiFile : sourceFiles.keySet()) {
+
       try {
-        fileIOUtilities.copyFileFromResources(pdiFile);
+        decomposePath(pdiFile);
+        byte[] buffer = new byte[sourceFiles.get(pdiFile).available()];
+        if (pdiFile.contains(".jar")) {
+          fileIOUtilities.copyFileFromResources(pdiFile);
+          continue;
+        }
+        sourceFiles.get(pdiFile).read(buffer);
+
+        File targetFile = new File(pdiFile);
+        outStream = new FileOutputStream(targetFile);
+        outStream.write(buffer);
+        outStream.flush();
+        log.info("File: " + pdiFile + " created");
       } catch (IOException ex) {
         log.error("An IOException occurred while copying resource files", ex);
-        return false;
-      } catch (InvalidParameterException paramEx) {
-        log.error("An Invalid Parameter Exception occurred while copying resource files", paramEx);
         return false;
       }
     }
 
     return true;
+  }
+  /**
+   * This helper method supports on folder creation
+   *
+   * @param string
+   * @throws IOException
+   */
+  private void decomposePath(String string) throws IOException {
+    if (string.contains("/")) {
+      String[] splitted = string.split("/");
+      StringBuilder acumulator = new StringBuilder("");
+      for (int i = 0; i < splitted.length; i++) {
+        // if it is not the last element
+        if (i < splitted.length - 1) {
+          acumulator.append(splitted[i] + "/");
+          fileIOUtilities.createDirectory(Paths.get(acumulator.toString()));
+          log.info("Folder: " + acumulator.toString() + " created");
+        }
+      }
+    }
   }
 }

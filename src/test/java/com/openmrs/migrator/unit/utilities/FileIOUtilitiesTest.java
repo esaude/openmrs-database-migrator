@@ -9,17 +9,22 @@ import static org.junit.Assert.assertTrue;
 import com.openmrs.migrator.core.exceptions.InvalidParameterException;
 import com.openmrs.migrator.core.services.SettingsService;
 import com.openmrs.migrator.core.utilities.FileIOUtilities;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Stream;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -327,5 +332,81 @@ public class FileIOUtilitiesTest {
 
     assertNotNull(kettleFile);
     assertTrue(kettleFile.exists());
+  }
+
+  @Test
+  public void getListOfPDIFilesInResourcesShouldReturnListofFiles()
+      throws URISyntaxException, IOException {
+
+    String pdiFolder = "classpath:" + SettingsService.PDI_RESOURCES_DIR + "/*";
+    Map<String, InputStream> files = fileIOUtilities.getListOfResourceFiles(pdiFolder);
+
+    files.keySet().forEach(x -> System.out.println(files.get(x) + " ::::: " + x));
+    assertFalse(files.isEmpty());
+  }
+
+  @Test
+  public void isSettingsFilesMissingSomeValueShouldReturnTrue() throws IOException {
+
+    File file = new File("settings.properties");
+    file.createNewFile();
+
+    try (BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
+      bw.write("ETL_SOURCE_DATABASE=");
+      bw.flush();
+    }
+
+    boolean value = fileIOUtilities.isSettingsFilesMissingSomeValue();
+
+    assertTrue(value);
+  }
+
+  @Test
+  public void isSettingsFilesMissingSomeValueShouldReturnfalse() throws IOException {
+
+    File file = new File("settings.properties");
+    file.createNewFile();
+
+    try (BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
+      bw.write("ETL_SOURCE_DATABASE=fgh\n");
+      bw.flush();
+      bw.write("ETL_DATABASE_HOST=127.0.0.1\n");
+      bw.flush();
+      bw.write("ETL_DATABASE_PORT=3306\n");
+      bw.flush();
+      bw.write("ETL_DATABASE_USER=root\n");
+      bw.flush();
+      bw.write("ETL_DATABASE_PASSWORD=password\n");
+      bw.flush();
+    }
+
+    boolean value = fileIOUtilities.isSettingsFilesMissingSomeValue();
+
+    assertFalse(value);
+  }
+
+  @Test
+  public void identifyResourceSubFoldersShouldRunSuccess() throws IOException, URISyntaxException {
+    List<String> list =
+        fileIOUtilities.identifyResourceSubFolders(SettingsService.PDI_RESOURCES_DIR + "/");
+    list.forEach(System.out::println);
+    assertNotNull(list);
+    assertFalse(list.isEmpty());
+  }
+
+  @Test
+  public void prepareResourceFolderShouldRunSuccess() {
+
+    List<String> dirList =
+        Arrays.asList(
+            SettingsService.PDI_RESOURCES_DIR + "/jobs/dummy1.kjb",
+            SettingsService.PDI_RESOURCES_DIR + "/jobs/migration-jobs/dummy2.kjb*");
+
+    Set<String> set = fileIOUtilities.prepareResourceFolder(dirList, ".k");
+    set.forEach(System.out::println);
+
+    assertFalse(set.isEmpty());
+    assertTrue(set.contains("classpath:pdiresources/jobs/migration-jobs/*"));
+    assertTrue(set.contains("classpath:pdiresources/jobs/*"));
   }
 }
