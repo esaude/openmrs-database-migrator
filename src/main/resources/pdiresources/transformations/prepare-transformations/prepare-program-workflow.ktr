@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <transformation>
   <info>
-    <name>delete-program-workflow-mapping-table</name>
+    <name>prepare-program-workflow</name>
     <description/>
     <extended_description/>
     <trans_version/>
@@ -493,7 +493,7 @@
   <order>
   </order>
   <step>
-    <name>Delete program workflow mappings</name>
+    <name>Add flag columns and backup program workflow</name>
     <type>ExecSQL</type>
     <description/>
     <distribute>Y</distribute>
@@ -508,7 +508,9 @@
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>DROP TABLE IF EXISTS program_workflow_mapping;</sql>
+    <sql>ALTER TABLE program_workflow_state ADD column updated INT(1) DEFAULT 0;
+CREATE TABLE program_workflow_backup LIKE program_workflow; 
+INSERT program_workflow_backup SELECT * FROM program_workflow;</sql>
     <set_params>N</set_params>
     <insert_field/>
     <update_field/>
@@ -525,8 +527,8 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>144</xloc>
-      <yloc>32</yloc>
+      <xloc>192</xloc>
+      <yloc>16</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

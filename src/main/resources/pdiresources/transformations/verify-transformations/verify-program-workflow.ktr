@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <transformation>
   <info>
-    <name>mapping-program-workflows</name>
+    <name>verify-program-workflow</name>
     <description/>
     <extended_description/>
     <trans_version/>
@@ -492,59 +492,24 @@
   </connection>
   <order>
     <hop>
-      <from>existing program workflows</from>
-      <to>Sort existing workflows</to>
+      <from>Miss-match</from>
+      <to>Abort</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Sort existing workflows</from>
-      <to>join the existing and  harmonized program workflows</to>
+      <from>Mis-Matched patient states</from>
+      <to>zero count</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>load program workflows</from>
-      <to>Sort harmonized workflows</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Sort harmonized workflows</from>
-      <to>join the existing and  harmonized program workflows</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Missing program workflow</from>
-      <to>Miss-matched program workflow ids</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Missing program workflow</from>
-      <to>existing program workflow existing</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>existing program workflow existing</from>
-      <to>existing program workflow is used</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>existing program workflow is used</from>
-      <to>Insert mapping for missing</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Miss-matched program workflow ids</from>
-      <to>Insert mapping for miss-matches</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>join the existing and  harmonized program workflows</from>
-      <to>Missing program workflow</to>
+      <from>zero count</from>
+      <to>Miss-match</to>
       <enabled>Y</enabled>
     </hop>
   </order>
   <step>
-    <name>Insert mapping for miss-matches</name>
-    <type>ExecSQL</type>
+    <name>Abort</name>
+    <type>Abort</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -553,26 +518,10 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <connection>source</connection>
-    <execute_each_row>Y</execute_each_row>
-    <single_statement>N</single_statement>
-    <replace_variables>N</replace_variables>
-    <quoteString>N</quoteString>
-    <sql>insert into program_workflow_mapping(former_program_workflow_id, uuid) values(?, ?);
-</sql>
-    <set_params>Y</set_params>
-    <insert_field/>
-    <update_field/>
-    <delete_field/>
-    <read_field/>
-    <arguments>
-      <argument>
-        <name>program_workflow_id</name>
-      </argument>
-      <argument>
-        <name>uuid</name>
-      </argument>
-    </arguments>
+    <row_threshold>0</row_threshold>
+    <message/>
+    <always_log_rows>Y</always_log_rows>
+    <abort_option>ABORT</abort_option>
     <attributes/>
     <cluster_schema/>
     <remotesteps>
@@ -582,312 +531,13 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>624</xloc>
-      <yloc>272</yloc>
+      <xloc>768</xloc>
+      <yloc>96</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Insert mapping for missing</name>
-    <type>ExecSQL</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <connection>source</connection>
-    <execute_each_row>Y</execute_each_row>
-    <single_statement>N</single_statement>
-    <replace_variables>N</replace_variables>
-    <quoteString>N</quoteString>
-    <sql>insert into program_workflow_mapping(former_program_workflow_id, uuid) values(?, ?);
-</sql>
-    <set_params>Y</set_params>
-    <insert_field/>
-    <update_field/>
-    <delete_field/>
-    <read_field/>
-    <arguments>
-      <argument>
-        <name>existing_program_workflow_id</name>
-      </argument>
-      <argument>
-        <name>existing_program_workflow_uuid</name>
-      </argument>
-    </arguments>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>928</xloc>
-      <yloc>16</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Miss-matched program workflow ids</name>
-    <type>FilterRows</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <send_true_to/>
-    <send_false_to>Insert mapping for miss-matches</send_false_to>
-    <compare>
-      <condition>
-        <negated>N</negated>
-        <conditions>
-          <condition>
-            <negated>N</negated>
-            <leftvalue>program_workflow_id</leftvalue>
-            <function>=</function>
-            <rightvalue>program_workflow_id_1</rightvalue>
-          </condition>
-        </conditions>
-      </condition>
-    </compare>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>256</xloc>
-      <yloc>272</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Missing program workflow</name>
-    <type>FilterRows</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <send_true_to>existing program workflow existing</send_true_to>
-    <send_false_to>Miss-matched program workflow ids</send_false_to>
-    <compare>
-      <condition>
-        <negated>N</negated>
-        <conditions>
-          <condition>
-            <negated>N</negated>
-            <leftvalue>program_workflow_id</leftvalue>
-            <function>IS NULL</function>
-            <rightvalue/>
-          </condition>
-          <condition>
-            <negated>N</negated>
-            <operator>AND</operator>
-            <leftvalue>program_workflow_id_1</leftvalue>
-            <function>IS NOT NULL</function>
-            <rightvalue/>
-          </condition>
-        </conditions>
-      </condition>
-    </compare>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>752</xloc>
-      <yloc>128</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Sort existing workflows</name>
-    <type>SortRows</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <directory>%%java.io.tmpdir%%</directory>
-    <prefix>out</prefix>
-    <sort_size>1000000</sort_size>
-    <free_memory/>
-    <compress>N</compress>
-    <compress_variable/>
-    <unique_rows>N</unique_rows>
-    <fields>
-      <field>
-        <name>uuid</name>
-        <ascending>Y</ascending>
-        <case_sensitive>Y</case_sensitive>
-        <collator_enabled>N</collator_enabled>
-        <collator_strength>0</collator_strength>
-        <presorted>N</presorted>
-      </field>
-    </fields>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>128</xloc>
-      <yloc>64</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Sort harmonized workflows</name>
-    <type>SortRows</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <directory>%%java.io.tmpdir%%</directory>
-    <prefix>out</prefix>
-    <sort_size>1000000</sort_size>
-    <free_memory/>
-    <compress>N</compress>
-    <compress_variable/>
-    <unique_rows>N</unique_rows>
-    <fields>
-      <field>
-        <name>uuid</name>
-        <ascending>Y</ascending>
-        <case_sensitive>Y</case_sensitive>
-        <collator_enabled>N</collator_enabled>
-        <collator_strength>0</collator_strength>
-        <presorted>N</presorted>
-      </field>
-    </fields>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>128</xloc>
-      <yloc>240</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>existing program workflow existing</name>
-    <type>DBJoin</type>
-    <description/>
-    <distribute>N</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <connection>source</connection>
-    <rowlimit>0</rowlimit>
-    <sql>SELECT program_workflow_id as existing_program_workflow_id, uuid as existing_program_workflow_uuid from program_workflow where program_workflow_id = ?</sql>
-    <outer_join>Y</outer_join>
-    <replace_vars>Y</replace_vars>
-    <parameter>
-      <field>
-        <name>program_workflow_id_1</name>
-        <type>None</type>
-      </field>
-    </parameter>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>304</xloc>
-      <yloc>16</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>existing program workflow is used</name>
-    <type>FilterRows</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <send_true_to>Insert mapping for missing</send_true_to>
-    <send_false_to/>
-    <compare>
-      <condition>
-        <negated>N</negated>
-        <conditions>
-          <condition>
-            <negated>N</negated>
-            <leftvalue>existing_program_workflow_id</leftvalue>
-            <function>IS NOT NULL</function>
-            <rightvalue/>
-          </condition>
-          <condition>
-            <negated>N</negated>
-            <operator>AND</operator>
-            <leftvalue>existing_program_workflow_uuid</leftvalue>
-            <function>IS NOT NULL</function>
-            <rightvalue/>
-          </condition>
-        </conditions>
-      </condition>
-    </compare>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>592</xloc>
-      <yloc>16</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>existing program workflows</name>
+    <name>Mis-Matched patient states</name>
     <type>TableInput</type>
     <description/>
     <distribute>Y</distribute>
@@ -898,7 +548,11 @@
       <schema_name/>
     </partitioning>
     <connection>source</connection>
-    <sql>SELECT * FROM  program_workflow </sql>
+    <sql>SELECT COUNT(pws.program_workflow_id) as miss_matched_program_workflows FROM program_workflow_state pws
+INNER JOIN program_workflow pw ON pws.program_workflow_id = pw.program_workflow_id 
+INNER JOIN program_workflow_backup pwb ON pwb.uuid = pw.uuid 
+WHERE pws.program_workflow_id != pwb.program_workflow_id
+AND pws.updated = 0;</sql>
     <limit>0</limit>
     <lookup/>
     <execute_each_row>N</execute_each_row>
@@ -913,14 +567,14 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>48</xloc>
-      <yloc>0</yloc>
+      <xloc>112</xloc>
+      <yloc>96</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>join the existing and  harmonized program workflows</name>
-    <type>MergeJoin</type>
+    <name>Miss-match</name>
+    <type>FilterRows</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -929,15 +583,16 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <join_type>FULL OUTER</join_type>
-    <step1>Sort existing workflows</step1>
-    <step2>Sort harmonized workflows</step2>
-    <keys_1>
-      <key>uuid</key>
-    </keys_1>
-    <keys_2>
-      <key>uuid</key>
-    </keys_2>
+    <send_true_to>Abort</send_true_to>
+    <send_false_to/>
+    <compare>
+      <condition>
+        <negated>Y</negated>
+        <leftvalue>miss_matched_program_workflows</leftvalue>
+        <function>=</function>
+        <rightvalue>zero_count</rightvalue>
+      </condition>
+    </compare>
     <attributes/>
     <cluster_schema/>
     <remotesteps>
@@ -947,14 +602,14 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>192</xloc>
-      <yloc>128</yloc>
+      <xloc>592</xloc>
+      <yloc>96</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>load program workflows</name>
-    <type>CsvInput</type>
+    <name>zero count</name>
+    <type>DBJoin</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -963,121 +618,13 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <filename>${Internal.Entry.Current.Directory}/../../../../config/program-workflows.csv</filename>
-    <filename_field/>
-    <rownum_field/>
-    <include_filename>N</include_filename>
-    <separator>,</separator>
-    <enclosure>"</enclosure>
-    <header>Y</header>
-    <buffer_size>50000</buffer_size>
-    <lazy_conversion>Y</lazy_conversion>
-    <add_filename_result>N</add_filename_result>
-    <parallel>N</parallel>
-    <newline_possible>N</newline_possible>
-    <format>mixed</format>
-    <encoding/>
-    <fields>
-      <field>
-        <name>program_workflow_id</name>
-        <type>Integer</type>
-        <format>#</format>
-        <currency>$</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>15</length>
-        <precision>0</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>program_id</name>
-        <type>Integer</type>
-        <format>#</format>
-        <currency>$</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>15</length>
-        <precision>0</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>concept_id</name>
-        <type>Integer</type>
-        <format>#</format>
-        <currency>$</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>15</length>
-        <precision>0</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>creator</name>
-        <type>Integer</type>
-        <format>#</format>
-        <currency>$</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>15</length>
-        <precision>0</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>date_created</name>
-        <type>Date</type>
-        <format>yyyy-MM-dd HH:mm:ss</format>
-        <currency>$</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>-1</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>retired</name>
-        <type>Integer</type>
-        <format>#</format>
-        <currency>$</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>15</length>
-        <precision>0</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>changed_by</name>
-        <type>Integer</type>
-        <format>#</format>
-        <currency>$</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>15</length>
-        <precision>0</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>date_changed</name>
-        <type>Date</type>
-        <format>yyyy-MM-dd HH:mm:ss</format>
-        <currency>$</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>-1</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>uuid</name>
-        <type>String</type>
-        <format/>
-        <currency>$</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>36</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-    </fields>
+    <connection>source</connection>
+    <rowlimit>0</rowlimit>
+    <sql>select 0 as zero_count;</sql>
+    <outer_join>N</outer_join>
+    <replace_vars>N</replace_vars>
+    <parameter>
+    </parameter>
     <attributes/>
     <cluster_schema/>
     <remotesteps>
@@ -1087,8 +634,8 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>80</xloc>
-      <yloc>320</yloc>
+      <xloc>352</xloc>
+      <yloc>96</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

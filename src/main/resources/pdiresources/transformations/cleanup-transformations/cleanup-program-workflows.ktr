@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <transformation>
   <info>
-    <name>update-program-workflow-references-using-mappings</name>
+    <name>delete-program-workflow-mapping-table</name>
     <description/>
     <extended_description/>
     <trans_version/>
@@ -493,7 +493,7 @@
   <order>
   </order>
   <step>
-    <name>update program workflow references</name>
+    <name>Cleanup program workflows</name>
     <type>ExecSQL</type>
     <description/>
     <distribute>Y</distribute>
@@ -508,19 +508,8 @@
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>UPDATE program_workflow_state pw1, (SELECT pws.program_workflow_id, pwm.former_program_workflow_id FROM program_workflow_state pws
-INNER JOIN program_workflow pw ON pw.program_workflow_id = pws.program_workflow_id 
-INNER JOIN program_workflow_mapping pwm ON pwm.uuid = pw.uuid
-GROUP BY pws.program_workflow_id) pw2
-SET pw1.program_workflow_id = pw2.program_workflow_id
-WHERE pw1.program_workflow_id = pw2.former_program_workflow_id;
-
-UPDATE concept_state_conversion cs1, (SELECT cs.program_workflow_state_id, m.former_program_workflow_id FROM concept_state_conversion cs
-INNER JOIN program_workflow_state pws ON cs.program_workflow_state_id = pws.program_workflow_state_id 
-INNER JOIN program_workflow_mapping m ON m.uuid = cs.uuid
-GROUP BY cs.program_workflow_state_id) cs2
-SET cs1.program_workflow_state_id = cs2.program_workflow_state_id
-WHERE cs1.program_workflow_state_id = cs2.former_program_workflow_id;</sql>
+    <sql>ALTER TABLE program_workflow_state DROP updated;
+DROP TABLE program_workflow_backup;</sql>
     <set_params>N</set_params>
     <insert_field/>
     <update_field/>
@@ -537,8 +526,8 @@ WHERE cs1.program_workflow_state_id = cs2.former_program_workflow_id;</sql>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>208</xloc>
-      <yloc>96</yloc>
+      <xloc>144</xloc>
+      <yloc>32</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

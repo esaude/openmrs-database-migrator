@@ -316,7 +316,7 @@
       <attributes/>
       <specification_method>filename</specification_method>
       <job_object_id/>
-      <filename>pdiresources/jobs/migration.kjb</filename>
+      <filename>${Internal.Entry.Current.Directory}/migration.kjb</filename>
       <jobname/>
       <directory/>
       <arg_from_previous>N</arg_from_previous>
@@ -366,7 +366,7 @@
       <attributes/>
       <specification_method>filename</specification_method>
       <job_object_id/>
-      <filename>pdiresources/jobs/validations.kjb</filename>
+      <filename>${Internal.Entry.Current.Directory}/validations.kjb</filename>
       <jobname/>
       <directory/>
       <arg_from_previous>N</arg_from_previous>
@@ -403,7 +403,7 @@
       <attributes/>
       <specification_method>filename</specification_method>
       <job_object_id/>
-      <filename>pdiresources/jobs/preparation.kjb</filename>
+      <filename>${Internal.Entry.Current.Directory}/preparation.kjb</filename>
       <jobname/>
       <directory/>
       <arg_from_previous>N</arg_from_previous>
@@ -440,7 +440,7 @@
       <attributes/>
       <specification_method>filename</specification_method>
       <job_object_id/>
-      <filename>pdiresources/jobs/verification.kjb</filename>
+      <filename>${Internal.Entry.Current.Directory}/verification.kjb</filename>
       <jobname/>
       <directory/>
       <arg_from_previous>N</arg_from_previous>
@@ -477,7 +477,7 @@
       <attributes/>
       <specification_method>filename</specification_method>
       <job_object_id/>
-      <filename>pdiresources/jobs/cleanup.kjb</filename>
+      <filename>${Internal.Entry.Current.Directory}/cleanup.kjb</filename>
       <jobname/>
       <directory/>
       <arg_from_previous>N</arg_from_previous>
