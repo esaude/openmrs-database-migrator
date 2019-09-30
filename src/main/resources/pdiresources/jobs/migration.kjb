@@ -346,52 +346,13 @@
       <attributes_kjc/>
     </entry>
     <entry>
-      <name>create old_encounter_type</name>
-      <description/>
-      <type>SQL</type>
-      <attributes/>
-      <sql>CREATE TABLE `old_encounter_type` (
-  `encounter_type_id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(50) NOT NULL DEFAULT '',
-  `description` text,
-  `creator` int(11) NOT NULL DEFAULT '0',
-  `date_created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `retired` tinyint(1) NOT NULL DEFAULT '0',
-  `retired_by` int(11) DEFAULT NULL,
-  `date_retired` datetime DEFAULT NULL,
-  `retire_reason` varchar(255) DEFAULT NULL,
-  `uuid` char(38) NOT NULL,
-  `view_privilege` varchar(255) DEFAULT NULL,
-  `edit_privilege` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`encounter_type_id`),
-  UNIQUE KEY `encounter_type_uuid_index` (`uuid`),
-  UNIQUE KEY `encounter_type_unique_name` (`name`),
-  KEY `user_who_created_type` (`creator`),
-  KEY `user_who_retired_encounter_type` (`retired_by`),
-  KEY `retired_status` (`retired`),
-  KEY `privilege_which_can_view_encounter_type` (`view_privilege`),
-  KEY `privilege_which_can_edit_encounter_type` (`edit_privilege`)
-);</sql>
-      <useVariableSubstitution>F</useVariableSubstitution>
-      <sqlfromfile>F</sqlfromfile>
-      <sqlfilename/>
-      <sendOneStatement>F</sendOneStatement>
-      <connection/>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>608</xloc>
-      <yloc>144</yloc>
-      <attributes_kjc/>
-    </entry>
-    <entry>
-      <name>migrate encounter_type</name>
+      <name>encounter_type</name>
       <description/>
       <type>TRANS</type>
       <attributes/>
       <specification_method>filename</specification_method>
       <trans_object_id/>
-      <filename>/home/yassin/Projects/openmrs-database-migrator/src/main/resources/pdiresources/transformations/migrate-encounter-type.ktr</filename>
+      <filename>pdiresources/encounter_type/migration.ktr</filename>
       <transname/>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
@@ -418,26 +379,7 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>832</xloc>
-      <yloc>144</yloc>
-      <attributes_kjc/>
-    </entry>
-    <entry>
-      <name>drop old_encounter_type</name>
-      <description/>
-      <type>SQL</type>
-      <attributes/>
-      <sql>DROP TABLE old_encounter_type;
-</sql>
-      <useVariableSubstitution>F</useVariableSubstitution>
-      <sqlfromfile>F</sqlfromfile>
-      <sqlfilename/>
-      <sendOneStatement>F</sendOneStatement>
-      <connection/>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>1040</xloc>
+      <xloc>656</xloc>
       <yloc>144</yloc>
       <attributes_kjc/>
     </entry>
@@ -454,25 +396,7 @@
     </hop>
     <hop>
       <from>visit type transformation</from>
-      <to>create old_encounter_type</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>create old_encounter_type</from>
-      <to>migrate encounter_type</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>migrate encounter_type</from>
-      <to>drop old_encounter_type</to>
+      <to>encounter_type</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
