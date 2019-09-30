@@ -1,4 +1,4 @@
-package com.openmrs.migrator.core.services.impl;
+package com.openmrs.migrator.core.model;
 
 public class MySQLProps {
   private String host;

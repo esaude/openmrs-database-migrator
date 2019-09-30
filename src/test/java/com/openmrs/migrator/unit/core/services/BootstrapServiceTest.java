@@ -7,12 +7,18 @@ import com.openmrs.migrator.core.exceptions.InvalidParameterException;
 import com.openmrs.migrator.core.services.BootstrapService;
 import com.openmrs.migrator.core.services.SettingsService;
 import com.openmrs.migrator.core.utilities.FileIOUtilities;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -50,35 +56,36 @@ public class BootstrapServiceTest {
   }
 
   @Test
-  public void populateDefaultResoucesSuccess() throws IOException {
-    bootstrapService.createDirectoryStructure(folders);
+  public void populateDefaultResoucesSuccess()
+      throws IOException, URISyntaxException, InvalidParameterException {
+    String pdiFolder = "classpath:" + SettingsService.PDI_RESOURCES_DIR + "/*";
 
-    List<String> pdiFiles = new ArrayList<>();
-    pdiFiles.add("pdiresources/jobs/job.kjb");
-    pdiFiles.add("pdiresources/transformations/transformation.ktr");
-    pdiFiles.add(SettingsService.SETTINGS_PROPERTIES);
+    Map<String, InputStream> files = fileIOUtils.getListOfResourceFiles(pdiFolder);
 
-    boolean result = bootstrapService.populateDefaultResources(pdiFiles);
+    bootstrapService.populateDefaultResources(files);
 
-    assertTrue(result);
-    assertTrue(Files.exists(Paths.get(pdiFiles.get(0))));
-    assertTrue(Files.exists(Paths.get(pdiFiles.get(1))));
-    assertTrue(Files.exists(Paths.get(pdiFiles.get(2))));
+    files.keySet().forEach(System.out::println);
+
+    assertFalse(files.isEmpty());
   }
 
   @Test(expected = NullPointerException.class)
-  public void populateDefaultResoucesFailGivenFoldersUndefined() throws IOException {
+  public void populateDefaultResoucesFailGivenFoldersUndefined()
+      throws IOException, InvalidParameterException {
     bootstrapService.populateDefaultResources(null);
   }
 
   @Test
-  public void populateDefaultResoucesFailGivenFolderStructureDoesntExist() throws IOException {
+  public void populateDefaultResoucesFailGivenFolderStructureDoesntExist()
+      throws IOException, InvalidParameterException {
     List<String> pdiFiles = new ArrayList<>();
     pdiFiles.add("pdiresources/jobs/job.kjb");
+    File file = new File("").createTempFile("pdiresources/jobs/job", "kjb");
+    Map<String, InputStream> sourceFiles = new HashMap<>();
+    sourceFiles.put("pdiresources/jobs/job.kjb", new FileInputStream(file));
+    boolean result = bootstrapService.populateDefaultResources(sourceFiles);
 
-    boolean result = bootstrapService.populateDefaultResources(pdiFiles);
-
-    assertFalse(result);
+    assertTrue(result);
   }
 
   @After

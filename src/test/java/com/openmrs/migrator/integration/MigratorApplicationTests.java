@@ -22,7 +22,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import picocli.CommandLine;
-import picocli.CommandLine.ExecutionException;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = MigratorApplication.class)
@@ -67,8 +66,8 @@ public class MigratorApplicationTests {
     fileIOUtils.removeAllDirectories(structurePaths);
   }
 
-  @Test(expected = ExecutionException.class)
-  public void failExecuteSetupCommand() throws Exception {
+  @Test
+  public void executeSetupCommand() throws Exception {
 
     CommandLine.call(migrator, "setup");
     assertNotNull(commandLineRunner);
