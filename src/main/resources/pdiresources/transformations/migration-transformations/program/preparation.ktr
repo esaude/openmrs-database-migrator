@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <transformation>
   <info>
-    <name>program-drop-temp-table</name>
+    <name>program-preparation</name>
     <description/>
     <extended_description/>
     <trans_version/>
@@ -427,16 +427,16 @@
     <clusterschemas>
     </clusterschemas>
     <created_user>-</created_user>
-    <created_date>2019/08/29 12:02:11.221</created_date>
+    <created_date>2019/09/27 11:05:46.967</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2019/08/29 12:02:11.221</modified_date>
-    <key_for_session_key/>
+    <modified_date>2019/09/27 11:05:46.967</modified_date>
+    <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
   </notepads>
   <connection>
-    <name>OpenMRS target DB</name>
+    <name>OpenMRS source DB</name>
     <server>${ETL_DATABASE_HOST}</server>
     <type>MYSQL</type>
     <access>Native</access>
@@ -473,6 +473,10 @@
         <attribute>N</attribute>
       </attribute>
       <attribute>
+        <code>SQL_CONNECT</code>
+        <attribute>SET FOREIGN_KEY_CHECKS=0;</attribute>
+      </attribute>
+      <attribute>
         <code>STREAM_RESULTS</code>
         <attribute>Y</attribute>
       </attribute>
@@ -491,9 +495,69 @@
     </attributes>
   </connection>
   <order>
+    <hop>
+      <from>create_old_program_table</from>
+      <to>add_flag_to_patient_program</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>add_flag_to_patient_program</from>
+      <to>add_flag_to_program_workflow</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>add_flag_to_program_workflow</from>
+      <to>read_programs</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>read_programs</from>
+      <to>backup_program</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>backup_program</from>
+      <to>Blocking step</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Blocking step</from>
+      <to>delete_program</to>
+      <enabled>Y</enabled>
+    </hop>
   </order>
   <step>
-    <name>Execute SQL script</name>
+    <name>Blocking step</name>
+    <type>BlockingStep</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <pass_all_rows>Y</pass_all_rows>
+    <directory>%%java.io.tmpdir%%</directory>
+    <prefix>block</prefix>
+    <cache_size>5000</cache_size>
+    <compress>Y</compress>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1200</xloc>
+      <yloc>176</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>add_flag_to_patient_program</name>
     <type>ExecSQL</type>
     <description/>
     <distribute>Y</distribute>
@@ -503,12 +567,12 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <connection>OpenMRS target DB</connection>
+    <connection>OpenMRS source DB</connection>
     <execute_each_row>N</execute_each_row>
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>drop table  if  exists program_backup</sql>
+    <sql>ALTER TABLE patient_program ADD seen BOOLEAN DEFAULT 0;</sql>
     <set_params>N</set_params>
     <insert_field/>
     <update_field/>
@@ -525,8 +589,215 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>240</xloc>
-      <yloc>128</yloc>
+      <xloc>352</xloc>
+      <yloc>176</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>add_flag_to_program_workflow</name>
+    <type>ExecSQL</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>OpenMRS source DB</connection>
+    <execute_each_row>N</execute_each_row>
+    <single_statement>N</single_statement>
+    <replace_variables>N</replace_variables>
+    <quoteString>N</quoteString>
+    <sql>ALTER TABLE program_workflow ADD seen BOOLEAN DEFAULT 0;</sql>
+    <set_params>N</set_params>
+    <insert_field/>
+    <update_field/>
+    <delete_field/>
+    <read_field/>
+    <arguments>
+    </arguments>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>592</xloc>
+      <yloc>176</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>backup_program</name>
+    <type>TableOutput</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>OpenMRS source DB</connection>
+    <schema/>
+    <table>old_program</table>
+    <commit>1000</commit>
+    <truncate>N</truncate>
+    <ignore_errors>N</ignore_errors>
+    <use_batch>Y</use_batch>
+    <specify_fields>N</specify_fields>
+    <partitioning_enabled>N</partitioning_enabled>
+    <partitioning_field/>
+    <partitioning_daily>N</partitioning_daily>
+    <partitioning_monthly>Y</partitioning_monthly>
+    <tablename_in_field>N</tablename_in_field>
+    <tablename_field/>
+    <tablename_in_table>Y</tablename_in_table>
+    <return_keys>N</return_keys>
+    <return_field/>
+    <fields>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1024</xloc>
+      <yloc>176</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>create_old_program_table</name>
+    <type>ExecSQL</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>OpenMRS source DB</connection>
+    <execute_each_row>N</execute_each_row>
+    <single_statement>N</single_statement>
+    <replace_variables>N</replace_variables>
+    <quoteString>N</quoteString>
+    <sql>CREATE TABLE  old_program  (
+   program_id  int(11) NOT NULL AUTO_INCREMENT,
+   concept_id  int(11) NOT NULL DEFAULT '0',
+   creator  int(11) NOT NULL DEFAULT '0',
+   date_created  datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+   changed_by  int(11) DEFAULT NULL,
+   date_changed  datetime DEFAULT NULL,
+   retired  tinyint(1) NOT NULL DEFAULT '0',
+   name  varchar(50) NOT NULL,
+   description  text,
+   uuid  char(38) NOT NULL,
+   outcomes_concept_id  int(11) DEFAULT NULL,
+  PRIMARY KEY ( program_id ),
+  UNIQUE KEY  program_uuid_index  ( uuid ),
+  KEY  program_concept  ( concept_id ),
+  KEY  program_creator  ( creator ),
+  KEY  user_who_changed_program  ( changed_by ),
+  KEY  program_outcomes_concept_id_fk  ( outcomes_concept_id )
+);</sql>
+    <set_params>N</set_params>
+    <insert_field/>
+    <update_field/>
+    <delete_field/>
+    <read_field/>
+    <arguments>
+    </arguments>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>112</xloc>
+      <yloc>176</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>delete_program</name>
+    <type>Delete</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>OpenMRS source DB</connection>
+    <commit>100</commit>
+    <lookup>
+      <schema/>
+      <table>program</table>
+      <key>
+        <name>program_id</name>
+        <field>program_id</field>
+        <condition>=</condition>
+        <name2/>
+      </key>
+    </lookup>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1408</xloc>
+      <yloc>176</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>read_programs</name>
+    <type>TableInput</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>OpenMRS source DB</connection>
+    <sql>select *  from program;</sql>
+    <limit>0</limit>
+    <lookup/>
+    <execute_each_row>N</execute_each_row>
+    <variables_active>N</variables_active>
+    <lazy_conversion_active>N</lazy_conversion_active>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>816</xloc>
+      <yloc>176</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
