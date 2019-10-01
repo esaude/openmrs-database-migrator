@@ -623,7 +623,7 @@ WHERE uuid=?</sql>
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <filename>config/harmonized_encounter_types.csv</filename>
+    <filename>config/encounter_type.csv</filename>
     <filename_field/>
     <rownum_field/>
     <include_filename>N</include_filename>
