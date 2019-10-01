@@ -315,7 +315,7 @@
       <attributes/>
       <specification_method>filename</specification_method>
       <job_object_id/>
-      <filename>${Internal.Entry.Current.Directory}/visit_type_job.kjb</filename>
+      <filename>pdiresources/jobs/visit_type_job.kjb</filename>
       <jobname/>
       <directory/>
       <arg_from_previous>N</arg_from_previous>

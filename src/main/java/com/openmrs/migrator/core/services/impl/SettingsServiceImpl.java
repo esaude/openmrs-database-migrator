@@ -1,6 +1,7 @@
 package com.openmrs.migrator.core.services.impl;
 
 import com.openmrs.migrator.core.exceptions.SettingsException;
+import com.openmrs.migrator.core.model.MySQLProps;
 import com.openmrs.migrator.core.services.DataBaseService;
 import com.openmrs.migrator.core.services.SettingsService;
 import com.openmrs.migrator.core.utilities.FileIOUtilities;

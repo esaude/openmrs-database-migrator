@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <transformation>
   <info>
-    <name>Validate Program Workflow States</name>
+    <name>Validate Person Attribute Types</name>
     <description/>
     <extended_description/>
     <trans_version/>
@@ -653,7 +653,7 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <filename>config/program_workflow_states.csv</filename>
+    <filename>config/person_attribute_types.csv</filename>
     <filename_field/>
     <rownum_field/>
     <include_filename>N</include_filename>
@@ -705,7 +705,7 @@
       <schema_name/>
     </partitioning>
     <row_threshold>0</row_threshold>
-    <message>Could not find program workflow state on  destination database ${ETL_MERGE_DATABASE}</message>
+    <message>Could not find person attribute type on  destination database ${ETL_MERGE_DATABASE}</message>
     <always_log_rows>Y</always_log_rows>
     <abort_option>ABORT_WITH_ERROR</abort_option>
     <attributes/>
@@ -734,7 +734,7 @@
       <schema_name/>
     </partitioning>
     <row_threshold>0</row_threshold>
-    <message>Could not find program workflow state on destination database ${ETL_MERGE_DATABASE}</message>
+    <message>Could not find person attribute type on destination database ${ETL_MERGE_DATABASE}</message>
     <always_log_rows>Y</always_log_rows>
     <abort_option>ABORT_WITH_ERROR</abort_option>
     <attributes/>
@@ -763,7 +763,7 @@
       <schema_name/>
     </partitioning>
     <row_threshold>0</row_threshold>
-    <message>Could not find program workflow state on source database ${ETL_SOURCE_DATABASE}</message>
+    <message>Could not find person attribute type on source database ${ETL_SOURCE_DATABASE}</message>
     <always_log_rows>Y</always_log_rows>
     <abort_option>ABORT_WITH_ERROR</abort_option>
     <attributes/>
@@ -795,8 +795,8 @@
     <concat_errors>N</concat_errors>
     <concat_separator>|</concat_separator>
     <validator_field>
-      <name>new_program_workflow_state_id</name>
-      <validation_name>new_program_workflow_state_id</validation_name>
+      <name>new_person_attribute_type_id</name>
+      <validation_name>new_person_attribute_type_id</validation_name>
       <max_length/>
       <min_length/>
       <null_allowed>N</null_allowed>
@@ -823,8 +823,8 @@
       <allowed_value/>
     </validator_field>
     <validator_field>
-      <name>old_program_workflow_state_id</name>
-      <validation_name>old_program_workflow_state_id</validation_name>
+      <name>old_person_attribute_type_id</name>
+      <validation_name>old_person_attribute_type_id</validation_name>
       <max_length/>
       <min_length/>
       <null_allowed>N</null_allowed>
@@ -851,8 +851,8 @@
       <allowed_value/>
     </validator_field>
     <validator_field>
-      <name>new_program_workflow_state_uuid</name>
-      <validation_name>new_program_workflow_state_uuid</validation_name>
+      <name>new_person_attribute_type_uuid</name>
+      <validation_name>new_person_attribute_type_uuid</validation_name>
       <max_length/>
       <min_length/>
       <null_allowed>N</null_allowed>
@@ -879,8 +879,8 @@
       <allowed_value/>
     </validator_field>
     <validator_field>
-      <name>old_program_workflow_state_uuid</name>
-      <validation_name>old_program_workflow_state_uuid</validation_name>
+      <name>old_person_attribute_type_uuid</name>
+      <validation_name>old_person_attribute_type_uuid</validation_name>
       <max_length/>
       <min_length/>
       <null_allowed>N</null_allowed>
@@ -936,7 +936,7 @@
     <compare>
       <condition>
         <negated>N</negated>
-        <leftvalue>source_program_workflow_state_id</leftvalue>
+        <leftvalue>source_person_attribute_type_id</leftvalue>
         <function>IS NOT NULL</function>
         <rightvalue/>
       </condition>
@@ -971,7 +971,7 @@
     <compare>
       <condition>
         <negated>N</negated>
-        <leftvalue>destination_program_workflow_state_id</leftvalue>
+        <leftvalue>destination_person_attribute_type_id</leftvalue>
         <function>IS NOT NULL</function>
         <rightvalue/>
       </condition>
@@ -1038,18 +1038,18 @@
     </partitioning>
     <connection>OpenMRS destination</connection>
     <rowlimit>1</rowlimit>
-    <sql>select program_workflow_state_id destination_program_workflow_state_id, uuid destination_program_workflow_state_uuid 
-from program_workflow_state 
-where program_workflow_state_id=? and uuid=?</sql>
+    <sql>select person_attribute_type_id destination_person_attribute_type_id, uuid destination_person_attribute_type_uuid 
+from person_attribute_type 
+where person_attribute_type_id=? and uuid=?</sql>
     <outer_join>Y</outer_join>
     <replace_vars>N</replace_vars>
     <parameter>
       <field>
-        <name>new_program_workflow_state_id</name>
+        <name>new_person_attribute_type_id</name>
         <type>Integer</type>
       </field>
       <field>
-        <name>new_program_workflow_state_uuid</name>
+        <name>new_person_attribute_type_uuid</name>
         <type>String</type>
       </field>
     </parameter>
@@ -1080,18 +1080,18 @@ where program_workflow_state_id=? and uuid=?</sql>
     </partitioning>
     <connection>OpenMRS source</connection>
     <rowlimit>1</rowlimit>
-    <sql>select program_workflow_state_id source_program_workflow_state_id, uuid source_program_workflow_state_uuid 
-from program_workflow_state 
-where program_workflow_state_id=? and uuid=?</sql>
+    <sql>select person_attribute_type_id source_person_attribute_type_id, uuid source_person_attribute_type_uuid 
+from person_attribute_type 
+where person_attribute_type_id=? and uuid=?</sql>
     <outer_join>Y</outer_join>
     <replace_vars>N</replace_vars>
     <parameter>
       <field>
-        <name>old_program_workflow_state_id</name>
+        <name>old_person_attribute_type_id</name>
         <type>Integer</type>
       </field>
       <field>
-        <name>old_program_workflow_state_uuid</name>
+        <name>old_person_attribute_type_uuid</name>
         <type>String</type>
       </field>
     </parameter>
@@ -1154,7 +1154,7 @@ where program_workflow_state_id=? and uuid=?</sql>
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <filename>config/program_workflow_state.csv</filename>
+    <filename>config/person_attribute_type_mapping.csv</filename>
     <filename_field/>
     <rownum_field/>
     <include_filename>N</include_filename>
@@ -1180,7 +1180,7 @@ where program_workflow_state_id=? and uuid=?</sql>
         <trim_type>none</trim_type>
       </field>
       <field>
-        <name>old_program_workflow_state_id</name>
+        <name>old_person_attribute_type_id</name>
         <type>Integer</type>
         <format/>
         <currency/>
@@ -1191,7 +1191,7 @@ where program_workflow_state_id=? and uuid=?</sql>
         <trim_type>none</trim_type>
       </field>
       <field>
-        <name>old_program_workflow_state_uuid</name>
+        <name>old_person_attribute_type_uuid</name>
         <type>String</type>
         <format/>
         <currency/>
@@ -1202,7 +1202,7 @@ where program_workflow_state_id=? and uuid=?</sql>
         <trim_type>none</trim_type>
       </field>
       <field>
-        <name>new_program_workflow_state_id</name>
+        <name>new_person_attribute_type_id</name>
         <type>Integer</type>
         <format/>
         <currency/>
@@ -1213,7 +1213,7 @@ where program_workflow_state_id=? and uuid=?</sql>
         <trim_type>none</trim_type>
       </field>
       <field>
-        <name>new_program_workflow_state_uuid</name>
+        <name>new_person_attribute_type_uuid</name>
         <type>String</type>
         <format/>
         <currency/>
@@ -1250,7 +1250,7 @@ where program_workflow_state_id=? and uuid=?</sql>
       <schema_name/>
     </partitioning>
     <connection>OpenMRS source</connection>
-    <sql>SELECT uuid source_uuid from program_workflow_state ORDER BY uuid</sql>
+    <sql>SELECT uuid source_uuid from person_attribute_type ORDER BY uuid</sql>
     <limit>0</limit>
     <lookup/>
     <execute_each_row>N</execute_each_row>
