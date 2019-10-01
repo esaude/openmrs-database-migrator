@@ -321,7 +321,7 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>400</xloc>
+      <xloc>304</xloc>
       <yloc>48</yloc>
       <attributes_kjc/>
     </entry>
@@ -734,7 +734,7 @@
       <attributes/>
       <specification_method>filename</specification_method>
       <trans_object_id/>
-      <filename>pdiresources/transformations/validation-transformations/validate-program-workflow-states.ktr</filename>
+      <filename>pdiresources/program-workflow-state/validation.ktr</filename>
       <transname/>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
