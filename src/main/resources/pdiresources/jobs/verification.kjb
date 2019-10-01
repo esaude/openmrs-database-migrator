@@ -315,7 +315,7 @@
       <attributes/>
       <specification_method>filename</specification_method>
       <trans_object_id/>
-      <filename>${Internal.Entry.Current.Directory}/../transformations/migration/program-workflow-state/verify-program-workflow-state-update.ktr</filename>
+      <filename>${Internal.Entry.Current.Directory}/../transformations/verify-transformations/verify-program-workflow-state-update.ktr</filename>
       <transname/>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>

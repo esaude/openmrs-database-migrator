@@ -315,7 +315,7 @@
       <attributes/>
       <specification_method>filename</specification_method>
       <trans_object_id/>
-      <filename>${Internal.Entry.Current.Directory}/../transformations/migration/program-workflow-state/remove-all-program-workflow-states.ktr</filename>
+      <filename>${Internal.Entry.Current.Directory}/../transformations/merge-transformations/remove-all-program-workflow-states.ktr</filename>
       <transname/>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
@@ -353,7 +353,7 @@
       <attributes/>
       <specification_method>filename</specification_method>
       <trans_object_id/>
-      <filename>${Internal.Entry.Current.Directory}/../transformations/migration/program-workflow-state/load-harmonised-program-workflow-states.ktr</filename>
+      <filename>${Internal.Entry.Current.Directory}/../transformations/merge-transformations/load-harmonised-program-workflow-states.ktr</filename>
       <transname/>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
@@ -391,7 +391,7 @@
       <attributes/>
       <specification_method>filename</specification_method>
       <trans_object_id/>
-      <filename>${Internal.Entry.Current.Directory}/../transformations/migration/program-workflow-state/update-program-workflow-state-references-using-mappings.ktr</filename>
+      <filename>${Internal.Entry.Current.Directory}/../transformations/merge-transformations/update-program-workflow-state-references-using-mappings.ktr</filename>
       <transname/>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
