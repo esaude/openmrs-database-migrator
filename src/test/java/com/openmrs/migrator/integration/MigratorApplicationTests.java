@@ -66,6 +66,7 @@ public class MigratorApplicationTests {
 
     fileIOUtils.removeAllDirectories(structurePaths);
   }
+
   @Ignore
   @Test // it passes locally but line 72 fails on travis
   public void executeSetupCommand() throws Exception {
