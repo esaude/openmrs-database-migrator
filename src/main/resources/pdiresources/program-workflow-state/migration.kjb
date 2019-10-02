@@ -315,7 +315,7 @@
       <attributes/>
       <specification_method>filename</specification_method>
       <trans_object_id/>
-      <filename>remove-all-program-workflow-states.ktr</filename>
+      <filename>pdiresources/program-workflow-state/remove-all-program-workflow-states.ktr</filename>
       <transname/>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
@@ -343,7 +343,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>272</xloc>
-      <yloc>256</yloc>
+      <yloc>240</yloc>
       <attributes_kjc/>
     </entry>
     <entry>
@@ -353,7 +353,7 @@
       <attributes/>
       <specification_method>filename</specification_method>
       <trans_object_id/>
-      <filename>load-harmonised-program-workflow-states.ktr</filename>
+      <filename>pdiresources/program-workflow-state/load-harmonised-program-workflow-states.ktr</filename>
       <transname/>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
@@ -391,7 +391,7 @@
       <attributes/>
       <specification_method>filename</specification_method>
       <trans_object_id/>
-      <filename>update-program-workflow-state-references-using-mappings.ktr</filename>
+      <filename>pdiresources/program-workflow-state/update-program-workflow-state-references-using-mappings.ktr</filename>
       <transname/>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
