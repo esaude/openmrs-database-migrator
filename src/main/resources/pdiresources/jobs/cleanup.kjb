@@ -304,18 +304,18 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>288</xloc>
-      <yloc>160</yloc>
+      <xloc>160</xloc>
+      <yloc>80</yloc>
       <attributes_kjc/>
     </entry>
     <entry>
-      <name>encounter_type</name>
+      <name>cleanup-program-workflow-state</name>
       <description/>
       <type>TRANS</type>
       <attributes/>
       <specification_method>filename</specification_method>
       <trans_object_id/>
-      <filename>pdiresources/encounter_type/cleanup.ktr</filename>
+      <filename>pdiresources/program-workflow-state/cleanup.ktr</filename>
       <transname/>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
@@ -342,15 +342,15 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>464</xloc>
-      <yloc>160</yloc>
+      <xloc>432</xloc>
+      <yloc>80</yloc>
       <attributes_kjc/>
     </entry>
   </entries>
   <hops>
     <hop>
       <from>Start</from>
-      <to>encounter_type</to>
+      <to>cleanup-program-workflow-state</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
