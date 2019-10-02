@@ -2,7 +2,6 @@ package com.openmrs.migrator.unit.core.services;
 
 import com.openmrs.migrator.core.exceptions.SettingsException;
 import com.openmrs.migrator.core.services.SettingsService;
-
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
