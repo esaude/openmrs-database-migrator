@@ -309,21 +309,13 @@
       <attributes_kjc/>
     </entry>
     <entry>
-<<<<<<< HEAD
-      <name>cleanup-program-workflows</name>
-=======
       <name>cleanup-program-workflow-state</name>
->>>>>>> 475014f132a845a0e7261619529eb8c35e2ee4b7
       <description/>
       <type>TRANS</type>
       <attributes/>
       <specification_method>filename</specification_method>
       <trans_object_id/>
-<<<<<<< HEAD
-      <filename>${Internal.Entry.Current.Directory}/../transformations/cleanup-transformations/cleanup-program-workflows.ktr</filename>
-=======
       <filename>pdiresources/program-workflow-state/cleanup.ktr</filename>
->>>>>>> 475014f132a845a0e7261619529eb8c35e2ee4b7
       <transname/>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
@@ -350,29 +342,67 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-<<<<<<< HEAD
-      <xloc>544</xloc>
-      <yloc>160</yloc>
-=======
       <xloc>432</xloc>
       <yloc>80</yloc>
->>>>>>> 475014f132a845a0e7261619529eb8c35e2ee4b7
+      <attributes_kjc/>
+    </entry>
+    <entry>
+      <name>cleanup-program-workflow</name>
+      <description/>
+      <type>TRANS</type>
+      <attributes/>
+      <specification_method>filename</specification_method>
+      <trans_object_id/>
+      <filename>pdiresources/program-workflow/cleanup.ktr</filename>
+      <transname/>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <clear_rows>N</clear_rows>
+      <clear_files>N</clear_files>
+      <set_logfile>N</set_logfile>
+      <logfile/>
+      <logext/>
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Basic</loglevel>
+      <cluster>N</cluster>
+      <slave_server_name/>
+      <set_append_logfile>N</set_append_logfile>
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <create_parent_folder>N</create_parent_folder>
+      <logging_remote_work>N</logging_remote_work>
+      <run_configuration>Pentaho local</run_configuration>
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+      </parameters>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>656</xloc>
+      <yloc>80</yloc>
       <attributes_kjc/>
     </entry>
   </entries>
   <hops>
     <hop>
       <from>Start</from>
-<<<<<<< HEAD
-      <to>cleanup-program-workflows</to>
-=======
       <to>cleanup-program-workflow-state</to>
->>>>>>> 475014f132a845a0e7261619529eb8c35e2ee4b7
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
       <evaluation>Y</evaluation>
       <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>cleanup-program-workflow-state</from>
+      <to>cleanup-program-workflow</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
     </hop>
   </hops>
   <notepads>
