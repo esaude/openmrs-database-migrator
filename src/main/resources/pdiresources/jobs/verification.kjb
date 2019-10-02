@@ -304,18 +304,18 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>304</xloc>
-      <yloc>144</yloc>
+      <xloc>64</xloc>
+      <yloc>48</yloc>
       <attributes_kjc/>
     </entry>
     <entry>
-      <name>encounter_type</name>
+      <name>verify-program-workflow-state-update</name>
       <description/>
       <type>TRANS</type>
       <attributes/>
       <specification_method>filename</specification_method>
       <trans_object_id/>
-      <filename>pdiresources/encounter_type/verification.ktr</filename>
+      <filename>pdiresources/program-workflow-state/verification.ktr</filename>
       <transname/>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
@@ -342,15 +342,15 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>528</xloc>
-      <yloc>144</yloc>
+      <xloc>384</xloc>
+      <yloc>48</yloc>
       <attributes_kjc/>
     </entry>
   </entries>
   <hops>
     <hop>
       <from>Start</from>
-      <to>encounter_type</to>
+      <to>verify-program-workflow-state-update</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
