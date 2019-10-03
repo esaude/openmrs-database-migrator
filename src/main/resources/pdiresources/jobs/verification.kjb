@@ -320,7 +320,7 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>688</xloc>
+      <xloc>256</xloc>
       <yloc>64</yloc>
       <attributes_kjc/>
     </entry>
@@ -380,7 +380,7 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>480</xloc>
+      <xloc>816</xloc>
       <yloc>64</yloc>
       <attributes_kjc/>
     </entry>
@@ -418,8 +418,8 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>288</xloc>
-      <yloc>64</yloc>
+      <xloc>816</xloc>
+      <yloc>224</yloc>
       <attributes_kjc/>
     </entry>
     <entry>
@@ -456,15 +456,15 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>704</xloc>
-      <yloc>48</yloc>
+      <xloc>608</xloc>
+      <yloc>64</yloc>
       <attributes_kjc/>
     </entry>
   </entries>
   <hops>
     <hop>
       <from>Start</from>
-      <to>encounter_type</to>
+      <to>verify-program-workflow-state-update</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -474,6 +474,24 @@
     <hop>
       <from>verify-program-workflow-state-update</from>
       <to>verify-program-workflow-update</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>verify-program-workflow-update</from>
+      <to>program</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>N</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>program</from>
+      <to>encounter_type</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
