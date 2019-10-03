@@ -46,6 +46,7 @@ public class PDIServiceTest {
   }
 
   @Ignore
+  @Test
   public void runMainJob() throws SettingsException, IOException {
     boolean runnedCorrectly =
         pdiService.runJob(

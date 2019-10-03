@@ -1,19 +1,19 @@
-"visit_type_id","name","description","creator","date_created","retired","date_retired","retire_reason","changed_by","date_changed","uuid"
-"1","SEGUIMENTO PTV","Visita de seguimento no serviÁo de PTV","13","2013-01-10 09:53:18","0",,,"13","2013-01-18 16:46:59","056a9354-320f-4b12-9db3-187e12e20b76"
-"2","ABERTURA DE PROCESSO TB","Visita de abertura de processo no serviÁo de TB","13","2013-01-10 09:54:07","0",,,"13","2013-01-18 16:46:59","26690ee5-b451-4850-b41e-41a7c87b31e9"
-"3","SEGUIMENTO SEGUINTE S. TARV","Visita seguinte de seguimento","13","2013-01-08 16:39:15","0",,,"13","2013-01-18 16:46:59","3866891d-09c5-4d98-98de-6ae7916110fa"
-"4","SEGUIMENTO CCR","Visita de seguimento no serviÁo de CCR","13","2013-01-10 09:56:35","0",,,"13","2013-01-18 16:46:59","396c0cd8-0b77-425c-a4b9-bb4da976ebcb"
-"5","PRIMEIRO SEGUIMENTO S.TARV","Primeira visita de seguimento no servico TARV","13","2013-01-08 16:38:18","0",,,"13","2013-01-18 16:46:59","64a510a1-fbf4-465f-acd2-cd37bc321cee"
-"6","INTERNAMENTO","Visita na qual o paciente È internado na unidade sanit·ria","13","2013-01-10 11:25:40","0",,,"13","2013-01-18 16:46:59","744ebe99-c086-4b2c-bfbb-a68ed4741e49"
-"7","LABORATORIO","Visita de laboratorio","13","2013-01-08 16:41:41","0",,,"13","2013-01-18 16:46:59","b3114b6e-7c8e-4c2d-89d5-d45b368d0625"
-"8","LEVANTAMENTO DE ARV","Visita para levantamento de ARV","13","2013-01-08 16:39:42","0",,,"13","2013-01-18 16:46:59","b5e7993c-7429-4c63-bb82-a66cd15553b0"
-"9","ABERTURA PROCESSO PTV","Visita de abertura do processo no serviÁo de PTV","13","2013-01-10 09:52:42","0",,,"13","2013-01-18 16:46:59","c066031d-338c-4573-9f3a-2f774caebd52"
-"10","ACONSELHAMENTO","Visita de aconselhamento","13","2013-01-08 16:40:33","0",,,"13","2013-01-18 16:46:59","c607f451-92a9-45bf-b418-5288645a335d"
-"11","ABERTURA DE PROCESSO CCR","Visita de abertura de processo no serviÁo de CCR","13","2013-01-10 09:55:53","0",,,"13","2013-01-18 16:46:59","cbcb03a4-b90a-4351-93ee-4b118ed4f6c3"
-"12","ABERTURA PROCESSO S. TARV","Visita inicial de abertura de processo clinico no serviÁo TARV","13","2013-01-08 16:37:31","0",,,"13","2013-01-18 16:46:59","ceae3031-b8a7-47dc-9d4a-700d73dda335"
-"14","SEGUIMENTO TB","Visita de seguimento no serviÁo de TB","13","2013-01-10 09:54:36","0",,,"13","2013-01-18 16:46:59","d9911494-b231-4b3c-9246-1fe5f269476c"
-"15","LIVRO DE REGISTO TARV","Livro de registo TARV e PRE-TARV","13","2013-03-01 09:45:41","0",,,,,"1cfb7589-c648-45d3-b524-3e8bff50a3c1"
-"17","VISITA DOMICILIARIA","Visita domiciliaria","29","2013-03-25 09:43:16","0",,,,,"85b891bf-4ef9-4c08-9c1e-b92c5bd441b0"
-"16","MASTER CARD","Tipo de visita referente as fichas master card","1","2019-08-02 08:13:55","0",,,,,"16e8e70e-71a9-4ba7-9138-dfaae88a6969"
-"13","MASTER CARD_"," dup-Tipo de visita referente as fichas master card","1","2019-08-02 08:13:55","0",,,,,"16e8e70e-71a9-4ba7-9138-dfaae88a7070"
-"18","MASTER CARD__"," dup--Tipo de visita referente as fichas master card","1","2019-08-02 08:13:55","0",,,,,"16e8e70e-71a9-4ba7-9138-dfaae88a7071"
+visit_type_id,name,retired,uuid,creator,date_created
+1,SEGUIMENTO PTV,0,056a9354-320f-4b12-9db3-187e12e20b76,1,2013-1-18 16:46
+2,ABERTURA DE PROCESSO TB,0,26690ee5-b451-4850-b41e-41a7c87b31e9,1,2013-1-18 16:46
+3,SEGUIMENTO SEGUINTE S. TARV,0,3866891d-09c5-4d98-98de-6ae7916110fa,1,2013-1-18 16:46
+4,SEGUIMENTO CCR,0,396c0cd8-0b77-425c-a4b9-bb4da976ebcb,1,2013-1-18 16:46
+5,PRIMEIRO SEGUIMENTO S.TARV,0,64a510a1-fbf4-465f-acd2-cd37bc321cee,1,2013-1-18 16:46
+6,INTERNAMENTO,0,744ebe99-c086-4b2c-bfbb-a68ed4741e49,1,2013-1-18 16:46
+7,LABORATORIO,0,b3114b6e-7c8e-4c2d-89d5-d45b368d0625,1,2013-1-18 16:46
+8,LEVANTAMENTO DE ARV,0,b5e7993c-7429-4c63-bb82-a66cd15553b0,1,2013-1-18 16:46
+9,ABERTURA PROCESSO PTV,0,c066031d-338c-4573-9f3a-2f774caebd52,1,2013-1-18 16:46
+10,ACONSELHAMENTO,0,c607f451-92a9-45bf-b418-5288645a335d,1,2013-1-18 16:46
+11,ABERTURA DE PROCESSO CCR,0,cbcb03a4-b90a-4351-93ee-4b118ed4f6c3,1,2013-1-18 16:46
+12,ABERTURA PROCESSO S. TARV,0,ceae3031-b8a7-47dc-9d4a-700d73dda335,1,2013-1-18 16:46
+13,SEGUIMENTO TB,0,d9911494-b231-4b3c-9246-1fe5f269476c,1,2013-1-18 16:46
+14,LIVRO DE REGISTO TARV,0,1cfb7589-c648-45d3-b524-3e8bff50a3c1,1,2013-1-18 16:46
+15,VISITA DOMICILIARIA,0,85b891bf-4ef9-4c08-9c1e-b92c5bd441b0,1,2013-1-18 16:46
+17,FSR,0,10bce8b9-d0f4-4c3e-ae34-4d7226911bc0,1,2013-1-18 16:46
+18,04010801/09/0434,0,9030d383-1e9c-4b21-95d2-590745644203,1,2013-1-18 16:46
+19,CHAMADA TELEFONICA,0,7fefe3bb-de47-41e1-8993-c9bfcdaf3f37,1,2013-1-18 16:46

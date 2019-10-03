@@ -1,8 +1,8 @@
 package com.openmrs.migrator.unit.core.services;
 
+import com.openmrs.migrator.core.model.MySQLProps;
 import com.openmrs.migrator.core.services.DataBaseService;
 import com.openmrs.migrator.core.services.SettingsService;
-import com.openmrs.migrator.core.services.impl.MySQLProps;
 import com.openmrs.migrator.core.utilities.FileIOUtilities;
 import java.io.FileNotFoundException;
 import java.io.IOException;
