@@ -491,9 +491,50 @@
     </attributes>
   </connection>
   <order>
+    <hop>
+      <from>Mis-matched referenced visit_type</from>
+      <to>update program workflow state references in patient_state</to>
+      <enabled>Y</enabled>
+    </hop>
   </order>
   <step>
-    <name>update visit types references</name>
+    <name>Mis-matched referenced visit_type</name>
+    <type>TableInput</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>source</connection>
+    <sql>SELECT v.visit_type_id as current_visit_type_id, vtb.visit_type_id as former_visit_type_id, v.updated FROM visit v
+INNER JOIN visit_type vt ON v.visit_type_id = vt.visit_type_id 
+INNER JOIN visit_type_backup vtb ON v.uuid = vtb.uuid 
+WHERE v.visit_type_id != vtb.visit_type_id
+AND v.updated = 0;</sql>
+    <limit>0</limit>
+    <lookup/>
+    <execute_each_row>N</execute_each_row>
+    <variables_active>N</variables_active>
+    <lazy_conversion_active>Y</lazy_conversion_active>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>128</xloc>
+      <yloc>128</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>update program workflow state references in patient_state</name>
     <type>ExecSQL</type>
     <description/>
     <distribute>Y</distribute>
@@ -504,23 +545,23 @@
       <schema_name/>
     </partitioning>
     <connection>source</connection>
-    <execute_each_row>N</execute_each_row>
-    <single_statement>N</single_statement>
-    <replace_variables>N</replace_variables>
+    <execute_each_row>Y</execute_each_row>
+    <single_statement>Y</single_statement>
+    <replace_variables>Y</replace_variables>
     <quoteString>N</quoteString>
-    <sql>UPDATE visit v1, (SELECT v.visit_type_id, m.former_id FROM visit v
-INNER JOIN visit_type vt ON v.visit_type_id = vt.visit_type_id 
-INNER JOIN visit_type_mapping m ON m.uuid = vt.uuid
-GROUP BY v.visit_type_id) v2
-SET v1.visit_type_id = v2.visit_type_id
-WHERE v1.visit_type_id = v2.former_id;
-</sql>
+    <sql>UPDATE visit SET visit_type_id = ?, updated = 1 WHERE visit_type_id = ? AND updated = 0;</sql>
     <set_params>N</set_params>
     <insert_field/>
     <update_field/>
     <delete_field/>
     <read_field/>
     <arguments>
+      <argument>
+        <name>former_visit_type_id</name>
+      </argument>
+      <argument>
+        <name>current_visit_type_id</name>
+      </argument>
     </arguments>
     <attributes/>
     <cluster_schema/>
@@ -531,8 +572,8 @@ WHERE v1.visit_type_id = v2.former_id;
       </output>
     </remotesteps>
     <GUI>
-      <xloc>208</xloc>
-      <yloc>80</yloc>
+      <xloc>704</xloc>
+      <yloc>128</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

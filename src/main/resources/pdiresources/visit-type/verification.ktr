@@ -588,7 +588,7 @@ AND v.updated = 0;</sql>
     <compare>
       <condition>
         <negated>Y</negated>
-        <leftvalue>miss_matched_patient_states</leftvalue>
+        <leftvalue>miss_matched_visit_types</leftvalue>
         <function>=</function>
         <rightvalue>zero_count</rightvalue>
       </condition>
