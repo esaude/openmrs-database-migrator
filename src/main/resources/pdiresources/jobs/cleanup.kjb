@@ -347,7 +347,7 @@
       <attributes_kjc/>
     </entry>
     <entry>
-    <name>cleanup-program-workflow</name>
+      <name>cleanup-program-workflow</name>
       <description/>
       <type>TRANS</type>
       <attributes/>
@@ -380,7 +380,7 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>656</xloc>
+      <xloc>544</xloc>
       <yloc>80</yloc>
       <attributes_kjc/>
     </entry>
@@ -456,7 +456,7 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>496</xloc>
+      <xloc>720</xloc>
       <yloc>80</yloc>
       <attributes_kjc/>
     </entry>
@@ -472,8 +472,8 @@
       <unconditional>Y</unconditional>
     </hop>
     <hop>
-      <from>program</from>
-      <to>encounter_type</to>
+      <from>cleanup-program-workflow-state</from>
+      <to>cleanup-program-workflow</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -481,22 +481,22 @@
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>cleanup-program-workflow-state</from>
+      <from>cleanup-program-workflow</from>
       <to>cleanup-visit-type</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
       <evaluation>Y</evaluation>
-      <unconditional>Y</unconditional>
+      <unconditional>N</unconditional>
     </hop>
     <hop>
       <from>cleanup-visit-type</from>
-      <to>program</to>
+      <to>encounter_type</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>N</enabled>
       <evaluation>Y</evaluation>
-      <unconditional>Y</unconditional>
+      <unconditional>N</unconditional>
     </hop>
   </hops>
   <notepads>

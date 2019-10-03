@@ -321,7 +321,7 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>528</xloc>
+      <xloc>608</xloc>
       <yloc>48</yloc>
       <attributes_kjc/>
     </entry>
@@ -359,7 +359,7 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>688</xloc>
+      <xloc>784</xloc>
       <yloc>48</yloc>
       <attributes_kjc/>
     </entry>
@@ -419,7 +419,7 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>880</xloc>
+      <xloc>976</xloc>
       <yloc>48</yloc>
       <attributes_kjc/>
     </entry>
@@ -457,7 +457,7 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>1008</xloc>
+      <xloc>1104</xloc>
       <yloc>48</yloc>
       <attributes_kjc/>
     </entry>
@@ -658,7 +658,7 @@
       <attributes/>
       <specification_method>filename</specification_method>
       <trans_object_id/>
-      <filename>pdiresources/transformations/validation-transformations/validate-program-workflows.ktr</filename>
+      <filename>pdiresources/program-workflow/validation.ktr</filename>
       <transname/>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
@@ -685,8 +685,8 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>240</xloc>
-      <yloc>400</yloc>
+      <xloc>336</xloc>
+      <yloc>48</yloc>
       <attributes_kjc/>
     </entry>
     <entry>
@@ -723,7 +723,7 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>800</xloc>
+      <xloc>240</xloc>
       <yloc>400</yloc>
       <attributes_kjc/>
     </entry>
@@ -837,7 +837,7 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>320</xloc>
+      <xloc>496</xloc>
       <yloc>48</yloc>
       <attributes_kjc/>
     </entry>
@@ -934,24 +934,6 @@
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>Validate Program Workflow States</from>
-      <to>Validate Program Workflows</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>Y</unconditional>
-    </hop>
-    <hop>
-      <from>Validate Program Workflow States</from>
-      <to>Validate Visit type</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>Y</unconditional>
-    </hop>
-    <hop>
       <from>Validate Visit type</from>
       <to>Validate Concepts</to>
       <from_nr>0</from_nr>
@@ -968,6 +950,24 @@
       <enabled>Y</enabled>
       <evaluation>Y</evaluation>
       <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Validate Program Workflow States</from>
+      <to>Validate Program Workflows</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>Validate Program Workflows</from>
+      <to>Validate Visit type</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>Y</unconditional>
     </hop>
   </hops>
   <notepads>
