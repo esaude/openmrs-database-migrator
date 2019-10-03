@@ -321,7 +321,7 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>448</xloc>
+      <xloc>528</xloc>
       <yloc>48</yloc>
       <attributes_kjc/>
     </entry>
@@ -359,7 +359,7 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>640</xloc>
+      <xloc>688</xloc>
       <yloc>48</yloc>
       <attributes_kjc/>
     </entry>
@@ -419,7 +419,7 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>864</xloc>
+      <xloc>880</xloc>
       <yloc>48</yloc>
       <attributes_kjc/>
     </entry>
@@ -907,15 +907,6 @@
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>Validate Programs</from>
-      <to>Validate Program Workflows</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
       <from>Validate Order Types</from>
       <to>Validate Scheduler Task Config</to>
       <from_nr>0</from_nr>
@@ -925,7 +916,16 @@
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>Validate Program Workflows</from>
+      <from>Start</from>
+      <to>Validate Program Workflow States</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>Validate Programs</from>
       <to>Validate Order Types</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
@@ -934,8 +934,8 @@
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>Start</from>
-      <to>Validate Program Workflow States</to>
+      <from>Validate Program Workflow States</from>
+      <to>Validate Program Workflows</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>

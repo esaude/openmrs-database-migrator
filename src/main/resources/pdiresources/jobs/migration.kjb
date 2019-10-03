@@ -304,8 +304,8 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>192</xloc>
-      <yloc>144</yloc>
+      <xloc>112</xloc>
+      <yloc>96</yloc>
       <attributes_kjc/>
     </entry>
     <entry>
@@ -385,7 +385,7 @@
       <attributes_kjc/>
     </entry>
     <entry>
-      <name>program_workflow_state</name>
+      <name>harmonize program workflow</name>
       <description/>
       <type>JOB</type>
       <attributes/>

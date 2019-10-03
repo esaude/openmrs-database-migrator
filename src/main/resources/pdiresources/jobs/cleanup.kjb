@@ -347,13 +347,13 @@
       <attributes_kjc/>
     </entry>
     <entry>
-      <name>program</name>
+    <name>cleanup-program-workflow</name>
       <description/>
       <type>TRANS</type>
       <attributes/>
       <specification_method>filename</specification_method>
       <trans_object_id/>
-      <filename>pdiresources/program/cleanup.ktr</filename>
+      <filename>pdiresources/program-workflow/cleanup.ktr</filename>
       <transname/>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
