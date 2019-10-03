@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <transformation>
   <info>
-    <name>delete-visit-type-mapping-table</name>
+    <name>cleanup-visit-type</name>
     <description/>
     <extended_description/>
     <trans_version/>
@@ -493,7 +493,7 @@
   <order>
   </order>
   <step>
-    <name>Delete visit type mappings</name>
+    <name>Clean up visit types</name>
     <type>ExecSQL</type>
     <description/>
     <distribute>Y</distribute>
@@ -508,7 +508,9 @@
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>DROP TABLE IF EXISTS visit_type_mapping;</sql>
+    <sql>ALTER TABLE visit DROP updated;
+DROP TABLE IF EXISTS visit_type_backup;
+</sql>
     <set_params>N</set_params>
     <insert_field/>
     <update_field/>
@@ -525,8 +527,8 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>144</xloc>
-      <yloc>32</yloc>
+      <xloc>128</xloc>
+      <yloc>16</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
