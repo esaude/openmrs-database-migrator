@@ -347,7 +347,7 @@
       <attributes_kjc/>
     </entry>
     <entry>
-      <name>cleanup-program-workflow</name>
+    <name>cleanup-program-workflow</name>
       <description/>
       <type>TRANS</type>
       <attributes/>
