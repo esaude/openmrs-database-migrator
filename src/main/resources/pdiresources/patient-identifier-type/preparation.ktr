@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <transformation>
   <info>
-    <name>create-patient-identifier-type-mapping-table</name>
+    <name>prepare-patient-identifier-types</name>
     <description/>
     <extended_description/>
     <trans_version/>
@@ -493,7 +493,7 @@
   <order>
   </order>
   <step>
-    <name>Create patient_identifier_type mappings</name>
+    <name>Add flag columns and backup patient_identifier_type</name>
     <type>ExecSQL</type>
     <description/>
     <distribute>Y</distribute>
@@ -508,12 +508,9 @@
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>CREATE TABLE patient_identifier_type_mapping (
-  mapping_id INT(11)  AUTO_INCREMENT,
-  former_id INT(11),
-  uuid VARCHAR(38),
-  PRIMARY KEY (mapping_id)
-) ENGINE = InnoDB; </sql>
+    <sql>ALTER TABLE patient_identifier ADD column updated INT(1) DEFAULT 0;
+CREATE TABLE patient_identifier_type_backup LIKE patient_identifier_type; 
+INSERT patient_identifier_type_backup SELECT * FROM patient_identifier_type;</sql>
     <set_params>N</set_params>
     <insert_field/>
     <update_field/>
@@ -530,8 +527,8 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>144</xloc>
-      <yloc>32</yloc>
+      <xloc>192</xloc>
+      <yloc>16</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

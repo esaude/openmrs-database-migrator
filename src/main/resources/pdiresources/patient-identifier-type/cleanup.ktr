@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <transformation>
   <info>
-    <name>update-patient-identifier-type-references-using-mappings</name>
+    <name>cleanup-patient-identifier-types</name>
     <description/>
     <extended_description/>
     <trans_version/>
@@ -493,7 +493,7 @@
   <order>
   </order>
   <step>
-    <name>update patient identifier types references</name>
+    <name>Cleanup patient identifier types</name>
     <type>ExecSQL</type>
     <description/>
     <distribute>Y</distribute>
@@ -508,13 +508,8 @@
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>UPDATE patient_identifier p1, (SELECT p.identifier_type, m.former_id FROM patient_identifier p
-INNER JOIN patient_identifier_type pt ON pt.patient_identifier_type_id = p.identifier_type 
-INNER JOIN patient_identifier_type_mapping m ON m.uuid = pt.uuid
-GROUP BY pt.patient_identifier_type_id) p2
-SET p1.identifier_type = p2.identifier_type
-WHERE p1.identifier_type = p2.former_id;
-</sql>
+    <sql>ALTER TABLE patient_identifier DROP updated;
+DROP TABLE patient_identifier_type_backup;</sql>
     <set_params>N</set_params>
     <insert_field/>
     <update_field/>
@@ -531,8 +526,8 @@ WHERE p1.identifier_type = p2.former_id;
       </output>
     </remotesteps>
     <GUI>
-      <xloc>208</xloc>
-      <yloc>80</yloc>
+      <xloc>144</xloc>
+      <yloc>32</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
