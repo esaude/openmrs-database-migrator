@@ -529,7 +529,7 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <filename>/home/cfaife/Desktop/MEPTS-247/concept.csv</filename>
+    <filename>config/concept.csv</filename>
     <filename_field/>
     <rownum_field/>
     <include_filename>N</include_filename>
