@@ -493,6 +493,11 @@
   <order>
     <hop>
       <from>Mis-matched referenced patient_identifier_type</from>
+      <to>harmonization user</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>harmonization user</from>
       <to>update references in patient_identifier</to>
       <enabled>Y</enabled>
     </hop>
@@ -549,7 +554,7 @@ AND i.updated = 0;</sql>
     <single_statement>Y</single_statement>
     <replace_variables>Y</replace_variables>
     <quoteString>N</quoteString>
-    <sql>UPDATE patient_identifier SET identifier_type = ?, updated = 1 WHERE identifier_type = ? AND updated = 0;</sql>
+    <sql>UPDATE patient_identifier SET identifier_type = ?, updated = 1, date_changed = NOW(), changed_by = ? WHERE identifier_type = ? AND updated = 0;</sql>
     <set_params>N</set_params>
     <insert_field/>
     <update_field/>
@@ -558,6 +563,9 @@ AND i.updated = 0;</sql>
     <arguments>
       <argument>
         <name>former_patient_identifier_type_id</name>
+      </argument>
+      <argument>
+        <name>harmonization_user_id</name>
       </argument>
       <argument>
         <name>current_patient_identifier_type_id</name>
@@ -573,6 +581,38 @@ AND i.updated = 0;</sql>
     </remotesteps>
     <GUI>
       <xloc>736</xloc>
+      <yloc>80</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>harmonization user</name>
+    <type>DBJoin</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>source</connection>
+    <rowlimit>0</rowlimit>
+    <sql>SELECT user_id AS harmonization_user_id FROM users where system_id = 'harmonization';</sql>
+    <outer_join>N</outer_join>
+    <replace_vars>N</replace_vars>
+    <parameter>
+    </parameter>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>464</xloc>
       <yloc>80</yloc>
       <draw>Y</draw>
     </GUI>
