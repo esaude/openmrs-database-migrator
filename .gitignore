@@ -47,3 +47,4 @@ out/
 # migrator files
 /pdiresources/
 settings.properties
+plugins/
