@@ -493,7 +493,12 @@
   <order>
     <hop>
       <from>Mis-matched referenced visit_type</from>
-      <to>update program workflow state references in patient_state</to>
+      <to>harmonization user</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>harmonization user</from>
+      <to>update references</to>
       <enabled>Y</enabled>
     </hop>
   </order>
@@ -534,7 +539,7 @@ AND v.updated = 0;</sql>
     </GUI>
   </step>
   <step>
-    <name>update program workflow state references in patient_state</name>
+    <name>update references</name>
     <type>ExecSQL</type>
     <description/>
     <distribute>Y</distribute>
@@ -549,7 +554,7 @@ AND v.updated = 0;</sql>
     <single_statement>Y</single_statement>
     <replace_variables>Y</replace_variables>
     <quoteString>N</quoteString>
-    <sql>UPDATE visit SET visit_type_id = ?, updated = 1 WHERE visit_type_id = ? AND updated = 0;</sql>
+    <sql>UPDATE visit SET visit_type_id = ?, updated = 1, date_changed = NOW(), changed_by = ? WHERE visit_type_id = ? AND updated = 0;</sql>
     <set_params>N</set_params>
     <insert_field/>
     <update_field/>
@@ -558,6 +563,9 @@ AND v.updated = 0;</sql>
     <arguments>
       <argument>
         <name>former_visit_type_id</name>
+      </argument>
+      <argument>
+        <name>harmonization_user_id</name>
       </argument>
       <argument>
         <name>current_visit_type_id</name>
@@ -573,6 +581,38 @@ AND v.updated = 0;</sql>
     </remotesteps>
     <GUI>
       <xloc>704</xloc>
+      <yloc>128</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>harmonization user</name>
+    <type>DBJoin</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>source</connection>
+    <rowlimit>0</rowlimit>
+    <sql>SELECT user_id AS harmonization_user_id FROM users where system_id = 'harmonization';</sql>
+    <outer_join>N</outer_join>
+    <replace_vars>N</replace_vars>
+    <parameter>
+    </parameter>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>400</xloc>
       <yloc>128</yloc>
       <draw>Y</draw>
     </GUI>
