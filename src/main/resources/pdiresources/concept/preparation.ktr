@@ -1662,6 +1662,8 @@
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
     <sql>ALTER TABLE obs ADD seen BOOLEAN DEFAULT 0;
+ALTER TABLE obs ADD seen_value_coded BOOLEAN DEFAULT 0;
+
 </sql>
     <set_params>N</set_params>
     <insert_field/>
