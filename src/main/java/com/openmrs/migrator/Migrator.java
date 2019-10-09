@@ -1,26 +1,30 @@
 package com.openmrs.migrator;
 
+import com.openmrs.migrator.core.exceptions.InvalidParameterException;
 import com.openmrs.migrator.core.exceptions.SettingsException;
+import com.openmrs.migrator.core.model.MySQLProps;
 import com.openmrs.migrator.core.services.BootstrapService;
 import com.openmrs.migrator.core.services.DataBaseService;
 import com.openmrs.migrator.core.services.PDIService;
 import com.openmrs.migrator.core.services.SettingsService;
-import com.openmrs.migrator.core.services.impl.MySQLProps;
 import com.openmrs.migrator.core.utilities.ConsoleUtils;
 import com.openmrs.migrator.core.utilities.FileIOUtilities;
 import java.io.Console;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.Callable;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
@@ -44,19 +48,11 @@ public class Migrator implements Callable<Optional<Void>> {
 
   private Console console;
 
-  private String[] jobs = {SettingsService.PDI_RESOURCES_DIR + "/jobs/control-center.kjb"};
-
   private Path settingProperties = Paths.get(SettingsService.SETTINGS_PROPERTIES);
 
-  private List<String> dirList =
-      Arrays.asList(
-          "input/",
-          "output/",
-          "config/",
-          "plugins",
-          SettingsService.PDI_RESOURCES_DIR + "/",
-          SettingsService.PDI_RESOURCES_DIR + "/transformations/",
-          SettingsService.PDI_RESOURCES_DIR + "/jobs/");
+  private List<String> dirList = Arrays.asList("input/", "output/");
+
+  private final String CONTROL_CENTER = "pdiresources/jobs/control-center.kjb";
 
   @Option(
       names = {"run"},
@@ -87,7 +83,9 @@ public class Migrator implements Callable<Optional<Void>> {
   }
 
   @Override
-  public Optional<Void> call() throws IOException, SQLException, SettingsException {
+  public Optional<Void> call()
+      throws IOException, SQLException, SettingsException, URISyntaxException,
+          InvalidParameterException {
     if (setup) {
       executeSetupCommand();
     }
@@ -103,68 +101,39 @@ public class Migrator implements Callable<Optional<Void>> {
     return Optional.empty();
   }
 
-  private void runAllJobs() throws IOException {
-    try {
-      for (String t : jobs) {
-
-        InputStream xml = fileIOUtilities.getResourceAsStream(t);
-        pdiService.runJob(xml);
-      }
-    } catch (SettingsException e) {
-      // Do nothing kettle prints stack trace
+  private void runAllJobs() throws IOException, SettingsException {
+    try (InputStream is = new FileInputStream(new File(CONTROL_CENTER))) {
+      pdiService.runJob(is);
     }
   }
 
-  private void executeSetupCommand() throws IOException, SQLException, SettingsException {
-    List<String> pdiFiles = new ArrayList<>();
+  private void executeSetupCommand()
+      throws IOException, SQLException, SettingsException, URISyntaxException,
+          InvalidParameterException {
 
-    pdiFiles.add(SettingsService.PDI_RESOURCES_DIR + "/jobs/control-center.kjb");
-    pdiFiles.add(SettingsService.PDI_RESOURCES_DIR + "/jobs/merge-patient-job.kjb");
-    pdiFiles.add(SettingsService.PDI_RESOURCES_DIR + "/jobs/validations.kjb");
-    pdiFiles.add(SettingsService.PDI_RESOURCES_DIR + "/transformations/merge-patient.ktr");
-    pdiFiles.add(SettingsService.PDI_RESOURCES_DIR + "/transformations/validate-concepts.ktr");
-    pdiFiles.add(
-        SettingsService.PDI_RESOURCES_DIR + "/transformations/validate-encounter-types.ktr");
-    pdiFiles.add(SettingsService.PDI_RESOURCES_DIR + "/transformations/validate-forms.ktr");
-    pdiFiles.add(SettingsService.PDI_RESOURCES_DIR + "/transformations/validate-order-types.ktr");
-    pdiFiles.add(
-        SettingsService.PDI_RESOURCES_DIR
-            + "/transformations/validate-patient-identifier-types.ktr");
-    pdiFiles.add(
-        SettingsService.PDI_RESOURCES_DIR + "/transformations/validate-person-attribute-types.ktr");
-    pdiFiles.add(SettingsService.PDI_RESOURCES_DIR + "/transformations/validate-programs.ktr");
-    pdiFiles.add(
-        SettingsService.PDI_RESOURCES_DIR + "/transformations/validate-program-workflows.ktr");
-    pdiFiles.add(
-        SettingsService.PDI_RESOURCES_DIR
-            + "/transformations/validate-program-workflow-states.ktr");
-    pdiFiles.add(
-        SettingsService.PDI_RESOURCES_DIR + "/transformations/validate-relationship-types.ktr");
-    pdiFiles.add(SettingsService.PDI_RESOURCES_DIR + "/transformations/validate-roles.ktr");
-    pdiFiles.add(
-        SettingsService.PDI_RESOURCES_DIR + "/transformations/validate-scheduler-task-config.ktr");
-    pdiFiles.add(
-        SettingsService.PDI_RESOURCES_DIR + "/transformations/validate-visit-attribute-types.ktr");
-    pdiFiles.add(SettingsService.PDI_RESOURCES_DIR + "/transformations/validate-visit-types.ktr");
-    pdiFiles.add(SettingsService.SETTINGS_PROPERTIES);
-    pdiFiles.add(SettingsService.PDI_PLUGINS_DIR + "/pdi-core-plugins-impl-8.2.0.7-719.jar");
+    Set<String> set =
+        fileIOUtilities.prepareResourceFolder(
+            fileIOUtilities.identifyResourceSubFolders(SettingsService.PDI_RESOURCES_DIR + "/"),
+            ".k");
 
-    bootstrapService.createDirectoryStructure(dirList);
-    bootstrapService.populateDefaultResources(pdiFiles);
+    set.addAll(
+        fileIOUtilities.prepareResourceFolder(
+            fileIOUtilities.identifyResourceSubFolders(SettingsService.PDI_CONFIG + "/"), ".c"));
 
-    Map<String, String> connDB = ConsoleUtils.readSettingsFromConsole(console);
+    set.addAll(
+        fileIOUtilities.prepareResourceFolder(
+            fileIOUtilities.identifyResourceSubFolders(SettingsService.PDI_PLUGINS_DIR + "/"),
+            ".j"));
 
-    MySQLProps mysqlConn = getMysqlOptsFromConsoleConn(connDB);
-    while (!dataBaseService.testConnection(mysqlConn, false)) {
-      console.writer().println("You have provided Wrong Connection details, please try again!");
-      connDB = ConsoleUtils.readSettingsFromConsole(console);
-      mysqlConn = getMysqlOptsFromConsoleConn(connDB);
+    fileIOUtilities.copyFileFromResources(SettingsService.SETTINGS_PROPERTIES);
+
+    Map<String, InputStream> map = new HashMap<>();
+    for (String s : set) {
+      map = fileIOUtilities.getListOfResourceFiles(s);
     }
 
-    settingsService.fillConfigFile(settingProperties, connDB);
-
-    MySQLProps mySQLProps = getMysqlConn();
-    chooseDatabase(mySQLProps);
+    bootstrapService.createDirectoryStructure(dirList);
+    bootstrapService.populateDefaultResources(map);
   }
 
   private MySQLProps getMysqlOptsFromConsoleConn(Map<String, String> connDB) {
@@ -261,7 +230,24 @@ public class Migrator implements Callable<Optional<Void>> {
         fileIOUtilities.getValueFromConfig(SettingsService.SOURCE_DB, "=", settingProperties));
   }
 
-  private void executeRunCommandLogic() throws IOException, SettingsException {
+  private void executeRunCommandLogic() throws IOException, SettingsException, SQLException {
+
+    if (fileIOUtilities.isSettingsFilesMissingSomeValue()) {
+      Map<String, String> connDB = ConsoleUtils.readSettingsFromConsole(console);
+
+      MySQLProps mysqlConn = getMysqlOptsFromConsoleConn(connDB);
+      while (!dataBaseService.testConnection(mysqlConn, false)) {
+        console.writer().println("You have provided Wrong Connection details, please try again!");
+        connDB = ConsoleUtils.readSettingsFromConsole(console);
+        mysqlConn = getMysqlOptsFromConsoleConn(connDB);
+      }
+
+      settingsService.fillConfigFile(settingProperties, connDB);
+
+      MySQLProps mySQLProps = getMysqlConn();
+      chooseDatabase(mySQLProps);
+    }
+
     if (Files.exists(Paths.get(SettingsService.PDI_RESOURCES_DIR))
         && Files.exists(Paths.get(SettingsService.SETTINGS_PROPERTIES))) {
       runAllJobs();

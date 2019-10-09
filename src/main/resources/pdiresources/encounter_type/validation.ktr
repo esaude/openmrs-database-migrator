@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <transformation>
   <info>
-    <name>Validate Person Attribute Types</name>
+    <name>Validate Encounter Types</name>
     <description/>
     <extended_description/>
     <trans_version/>
@@ -603,7 +603,7 @@
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>CSV file input</from>
+      <from>Read Harmonized encounter_type</from>
       <to>Sort rows</to>
       <enabled>Y</enabled>
     </hop>
@@ -643,57 +643,6 @@
     </GUI>
   </step>
   <step>
-    <name>CSV file input</name>
-    <type>CsvInput</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <filename>config/person_attribute_types.csv</filename>
-    <filename_field/>
-    <rownum_field/>
-    <include_filename>N</include_filename>
-    <separator>,</separator>
-    <enclosure>"</enclosure>
-    <header>Y</header>
-    <buffer_size>50000</buffer_size>
-    <lazy_conversion>N</lazy_conversion>
-    <add_filename_result>N</add_filename_result>
-    <parallel>N</parallel>
-    <newline_possible>N</newline_possible>
-    <encoding/>
-    <fields>
-      <field>
-        <name>uuid</name>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <length>36</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-    </fields>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>320</xloc>
-      <yloc>352</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
     <name>Could not find on destination DB</name>
     <type>Abort</type>
     <description/>
@@ -705,7 +654,7 @@
       <schema_name/>
     </partitioning>
     <row_threshold>0</row_threshold>
-    <message>Could not find person attribute type on  destination database ${ETL_MERGE_DATABASE}</message>
+    <message>Could not find encounter type on  destination database ${ETL_MERGE_DATABASE}</message>
     <always_log_rows>Y</always_log_rows>
     <abort_option>ABORT_WITH_ERROR</abort_option>
     <attributes/>
@@ -734,7 +683,7 @@
       <schema_name/>
     </partitioning>
     <row_threshold>0</row_threshold>
-    <message>Could not find person attribute type on destination database ${ETL_MERGE_DATABASE}</message>
+    <message>Could not find encounter type on destination database ${ETL_MERGE_DATABASE}</message>
     <always_log_rows>Y</always_log_rows>
     <abort_option>ABORT_WITH_ERROR</abort_option>
     <attributes/>
@@ -763,7 +712,7 @@
       <schema_name/>
     </partitioning>
     <row_threshold>0</row_threshold>
-    <message>Could not find person attribute type on source database ${ETL_SOURCE_DATABASE}</message>
+    <message>Could not find encounter type on source database ${ETL_SOURCE_DATABASE}</message>
     <always_log_rows>Y</always_log_rows>
     <abort_option>ABORT_WITH_ERROR</abort_option>
     <attributes/>
@@ -795,8 +744,8 @@
     <concat_errors>N</concat_errors>
     <concat_separator>|</concat_separator>
     <validator_field>
-      <name>new_person_attribute_type_id</name>
-      <validation_name>new_person_attribute_type_id</validation_name>
+      <name>new_encounter_type_id</name>
+      <validation_name>new_encounter_type_id</validation_name>
       <max_length/>
       <min_length/>
       <null_allowed>N</null_allowed>
@@ -823,8 +772,8 @@
       <allowed_value/>
     </validator_field>
     <validator_field>
-      <name>old_person_attribute_type_id</name>
-      <validation_name>old_person_attribute_type_id</validation_name>
+      <name>old_encounter_type_id</name>
+      <validation_name>old_encounter_type_id</validation_name>
       <max_length/>
       <min_length/>
       <null_allowed>N</null_allowed>
@@ -851,8 +800,8 @@
       <allowed_value/>
     </validator_field>
     <validator_field>
-      <name>new_person_attribute_type_uuid</name>
-      <validation_name>new_person_attribute_type_uuid</validation_name>
+      <name>new_encounter_type_uuid</name>
+      <validation_name>new_encounter_type_uuid</validation_name>
       <max_length/>
       <min_length/>
       <null_allowed>N</null_allowed>
@@ -879,8 +828,8 @@
       <allowed_value/>
     </validator_field>
     <validator_field>
-      <name>old_person_attribute_type_uuid</name>
-      <validation_name>old_person_attribute_type_uuid</validation_name>
+      <name>old_encounter_type_uuid</name>
+      <validation_name>old_encounter_type_uuid</validation_name>
       <max_length/>
       <min_length/>
       <null_allowed>N</null_allowed>
@@ -936,7 +885,7 @@
     <compare>
       <condition>
         <negated>N</negated>
-        <leftvalue>source_person_attribute_type_id</leftvalue>
+        <leftvalue>source_encounter_type_id</leftvalue>
         <function>IS NOT NULL</function>
         <rightvalue/>
       </condition>
@@ -971,7 +920,7 @@
     <compare>
       <condition>
         <negated>N</negated>
-        <leftvalue>destination_person_attribute_type_id</leftvalue>
+        <leftvalue>destination_encounter_type_id</leftvalue>
         <function>IS NOT NULL</function>
         <rightvalue/>
       </condition>
@@ -1038,18 +987,18 @@
     </partitioning>
     <connection>OpenMRS destination</connection>
     <rowlimit>1</rowlimit>
-    <sql>select person_attribute_type_id destination_person_attribute_type_id, uuid destination_person_attribute_type_uuid 
-from person_attribute_type 
-where person_attribute_type_id=? and uuid=?</sql>
+    <sql>select encounter_type_id destination_encounter_type_id, uuid destination_encounter_type_uuid 
+from encounter_type 
+where encounter_type_id=? and uuid=?</sql>
     <outer_join>Y</outer_join>
     <replace_vars>N</replace_vars>
     <parameter>
       <field>
-        <name>new_person_attribute_type_id</name>
+        <name>new_encounter_type_id</name>
         <type>Integer</type>
       </field>
       <field>
-        <name>new_person_attribute_type_uuid</name>
+        <name>new_encounter_type_uuid</name>
         <type>String</type>
       </field>
     </parameter>
@@ -1080,18 +1029,18 @@ where person_attribute_type_id=? and uuid=?</sql>
     </partitioning>
     <connection>OpenMRS source</connection>
     <rowlimit>1</rowlimit>
-    <sql>select person_attribute_type_id source_person_attribute_type_id, uuid source_person_attribute_type_uuid 
-from person_attribute_type 
-where person_attribute_type_id=? and uuid=?</sql>
+    <sql>select encounter_type_id source_encounter_type_id, uuid source_encounter_type_uuid 
+from encounter_type 
+where encounter_type_id=? and uuid=?</sql>
     <outer_join>Y</outer_join>
     <replace_vars>N</replace_vars>
     <parameter>
       <field>
-        <name>old_person_attribute_type_id</name>
+        <name>old_encounter_type_id</name>
         <type>Integer</type>
       </field>
       <field>
-        <name>old_person_attribute_type_uuid</name>
+        <name>old_encounter_type_uuid</name>
         <type>String</type>
       </field>
     </parameter>
@@ -1144,6 +1093,178 @@ where person_attribute_type_id=? and uuid=?</sql>
     </GUI>
   </step>
   <step>
+    <name>Read Harmonized encounter_type</name>
+    <type>CsvInput</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <filename>config/encounter_type.csv</filename>
+    <filename_field/>
+    <rownum_field/>
+    <include_filename>N</include_filename>
+    <separator>,</separator>
+    <enclosure>"</enclosure>
+    <header>Y</header>
+    <buffer_size>50000</buffer_size>
+    <lazy_conversion>N</lazy_conversion>
+    <add_filename_result>N</add_filename_result>
+    <parallel>N</parallel>
+    <newline_possible>N</newline_possible>
+    <encoding/>
+    <fields>
+      <field>
+        <name>encounter_type_id</name>
+        <type>Integer</type>
+        <format>#</format>
+        <currency/>
+        <decimal>.</decimal>
+        <group>,</group>
+        <length>11</length>
+        <precision>0</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>name</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal>.</decimal>
+        <group>,</group>
+        <length>50</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>description</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal>.</decimal>
+        <group>,</group>
+        <length>65535</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>creator</name>
+        <type>Integer</type>
+        <format>#</format>
+        <currency/>
+        <decimal>.</decimal>
+        <group>,</group>
+        <length>11</length>
+        <precision>0</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>date_created</name>
+        <type>Date</type>
+        <format>yyyy-MM-dd HH:mm:ss</format>
+        <currency/>
+        <decimal>.</decimal>
+        <group>,</group>
+        <length>-1</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>retired</name>
+        <type>Boolean</type>
+        <format>#</format>
+        <currency/>
+        <decimal>.</decimal>
+        <group>,</group>
+        <length>1</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>retired_by</name>
+        <type>Integer</type>
+        <format>#</format>
+        <currency/>
+        <decimal>.</decimal>
+        <group>,</group>
+        <length>11</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>date_retired</name>
+        <type>Date</type>
+        <format>yyyy-MM-dd HH:mm:ss</format>
+        <currency/>
+        <decimal>.</decimal>
+        <group>,</group>
+        <length>-1</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>retire_reason</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal>.</decimal>
+        <group>,</group>
+        <length>255</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>uuid</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal>.</decimal>
+        <group>,</group>
+        <length>38</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>view_privilege</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal>.</decimal>
+        <group>,</group>
+        <length>255</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>edit_privilege</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal>.</decimal>
+        <group>,</group>
+        <length>255</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>256</xloc>
+      <yloc>352</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
     <name>Read Metadata Mapping</name>
     <type>CsvInput</type>
     <description/>
@@ -1154,7 +1275,7 @@ where person_attribute_type_id=? and uuid=?</sql>
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <filename>config/person_attribute_type.csv</filename>
+    <filename>config/encounter_type_mapping.csv</filename>
     <filename_field/>
     <rownum_field/>
     <include_filename>N</include_filename>
@@ -1180,7 +1301,7 @@ where person_attribute_type_id=? and uuid=?</sql>
         <trim_type>none</trim_type>
       </field>
       <field>
-        <name>old_person_attribute_type_id</name>
+        <name>old_encounter_type_id</name>
         <type>Integer</type>
         <format/>
         <currency/>
@@ -1191,7 +1312,7 @@ where person_attribute_type_id=? and uuid=?</sql>
         <trim_type>none</trim_type>
       </field>
       <field>
-        <name>old_person_attribute_type_uuid</name>
+        <name>old_encounter_type_uuid</name>
         <type>String</type>
         <format/>
         <currency/>
@@ -1202,7 +1323,7 @@ where person_attribute_type_id=? and uuid=?</sql>
         <trim_type>none</trim_type>
       </field>
       <field>
-        <name>new_person_attribute_type_id</name>
+        <name>new_encounter_type_id</name>
         <type>Integer</type>
         <format/>
         <currency/>
@@ -1213,7 +1334,7 @@ where person_attribute_type_id=? and uuid=?</sql>
         <trim_type>none</trim_type>
       </field>
       <field>
-        <name>new_person_attribute_type_uuid</name>
+        <name>new_encounter_type_uuid</name>
         <type>String</type>
         <format/>
         <currency/>
@@ -1250,7 +1371,7 @@ where person_attribute_type_id=? and uuid=?</sql>
       <schema_name/>
     </partitioning>
     <connection>OpenMRS source</connection>
-    <sql>SELECT uuid source_uuid from person_attribute_type ORDER BY uuid</sql>
+    <sql>SELECT uuid source_uuid FROM encounter_type ORDER BY uuid</sql>
     <limit>0</limit>
     <lookup/>
     <execute_each_row>N</execute_each_row>
