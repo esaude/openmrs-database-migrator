@@ -512,23 +512,33 @@
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Join rows (cartesian product)</from>
-      <to>Join old_order_type</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
       <from>Write order_type</from>
       <to>Join rows (cartesian product)</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Read harmonized order_type</from>
-      <to>Write order_type</to>
+      <from>Join old_order_type</from>
+      <to>Update order_type_class_map</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Join old_order_type</from>
-      <to>Update order_type_class_map</to>
+      <from>Join rows (cartesian product)</from>
+      <to>Lookup harmonization user</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Lookup harmonization user</from>
+      <to>Get current date</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Get current date</from>
+      <to>Join old_order_type</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Read harmonized order_type</from>
+      <to>Write order_type</to>
       <enabled>Y</enabled>
     </hop>
   </order>
@@ -579,8 +589,8 @@ WHERE uuid=?</sql>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>1072</xloc>
-      <yloc>352</yloc>
+      <xloc>1232</xloc>
+      <yloc>336</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -616,8 +626,8 @@ WHERE uuid=?</sql>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>800</xloc>
-      <yloc>352</yloc>
+      <xloc>560</xloc>
+      <yloc>336</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -810,8 +820,126 @@ WHERE uuid=?</sql>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>224</xloc>
-      <yloc>352</yloc>
+      <xloc>128</xloc>
+      <yloc>336</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Update order_type parent</name>
+    <type>Update</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>OpenMRS Source</connection>
+    <skip_lookup>N</skip_lookup>
+    <commit>100</commit>
+    <use_batch>N</use_batch>
+    <error_ignored>Y</error_ignored>
+    <ignore_flag_field/>
+    <lookup>
+      <schema/>
+      <table>order_type</table>
+      <key>
+        <name>old_order_type_id</name>
+        <field>parent</field>
+        <condition>=</condition>
+        <name2/>
+      </key>
+      <key>
+        <name>false</name>
+        <field>seen</field>
+        <condition>=</condition>
+        <name2/>
+      </key>
+      <value>
+        <name>parent</name>
+        <rename>order_type_id</rename>
+      </value>
+      <value>
+        <name>seen</name>
+        <rename>true</rename>
+      </value>
+      <value>
+        <name>changed_by</name>
+        <rename>harmonization_user_id</rename>
+      </value>
+      <value>
+        <name>date_changed</name>
+        <rename>current_date</rename>
+      </value>
+    </lookup>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1536</xloc>
+      <yloc>192</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Update order_type_class_map</name>
+    <type>Update</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>OpenMRS Source</connection>
+    <skip_lookup>N</skip_lookup>
+    <commit>100</commit>
+    <use_batch>N</use_batch>
+    <error_ignored>Y</error_ignored>
+    <ignore_flag_field/>
+    <lookup>
+      <schema/>
+      <table>order_type_class_map</table>
+      <key>
+        <name>old_order_type_id</name>
+        <field>order_type_id</field>
+        <condition>=</condition>
+        <name2/>
+      </key>
+      <key>
+        <name>false</name>
+        <field>seen</field>
+        <condition>=</condition>
+        <name2/>
+      </key>
+      <value>
+        <name>order_type_id</name>
+        <rename>order_type_id</rename>
+      </value>
+      <value>
+        <name>seen</name>
+        <rename>true</rename>
+      </value>
+    </lookup>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1536</xloc>
+      <yloc>336</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -865,63 +993,8 @@ WHERE uuid=?</sql>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>1376</xloc>
-      <yloc>496</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Update order_type parent</name>
-    <type>Update</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <connection>OpenMRS Source</connection>
-    <skip_lookup>N</skip_lookup>
-    <commit>100</commit>
-    <use_batch>N</use_batch>
-    <error_ignored>Y</error_ignored>
-    <ignore_flag_field/>
-    <lookup>
-      <schema/>
-      <table>order_type</table>
-      <key>
-        <name>old_order_type_id</name>
-        <field>parent</field>
-        <condition>=</condition>
-        <name2/>
-      </key>
-      <key>
-        <name>false</name>
-        <field>seen</field>
-        <condition>=</condition>
-        <name2/>
-      </key>
-      <value>
-        <name>parent</name>
-        <rename>order_type_id</rename>
-      </value>
-      <value>
-        <name>seen</name>
-        <rename>true</rename>
-      </value>
-    </lookup>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>1376</xloc>
-      <yloc>208</yloc>
+      <xloc>1536</xloc>
+      <yloc>480</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1020,8 +1093,8 @@ WHERE uuid=?</sql>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>496</xloc>
-      <yloc>352</yloc>
+      <xloc>336</xloc>
+      <yloc>336</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1075,14 +1148,14 @@ WHERE uuid=?</sql>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>800</xloc>
-      <yloc>224</yloc>
+      <xloc>560</xloc>
+      <yloc>208</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Update order_type_class_map</name>
-    <type>Update</type>
+    <name>Get current date</name>
+    <type>SystemInfo</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -1091,36 +1164,12 @@ WHERE uuid=?</sql>
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <connection>OpenMRS Source</connection>
-    <skip_lookup>N</skip_lookup>
-    <commit>100</commit>
-    <use_batch>N</use_batch>
-    <error_ignored>Y</error_ignored>
-    <ignore_flag_field/>
-    <lookup>
-      <schema/>
-      <table>order_type_class_map</table>
-      <key>
-        <name>old_order_type_id</name>
-        <field>order_type_id</field>
-        <condition>=</condition>
-        <name2/>
-      </key>
-      <key>
-        <name>false</name>
-        <field>seen</field>
-        <condition>=</condition>
-        <name2/>
-      </key>
-      <value>
-        <name>order_type_id</name>
-        <rename>order_type_id</rename>
-      </value>
-      <value>
-        <name>seen</name>
-        <rename>true</rename>
-      </value>
-    </lookup>
+    <fields>
+      <field>
+        <name>current_date</name>
+        <type>system date (fixed)</type>
+      </field>
+    </fields>
     <attributes/>
     <cluster_schema/>
     <remotesteps>
@@ -1130,8 +1179,42 @@ WHERE uuid=?</sql>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>1376</xloc>
-      <yloc>352</yloc>
+      <xloc>1040</xloc>
+      <yloc>336</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Lookup harmonization user</name>
+    <type>DBJoin</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>OpenMRS Source</connection>
+    <rowlimit>0</rowlimit>
+    <sql>SELECT user_id AS harmonization_user_id 
+FROM users 
+WHERE system_id = 'harmonization';</sql>
+    <outer_join>Y</outer_join>
+    <replace_vars>N</replace_vars>
+    <parameter>
+    </parameter>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>816</xloc>
+      <yloc>336</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

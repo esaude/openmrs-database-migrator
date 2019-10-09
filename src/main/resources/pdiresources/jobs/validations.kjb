@@ -321,7 +321,7 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>528</xloc>
+      <xloc>768</xloc>
       <yloc>48</yloc>
       <attributes_kjc/>
     </entry>
@@ -359,7 +359,7 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>688</xloc>
+      <xloc>928</xloc>
       <yloc>48</yloc>
       <attributes_kjc/>
     </entry>
@@ -419,7 +419,7 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>880</xloc>
+      <xloc>1120</xloc>
       <yloc>48</yloc>
       <attributes_kjc/>
     </entry>
@@ -457,7 +457,7 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>1008</xloc>
+      <xloc>1248</xloc>
       <yloc>48</yloc>
       <attributes_kjc/>
     </entry>
@@ -495,7 +495,7 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>1232</xloc>
+      <xloc>1472</xloc>
       <yloc>48</yloc>
       <attributes_kjc/>
     </entry>
@@ -533,7 +533,7 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>1232</xloc>
+      <xloc>1472</xloc>
       <yloc>208</yloc>
       <attributes_kjc/>
     </entry>
@@ -571,7 +571,7 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>1024</xloc>
+      <xloc>1264</xloc>
       <yloc>208</yloc>
       <attributes_kjc/>
     </entry>
@@ -609,7 +609,7 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>800</xloc>
+      <xloc>1040</xloc>
       <yloc>208</yloc>
       <attributes_kjc/>
     </entry>
@@ -647,7 +647,7 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>512</xloc>
+      <xloc>752</xloc>
       <yloc>208</yloc>
       <attributes_kjc/>
     </entry>
@@ -685,7 +685,7 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>240</xloc>
+      <xloc>480</xloc>
       <yloc>208</yloc>
       <attributes_kjc/>
     </entry>
@@ -723,8 +723,8 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>240</xloc>
-      <yloc>400</yloc>
+      <xloc>160</xloc>
+      <yloc>48</yloc>
       <attributes_kjc/>
     </entry>
     <entry>
@@ -761,8 +761,8 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>1024</xloc>
-      <yloc>400</yloc>
+      <xloc>192</xloc>
+      <yloc>208</yloc>
       <attributes_kjc/>
     </entry>
     <entry>
@@ -799,7 +799,7 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>160</xloc>
+      <xloc>400</xloc>
       <yloc>48</yloc>
       <attributes_kjc/>
     </entry>
@@ -837,7 +837,7 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>368</xloc>
+      <xloc>608</xloc>
       <yloc>48</yloc>
       <attributes_kjc/>
     </entry>
@@ -925,7 +925,25 @@
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>Validate Order Types</from>
+      <from>Validate Program Workflow States</from>
+      <to>Validate Program Workflows</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Validate Program Workflows</from>
+      <to>Validate Concepts</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>N</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Validate Programs</from>
       <to>Validate Scheduler Task Config</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
@@ -935,39 +953,21 @@
     </hop>
     <hop>
       <from>Start</from>
-      <to>Validate Program Workflow States</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>N</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>Y</unconditional>
-    </hop>
-    <hop>
-      <from>Validate Programs</from>
       <to>Validate Order Types</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
       <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>Validate Program Workflow States</from>
-      <to>Validate Program Workflows</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
       <unconditional>Y</unconditional>
     </hop>
     <hop>
-      <from>Validate Program Workflows</from>
-      <to>Validate Concepts</to>
+      <from>Validate Order Types</from>
+      <to>Validate Program Workflow States</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>N</enabled>
       <evaluation>Y</evaluation>
-      <unconditional>Y</unconditional>
+      <unconditional>N</unconditional>
     </hop>
   </hops>
   <notepads>
