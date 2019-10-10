@@ -512,11 +512,6 @@
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Join rows (cartesian product)</from>
-      <to>Join old_encounter_type</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
       <from>Write encounter_type</from>
       <to>Join rows (cartesian product)</to>
       <enabled>Y</enabled>
@@ -524,6 +519,21 @@
     <hop>
       <from>Read harmonized encounter_type</from>
       <to>Write encounter_type</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Join rows (cartesian product)</from>
+      <to>Lookup harmonization user</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Lookup harmonization user</from>
+      <to>Get current date</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Get current date</from>
+      <to>Join old_encounter_type</to>
       <enabled>Y</enabled>
     </hop>
   </order>
@@ -570,8 +580,8 @@ WHERE uuid=?</sql>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>1072</xloc>
-      <yloc>352</yloc>
+      <xloc>1344</xloc>
+      <yloc>336</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -607,8 +617,8 @@ WHERE uuid=?</sql>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>800</xloc>
-      <yloc>352</yloc>
+      <xloc>672</xloc>
+      <yloc>336</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -779,8 +789,8 @@ WHERE uuid=?</sql>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>224</xloc>
-      <yloc>352</yloc>
+      <xloc>160</xloc>
+      <yloc>336</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -824,6 +834,14 @@ WHERE uuid=?</sql>
         <name>seen</name>
         <rename>true</rename>
       </value>
+      <value>
+        <name>changed_by</name>
+        <rename>harmonization_user_id</rename>
+      </value>
+      <value>
+        <name>date_changed</name>
+        <rename>current_date</rename>
+      </value>
     </lookup>
     <attributes/>
     <cluster_schema/>
@@ -834,8 +852,8 @@ WHERE uuid=?</sql>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>1376</xloc>
-      <yloc>464</yloc>
+      <xloc>1584</xloc>
+      <yloc>448</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -879,6 +897,14 @@ WHERE uuid=?</sql>
         <name>seen</name>
         <rename>true</rename>
       </value>
+      <value>
+        <name>changed_by</name>
+        <rename>harmonization_user_id</rename>
+      </value>
+      <value>
+        <name>date_changed</name>
+        <rename>current_date</rename>
+      </value>
     </lookup>
     <attributes/>
     <cluster_schema/>
@@ -889,8 +915,8 @@ WHERE uuid=?</sql>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>1376</xloc>
-      <yloc>224</yloc>
+      <xloc>1584</xloc>
+      <yloc>208</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -981,8 +1007,8 @@ WHERE uuid=?</sql>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>528</xloc>
-      <yloc>352</yloc>
+      <xloc>400</xloc>
+      <yloc>336</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1036,8 +1062,73 @@ WHERE uuid=?</sql>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>800</xloc>
-      <yloc>224</yloc>
+      <xloc>672</xloc>
+      <yloc>208</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Get current date</name>
+    <type>SystemInfo</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <fields>
+      <field>
+        <name>current_date</name>
+        <type>system date (fixed)</type>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1168</xloc>
+      <yloc>336</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Lookup harmonization user</name>
+    <type>DBJoin</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>OpenMRS Source</connection>
+    <rowlimit>0</rowlimit>
+    <sql>SELECT user_id AS harmonization_user_id 
+FROM users 
+WHERE system_id = 'harmonization';</sql>
+    <outer_join>Y</outer_join>
+    <replace_vars>N</replace_vars>
+    <parameter>
+    </parameter>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>928</xloc>
+      <yloc>336</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
