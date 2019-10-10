@@ -916,17 +916,17 @@
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>Start</from>
-      <to>Validate Program Workflow States</to>
+      <from>Validate Program Workflows</from>
+      <to>Validate Concepts</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
-      <enabled>Y</enabled>
+      <enabled>N</enabled>
       <evaluation>Y</evaluation>
-      <unconditional>Y</unconditional>
+      <unconditional>N</unconditional>
     </hop>
     <hop>
       <from>Validate Programs</from>
-      <to>Validate Order Types</to>
+      <to>Validate Scheduler Task Config</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -934,8 +934,8 @@
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>Validate Program Workflow States</from>
-      <to>Validate Program Workflows</to>
+      <from>Start</from>
+      <to>Validate Program Workflow States</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -963,6 +963,15 @@
     <hop>
       <from>Validate Visit Attribute Types</from>
       <to>Validate Programs</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Validate Program Workflow States</from>
+      <to>Validate Program Workflows</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
