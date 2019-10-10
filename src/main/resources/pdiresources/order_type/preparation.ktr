@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <transformation>
   <info>
-    <name>update-program-workflow-state-references-using-mappings</name>
+    <name>order-type-preparation</name>
     <description/>
     <extended_description/>
     <trans_version/>
@@ -428,16 +428,16 @@
     <clusterschemas>
     </clusterschemas>
     <created_user>-</created_user>
-    <created_date>2019/09/10 10:21:53.160</created_date>
+    <created_date>2019/09/26 10:57:10.824</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2019/09/10 10:21:53.160</modified_date>
+    <modified_date>2019/09/26 10:57:10.824</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
   </notepads>
   <connection>
-    <name>source</name>
+    <name>OpenMRS Source</name>
     <server>${ETL_DATABASE_HOST}</server>
     <type>MYSQL</type>
     <access>Native</access>
@@ -463,7 +463,7 @@
       </attribute>
       <attribute>
         <code>PORT_NUMBER</code>
-        <attribute>${ETL_DATABASE_PORT}</attribute>
+        <attribute>3306</attribute>
       </attribute>
       <attribute>
         <code>PRESERVE_RESERVED_WORD_CASE</code>
@@ -472,6 +472,10 @@
       <attribute>
         <code>QUOTE_ALL_FIELDS</code>
         <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>SQL_CONNECT</code>
+        <attribute>SET FOREIGN_KEY_CHECKS=0;</attribute>
       </attribute>
       <attribute>
         <code>STREAM_RESULTS</code>
@@ -493,29 +497,44 @@
   </connection>
   <order>
     <hop>
-      <from>Mis-matched referenced patient_state</from>
-      <to>harmonization user</to>
+      <from>create old_order_type</from>
+      <to>add flag to order_type</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>harmonization user</from>
-      <to>update program workflow state references in patient_state</to>
+      <from>add flag to order_type</from>
+      <to>add flag to order_type_class_map</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Mis-matched referenced concept_state_conversion</from>
-      <to>harmonization user 2</to>
+      <from>Read order_type</from>
+      <to>Backup order_type</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>harmonization user 2</from>
-      <to>update program workflow state references in concept_state_conversion</to>
+      <from>Backup order_type</from>
+      <to>Blocking step</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Blocking step</from>
+      <to>Delete order_type</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>add flag to order_type_class_map</from>
+      <to>add flag to orders</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>add flag to orders</from>
+      <to>Read order_type</to>
       <enabled>Y</enabled>
     </hop>
   </order>
   <step>
-    <name>Mis-matched referenced concept_state_conversion</name>
-    <type>TableInput</type>
+    <name>Backup order_type</name>
+    <type>TableOutput</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -524,12 +543,135 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <connection>source</connection>
-    <sql>SELECT cs.program_workflow_state_id as current_concept_state_convertion_id, psb.program_workflow_state_id as former_concept_state_convertion_id FROM concept_state_conversion cs
-INNER JOIN program_workflow_state pws ON cs.program_workflow_state_id = pws.program_workflow_state_id 
-INNER JOIN program_workflow_state_backup psb ON psb.uuid = cs.uuid
-WHERE cs.program_workflow_state_id != psb.program_workflow_state_id
-AND cs.updated = 0;</sql>
+    <connection>OpenMRS Source</connection>
+    <schema/>
+    <table>old_order_type</table>
+    <commit>1000</commit>
+    <truncate>N</truncate>
+    <ignore_errors>N</ignore_errors>
+    <use_batch>N</use_batch>
+    <specify_fields>N</specify_fields>
+    <partitioning_enabled>N</partitioning_enabled>
+    <partitioning_field/>
+    <partitioning_daily>N</partitioning_daily>
+    <partitioning_monthly>Y</partitioning_monthly>
+    <tablename_in_field>N</tablename_in_field>
+    <tablename_field/>
+    <tablename_in_table>Y</tablename_in_table>
+    <return_keys>N</return_keys>
+    <return_field/>
+    <fields>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1088</xloc>
+      <yloc>240</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Blocking step</name>
+    <type>BlockingStep</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <pass_all_rows>Y</pass_all_rows>
+    <directory>%%java.io.tmpdir%%</directory>
+    <prefix>block</prefix>
+    <cache_size>5000</cache_size>
+    <compress>Y</compress>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1280</xloc>
+      <yloc>240</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Delete order_type</name>
+    <type>Delete</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>OpenMRS Source</connection>
+    <commit>100</commit>
+    <lookup>
+      <schema/>
+      <table>order_type</table>
+      <key>
+        <name>order_type_id</name>
+        <field>order_type_id</field>
+        <condition>=</condition>
+        <name2/>
+      </key>
+    </lookup>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1456</xloc>
+      <yloc>240</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Read order_type</name>
+    <type>TableInput</type>
+    <description/>
+    <distribute>N</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>OpenMRS Source</connection>
+    <sql>SELECT
+  order_type_id
+, name
+, description
+, creator
+, date_created
+, retired
+, retired_by
+, date_retired
+, retire_reason
+, uuid
+, java_class_name
+, parent
+, changed_by
+, date_changed
+FROM order_type
+</sql>
     <limit>0</limit>
     <lookup/>
     <execute_each_row>N</execute_each_row>
@@ -544,14 +686,14 @@ AND cs.updated = 0;</sql>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>128</xloc>
-      <yloc>256</yloc>
+      <xloc>880</xloc>
+      <yloc>240</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Mis-matched referenced patient_state</name>
-    <type>TableInput</type>
+    <name>add flag to order_type_class_map</name>
+    <type>ExecSQL</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -560,63 +702,18 @@ AND cs.updated = 0;</sql>
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <connection>source</connection>
-    <sql>SELECT ps.state as current_patient_state_id, psb.program_workflow_state_id as former_patient_state_id, ps.updated FROM patient_state ps
-INNER JOIN program_workflow_state pws ON ps.state = pws.program_workflow_state_id 
-INNER JOIN program_workflow_state_backup psb ON psb.uuid = pws.uuid 
-WHERE ps.state != psb.program_workflow_state_id
-AND ps.updated = 0;</sql>
-    <limit>0</limit>
-    <lookup/>
+    <connection>OpenMRS Source</connection>
     <execute_each_row>N</execute_each_row>
-    <variables_active>N</variables_active>
-    <lazy_conversion_active>Y</lazy_conversion_active>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>128</xloc>
-      <yloc>16</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>update program workflow state references in concept_state_conversion</name>
-    <type>ExecSQL</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <connection>source</connection>
-    <execute_each_row>Y</execute_each_row>
     <single_statement>N</single_statement>
-    <replace_variables>Y</replace_variables>
+    <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>UPDATE concept_state_conversion SET program_workflow_state_id = ?, updated = 1, date_changed = NOW(), changed_by = ? WHERE program_workflow_state_id = ? AND updated = 0;</sql>
+    <sql>ALTER TABLE order_type_class_map ADD seen BOOLEAN DEFAULT 0;</sql>
     <set_params>N</set_params>
     <insert_field/>
     <update_field/>
     <delete_field/>
     <read_field/>
     <arguments>
-      <argument>
-        <name>former_concept_state_convertion_id</name>
-      </argument>
-      <argument>
-        <name>harmonization_user_id</name>
-      </argument>
-      <argument>
-        <name>current_concept_state_convertion_id</name>
-      </argument>
     </arguments>
     <attributes/>
     <cluster_schema/>
@@ -627,13 +724,13 @@ AND ps.updated = 0;</sql>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>704</xloc>
-      <yloc>256</yloc>
+      <xloc>496</xloc>
+      <yloc>240</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>update program workflow state references in patient_state</name>
+    <name>add flag to order_type</name>
     <type>ExecSQL</type>
     <description/>
     <distribute>Y</distribute>
@@ -643,27 +740,117 @@ AND ps.updated = 0;</sql>
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <connection>source</connection>
-    <execute_each_row>Y</execute_each_row>
-    <single_statement>Y</single_statement>
-    <replace_variables>Y</replace_variables>
+    <connection>OpenMRS Source</connection>
+    <execute_each_row>N</execute_each_row>
+    <single_statement>N</single_statement>
+    <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>UPDATE patient_state SET state = ?, updated = 1, date_changed = NOW(), changed_by = ? WHERE state = ? AND updated = 0;</sql>
+    <sql>ALTER TABLE order_type ADD seen BOOLEAN DEFAULT 0;</sql>
     <set_params>N</set_params>
     <insert_field/>
     <update_field/>
     <delete_field/>
     <read_field/>
     <arguments>
-      <argument>
-        <name>former_patient_state_id</name>
-      </argument>
-      <argument>
-        <name>harmonization_user_id</name>
-      </argument>
-      <argument>
-        <name>current_patient_state_id</name>
-      </argument>
+    </arguments>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>272</xloc>
+      <yloc>240</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>create old_order_type</name>
+    <type>ExecSQL</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>OpenMRS Source</connection>
+    <execute_each_row>N</execute_each_row>
+    <single_statement>N</single_statement>
+    <replace_variables>N</replace_variables>
+    <quoteString>N</quoteString>
+    <sql>CREATE TABLE `old_order_type` (
+  `order_type_id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL DEFAULT '',
+  `description` text,
+  `creator` int(11) NOT NULL DEFAULT '0',
+  `date_created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `retired` tinyint(1) NOT NULL DEFAULT '0',
+  `retired_by` int(11) DEFAULT NULL,
+  `date_retired` datetime DEFAULT NULL,
+  `retire_reason` varchar(255) DEFAULT NULL,
+  `uuid` char(38) NOT NULL,
+  `java_class_name` varchar(255) NOT NULL,
+  `parent` int(11) DEFAULT NULL,
+  `changed_by` int(11) DEFAULT NULL,
+  `date_changed` datetime DEFAULT NULL,
+  PRIMARY KEY (`order_type_id`),
+  UNIQUE KEY `order_type_uuid_index` (`uuid`),
+  UNIQUE KEY `name` (`name`),
+  KEY `type_created_by` (`creator`),
+  KEY `user_who_retired_order_type` (`retired_by`),
+  KEY `retired_status` (`retired`),
+  KEY `order_type_changed_by` (`changed_by`),
+  KEY `order_type_parent` (`parent`)
+);</sql>
+    <set_params>N</set_params>
+    <insert_field/>
+    <update_field/>
+    <delete_field/>
+    <read_field/>
+    <arguments>
+    </arguments>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>80</xloc>
+      <yloc>240</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>add flag to orders</name>
+    <type>ExecSQL</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>OpenMRS Source</connection>
+    <execute_each_row>N</execute_each_row>
+    <single_statement>N</single_statement>
+    <replace_variables>N</replace_variables>
+    <quoteString>N</quoteString>
+    <sql>ALTER TABLE orders ADD seen BOOLEAN DEFAULT 0;</sql>
+    <set_params>N</set_params>
+    <insert_field/>
+    <update_field/>
+    <delete_field/>
+    <read_field/>
+    <arguments>
     </arguments>
     <attributes/>
     <cluster_schema/>
@@ -675,71 +862,7 @@ AND ps.updated = 0;</sql>
     </remotesteps>
     <GUI>
       <xloc>704</xloc>
-      <yloc>16</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>harmonization user</name>
-    <type>DBJoin</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <connection>source</connection>
-    <rowlimit>0</rowlimit>
-    <sql>SELECT user_id AS harmonization_user_id FROM users where system_id = 'harmonization';</sql>
-    <outer_join>N</outer_join>
-    <replace_vars>N</replace_vars>
-    <parameter>
-    </parameter>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>416</xloc>
-      <yloc>16</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>harmonization user 2</name>
-    <type>DBJoin</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <connection>source</connection>
-    <rowlimit>0</rowlimit>
-    <sql>SELECT user_id AS harmonization_user_id FROM users where system_id = 'harmonization';</sql>
-    <outer_join>N</outer_join>
-    <replace_vars>N</replace_vars>
-    <parameter>
-    </parameter>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>400</xloc>
-      <yloc>256</yloc>
+      <yloc>240</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

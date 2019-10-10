@@ -380,7 +380,7 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>528</xloc>
+      <xloc>544</xloc>
       <yloc>80</yloc>
       <attributes_kjc/>
     </entry>
@@ -425,15 +425,6 @@
   </entries>
   <hops>
     <hop>
-      <from>Start</from>
-      <to>cleanup-program-workflow-state</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>Y</unconditional>
-    </hop>
-    <hop>
       <from>cleanup-program-workflow-state</from>
       <to>cleanup-program-workflow</to>
       <from_nr>0</from_nr>
@@ -450,6 +441,15 @@
       <enabled>Y</enabled>
       <evaluation>Y</evaluation>
       <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Start</from>
+      <to>cleanup-program-workflow-state</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>Y</unconditional>
     </hop>
   </hops>
   <notepads>
