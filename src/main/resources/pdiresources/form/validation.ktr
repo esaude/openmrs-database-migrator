@@ -494,7 +494,7 @@
   <order>
     <hop>
       <from>Filter non existing 3</from>
-      <to>Could not find on destination DB 2</to>
+      <to>Could not find on harmonized</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
@@ -570,7 +570,7 @@
     </GUI>
   </step>
   <step>
-    <name>Could not find on destination DB 2</name>
+    <name>Could not find on harmonized</name>
     <type>Abort</type>
     <description/>
     <distribute>Y</distribute>
@@ -581,7 +581,7 @@
       <schema_name/>
     </partitioning>
     <row_threshold>0</row_threshold>
-    <message>Could not find form on destination database ${ETL_MERGE_DATABASE}</message>
+    <message>Could not find form on harmonize metadata</message>
     <always_log_rows>Y</always_log_rows>
     <abort_option>ABORT_WITH_ERROR</abort_option>
     <attributes/>
@@ -609,7 +609,7 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <send_true_to>Could not find on destination DB 2</send_true_to>
+    <send_true_to>Could not find on harmonized</send_true_to>
     <send_false_to/>
     <compare>
       <condition>
