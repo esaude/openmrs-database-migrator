@@ -578,7 +578,7 @@
       </field>
       <field>
         <name>build</name>
-        <type>Integer</type>
+        <type>String</type>
         <format>#</format>
         <currency>$</currency>
         <decimal>.</decimal>
@@ -589,7 +589,7 @@
       </field>
       <field>
         <name>published</name>
-        <type>Integer</type>
+        <type>String</type>
         <format>#</format>
         <currency>$</currency>
         <decimal>.</decimal>
@@ -611,7 +611,7 @@
       </field>
       <field>
         <name>encounter_type</name>
-        <type>Integer</type>
+        <type>String</type>
         <format>#</format>
         <currency>$</currency>
         <decimal>.</decimal>
@@ -627,7 +627,7 @@
         <currency>$</currency>
         <decimal>.</decimal>
         <group>,</group>
-        <length>-1</length>
+        <length>2</length>
         <precision>-1</precision>
         <trim_type>none</trim_type>
       </field>
@@ -638,24 +638,24 @@
         <currency>$</currency>
         <decimal>.</decimal>
         <group>,</group>
-        <length>41</length>
+        <length>15</length>
         <precision>-1</precision>
         <trim_type>none</trim_type>
       </field>
       <field>
         <name>creator</name>
-        <type>Integer</type>
+        <type>String</type>
         <format/>
         <currency>$</currency>
         <decimal>.</decimal>
         <group>,</group>
-        <length>-1</length>
+        <length>25</length>
         <precision>-1</precision>
         <trim_type>none</trim_type>
       </field>
       <field>
         <name>date_created</name>
-        <type>Date</type>
+        <type>String</type>
         <format/>
         <currency>$</currency>
         <decimal>.</decimal>
@@ -699,7 +699,7 @@
       </field>
       <field>
         <name>retired_by</name>
-        <type>Internet Address</type>
+        <type>String</type>
         <format/>
         <currency>$</currency>
         <decimal>.</decimal>
