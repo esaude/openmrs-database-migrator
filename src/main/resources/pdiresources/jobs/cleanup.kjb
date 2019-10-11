@@ -304,7 +304,7 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>160</xloc>
+      <xloc>112</xloc>
       <yloc>80</yloc>
       <attributes_kjc/>
     </entry>
@@ -342,7 +342,7 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>592</xloc>
+      <xloc>304</xloc>
       <yloc>80</yloc>
       <attributes_kjc/>
     </entry>
@@ -380,18 +380,18 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>816</xloc>
+      <xloc>544</xloc>
       <yloc>80</yloc>
       <attributes_kjc/>
     </entry>
     <entry>
-      <name>order_type</name>
+      <name>encounter_type</name>
       <description/>
       <type>TRANS</type>
       <attributes/>
       <specification_method>filename</specification_method>
       <trans_object_id/>
-      <filename>pdiresources/order_type/cleanup.ktr</filename>
+      <filename>pdiresources/encounter_type/cleanup.ktr</filename>
       <transname/>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
@@ -418,18 +418,18 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>352</xloc>
+      <xloc>864</xloc>
       <yloc>80</yloc>
       <attributes_kjc/>
     </entry>
     <entry>
-      <name>cleanup-concepts</name>
+      <name>cleanup-visit-type</name>
       <description/>
       <type>TRANS</type>
       <attributes/>
       <specification_method>filename</specification_method>
       <trans_object_id/>
-      <filename>pdiresources/concept/cleanup.ktr</filename>
+      <filename>pdiresources/visit-type/cleanup.ktr</filename>
       <transname/>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
@@ -456,7 +456,7 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>816</xloc>
+      <xloc>720</xloc>
       <yloc>80</yloc>
       <attributes_kjc/>
     </entry>
@@ -472,17 +472,17 @@
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>Start</from>
-      <to>order_type</to>
+      <from>cleanup-program-workflow</from>
+      <to>cleanup-visit-type</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
       <evaluation>Y</evaluation>
-      <unconditional>Y</unconditional>
+      <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>order_type</from>
-      <to>cleanup-program-workflow-state</to>
+      <from>cleanup-visit-type</from>
+      <to>encounter_type</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>N</enabled>
@@ -490,13 +490,13 @@
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>cleanup-program-workflow</from>
-      <to>cleanup-concepts</to>
+      <from>Start</from>
+      <to>cleanup-program-workflow-state</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
       <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
+      <unconditional>Y</unconditional>
     </hop>
   </hops>
   <notepads>
