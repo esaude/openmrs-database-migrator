@@ -875,7 +875,7 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>192</xloc>
+      <xloc>48</xloc>
       <yloc>352</yloc>
       <attributes_kjc/>
     </entry>
@@ -1008,7 +1008,7 @@
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>Validate Scheduler Task Config</from>
+      <from>Validate Order Types</from>
       <to>form</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>

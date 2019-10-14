@@ -499,7 +499,7 @@
       <attributes_kjc/>
     </entry>
     <entry>
-      <name>cleanup</name>
+      <name>form</name>
       <description/>
       <type>TRANS</type>
       <attributes/>
@@ -532,8 +532,8 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>832</xloc>
-      <yloc>80</yloc>
+      <xloc>848</xloc>
+      <yloc>400</yloc>
       <attributes_kjc/>
     </entry>
   </entries>
@@ -584,8 +584,8 @@
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>cleanup-program-workflow</from>
-      <to>cleanup</to>
+      <from>encounter_type</from>
+      <to>form</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
