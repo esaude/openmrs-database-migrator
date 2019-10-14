@@ -108,8 +108,7 @@ public class Migrator implements Callable<Optional<Void>> {
   }
 
   private void executeSetupCommand()
-      throws IOException, SQLException, SettingsException, URISyntaxException,
-          InvalidParameterException {
+      throws IOException, URISyntaxException, InvalidParameterException {
 
     Set<String> set =
         fileIOUtilities.prepareResourceFolder(
