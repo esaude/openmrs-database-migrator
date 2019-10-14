@@ -1,8 +1,14 @@
 package com.openmrs.migrator.core.utilities;
 
-import com.openmrs.migrator.core.exceptions.EmptyFileException;
 import com.openmrs.migrator.core.exceptions.InvalidParameterException;
 import com.openmrs.migrator.core.services.SettingsService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.core.io.support.ResourcePatternResolver;
+import org.springframework.stereotype.Component;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -29,40 +35,15 @@ import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.stream.Collectors;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-import org.springframework.core.io.support.ResourcePatternResolver;
-import org.springframework.stereotype.Component;
-import org.springframework.web.multipart.MultipartFile;
 
 @Component
 public class FileIOUtilities {
 
   private static Logger logger = LoggerFactory.getLogger(FileIOUtilities.class);
-  private static final String UPLOADED_FOLDER = "~";
   private Path settingProperties = Paths.get(SettingsService.SETTINGS_PROPERTIES);
-  private final String KETTLE_PROPERTIES = "kettle.properties";
-  private final String KETTLE_DIR = ".kettle";
   private List<String> dirList = new ArrayList<>();
 
   private Map<String, InputStream> map = new HashMap<>();
-
-  public void UploadFile(MultipartFile file) throws EmptyFileException {
-    if (file.isEmpty()) {
-      throw new EmptyFileException(file.getOriginalFilename());
-    }
-
-    try {
-      // Get the file and save it somewhere
-      byte[] bytes = file.getBytes();
-      Path path = Paths.get(UPLOADED_FOLDER + file.getOriginalFilename());
-      Files.write(path, bytes);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-  }
 
   /**
    * Loads resources from the jar file
@@ -200,25 +181,6 @@ public class FileIOUtilities {
       }
       return Optional.empty();
     }
-  }
-
-  public File getKettlePropertiesLocation() throws IOException {
-    logger.info("Getting the default location of kettle.properties");
-    String homeDirectory = System.getProperty("user.home");
-
-    Path kettleDir = Paths.get(homeDirectory + "/" + KETTLE_DIR);
-    Path kettleFile = Paths.get(kettleDir + "/" + KETTLE_PROPERTIES);
-
-    if (!Files.exists(kettleDir)) {
-      Files.createDirectories(kettleDir);
-      Files.createFile(kettleFile);
-    }
-    if (!Files.exists(kettleFile)) {
-      Files.createFile(kettleFile);
-    }
-
-    File file = new File(homeDirectory + "/" + KETTLE_DIR + "/" + KETTLE_PROPERTIES);
-    return file;
   }
 
   public List<String> getAllDataBaseNamesFromConfigFile(Path path)

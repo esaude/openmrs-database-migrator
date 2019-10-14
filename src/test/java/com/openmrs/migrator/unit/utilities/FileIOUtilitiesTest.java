@@ -327,14 +327,6 @@ public class FileIOUtilitiesTest {
   }
 
   @Test
-  public void getKettlePropertiesLocationShouldReturnKettleFile() throws IOException {
-    File kettleFile = fileIOUtilities.getKettlePropertiesLocation();
-
-    assertNotNull(kettleFile);
-    assertTrue(kettleFile.exists());
-  }
-
-  @Test
   public void getListOfPDIFilesInResourcesShouldReturnListofFiles()
       throws URISyntaxException, IOException {
 

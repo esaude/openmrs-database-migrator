@@ -4,14 +4,11 @@ import com.openmrs.migrator.core.model.MySQLProps;
 import com.openmrs.migrator.core.services.DataBaseService;
 import com.openmrs.migrator.core.services.SettingsService;
 import com.openmrs.migrator.core.utilities.FileIOUtilities;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
-import java.util.Set;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -46,13 +43,5 @@ public class DataBaseServiceTest {
               new MySQLProps(host, port, user, pass, db), "show databases", "Database");
       Assert.assertFalse(names.isEmpty());
     }
-  }
-
-  @Test
-  public void shouldFindOneValidDataBasefromConfigFile() throws FileNotFoundException, IOException {
-    List<String> fromConfig = new ArrayList<>();
-    List<String> fromMySql = new ArrayList<>();
-    Set<String> validNames = dataBaseService.validateDataBaseNames(fromConfig, fromMySql);
-    Assert.assertTrue(validNames.isEmpty());
   }
 }
