@@ -593,7 +593,7 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <join_type>LEFT OUTER</join_type>
+    <join_type>INNER</join_type>
     <step1>Read from source DB</step1>
     <step2>Sort rows</step2>
     <keys_1>

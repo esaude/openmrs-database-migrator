@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <transformation>
   <info>
-    <name>Validate Program Workflows</name>
+    <name>Validate Patient identifier types</name>
     <description/>
     <extended_description/>
     <trans_version/>
@@ -529,7 +529,7 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <filename>config/program-workflows.csv</filename>
+    <filename>config/patient-identifier-types.csv</filename>
     <filename_field/>
     <rownum_field/>
     <include_filename>N</include_filename>
@@ -545,7 +545,7 @@
     <encoding/>
     <fields>
       <field>
-        <name>program_workflow_id</name>
+        <name>patient_identifier_type_id</name>
         <type>Integer</type>
         <format>#</format>
         <currency>$</currency>
@@ -556,18 +556,40 @@
         <trim_type>none</trim_type>
       </field>
       <field>
-        <name>program_id</name>
-        <type>Integer</type>
-        <format>#</format>
+        <name>name</name>
+        <type>String</type>
+        <format/>
         <currency>$</currency>
         <decimal>.</decimal>
         <group>,</group>
-        <length>15</length>
-        <precision>0</precision>
+        <length>29</length>
+        <precision>-1</precision>
         <trim_type>none</trim_type>
       </field>
       <field>
-        <name>concept_id</name>
+        <name>description</name>
+        <type>String</type>
+        <format/>
+        <currency>$</currency>
+        <decimal>.</decimal>
+        <group>,</group>
+        <length>156</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>format</name>
+        <type>String</type>
+        <format/>
+        <currency>$</currency>
+        <decimal>.</decimal>
+        <group>,</group>
+        <length>26</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>check_digit</name>
         <type>Integer</type>
         <format>#</format>
         <currency>$</currency>
@@ -600,6 +622,39 @@
         <trim_type>none</trim_type>
       </field>
       <field>
+        <name>required</name>
+        <type>Integer</type>
+        <format>#</format>
+        <currency>$</currency>
+        <decimal>.</decimal>
+        <group>,</group>
+        <length>15</length>
+        <precision>0</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>format_description</name>
+        <type>String</type>
+        <format/>
+        <currency>$</currency>
+        <decimal>.</decimal>
+        <group>,</group>
+        <length>54</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>validator</name>
+        <type>Boolean</type>
+        <format/>
+        <currency>$</currency>
+        <decimal>.</decimal>
+        <group>,</group>
+        <length>-1</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
         <name>retired</name>
         <type>Integer</type>
         <format>#</format>
@@ -611,7 +666,7 @@
         <trim_type>none</trim_type>
       </field>
       <field>
-        <name>changed_by</name>
+        <name>retired_by</name>
         <type>Integer</type>
         <format>#</format>
         <currency>$</currency>
@@ -622,13 +677,24 @@
         <trim_type>none</trim_type>
       </field>
       <field>
-        <name>date_changed</name>
+        <name>date_retired</name>
         <type>Date</type>
         <format>yyyy-MM-dd HH:mm:ss</format>
         <currency>$</currency>
         <decimal>.</decimal>
         <group>,</group>
         <length>-1</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>retire_reason</name>
+        <type>String</type>
+        <format/>
+        <currency>$</currency>
+        <decimal>.</decimal>
+        <group>,</group>
+        <length>10</length>
         <precision>-1</precision>
         <trim_type>none</trim_type>
       </field>
@@ -640,6 +706,28 @@
         <decimal>.</decimal>
         <group>,</group>
         <length>36</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>location_behavior</name>
+        <type>String</type>
+        <format/>
+        <currency>$</currency>
+        <decimal>.</decimal>
+        <group>,</group>
+        <length>8</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>uniqueness_behavior</name>
+        <type>Boolean</type>
+        <format/>
+        <currency>$</currency>
+        <decimal>.</decimal>
+        <group>,</group>
+        <length>-1</length>
         <precision>-1</precision>
         <trim_type>none</trim_type>
       </field>
@@ -733,7 +821,7 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <join_type>INNER</join_type>
+    <join_type>LEFT OUTER</join_type>
     <step1>Read from source DB</step1>
     <step2>Sort rows</step2>
     <keys_1>
@@ -768,7 +856,7 @@
       <schema_name/>
     </partitioning>
     <connection>OpenMRS source</connection>
-    <sql>SELECT uuid source_uuid from program_workflow ORDER BY uuid</sql>
+    <sql>SELECT uuid source_uuid from patient_identifier_type ORDER BY uuid</sql>
     <limit>0</limit>
     <lookup/>
     <execute_each_row>N</execute_each_row>
