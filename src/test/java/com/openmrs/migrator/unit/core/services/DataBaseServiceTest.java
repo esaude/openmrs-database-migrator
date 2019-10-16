@@ -49,6 +49,7 @@ public class DataBaseServiceTest {
 
   @Test
   public void tearDown() throws Exception {
+    Assert.assertNotNull(dbConnection);
     dbConnection.close();
   }
 

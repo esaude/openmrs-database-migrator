@@ -49,6 +49,7 @@ public class MigratorApplicationTests {
   @Test
   public void executeWrongCommand() {
     migratorApplication.run("wrongCommand");
+    assertNotNull(migratorApplication);
     notSetup();
   }
 
