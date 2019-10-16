@@ -1,10 +1,18 @@
 package com.openmrs.migrator.core.services.impl;
 
 import com.openmrs.migrator.core.exceptions.SettingsException;
-import com.openmrs.migrator.core.model.MySQLProps;
+import com.openmrs.migrator.core.model.DatabaseProps;
 import com.openmrs.migrator.core.services.DataBaseService;
 import com.openmrs.migrator.core.services.SettingsService;
 import com.openmrs.migrator.core.utilities.FileIOUtilities;
+import org.pentaho.di.core.KettleEnvironment;
+import org.pentaho.di.core.exception.KettleException;
+import org.pentaho.di.core.util.EnvUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -15,13 +23,6 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import org.pentaho.di.core.KettleEnvironment;
-import org.pentaho.di.core.exception.KettleException;
-import org.pentaho.di.core.util.EnvUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 @Component
 public class SettingsServiceImpl implements SettingsService {
@@ -78,7 +79,7 @@ public class SettingsServiceImpl implements SettingsService {
       String db = props.getProperty(SettingsService.SOURCE_DB);
       String user = props.getProperty(SettingsService.DB_USER);
       String pass = props.getProperty(SettingsService.DB_PASS);
-      MySQLProps mysqlOpts = new MySQLProps(host, port, user, pass, db);
+      DatabaseProps mysqlOpts = new DatabaseProps(host, port, user, pass, db);
       if ("false".equals(testConnection) || dataBaseService.testConnection(mysqlOpts, true)) {
         // initialize kettle environment
         KettleEnvironment.init();
