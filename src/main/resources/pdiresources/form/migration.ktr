@@ -560,6 +560,11 @@
       <to>Blocking step 2</to>
       <enabled>Y</enabled>
     </hop>
+    <hop>
+      <from>Execute SQL script</from>
+      <to>Text file input</to>
+      <enabled>Y</enabled>
+    </hop>
   </order>
   <step>
     <name>Blocking step</name>
@@ -617,6 +622,40 @@
     </remotesteps>
     <GUI>
       <xloc>256</xloc>
+      <yloc>240</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Execute row SQL script</name>
+    <type>ExecSQLRow</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <commit>1</commit>
+    <connection>OpenMRS Source DB</connection>
+    <sql_field/>
+    <insert_field/>
+    <update_field/>
+    <delete_field/>
+    <read_field/>
+    <sqlFromfile>Y</sqlFromfile>
+    <sendOneStatement>N</sendOneStatement>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>80</xloc>
       <yloc>240</yloc>
       <draw>Y</draw>
     </GUI>
@@ -776,7 +815,7 @@
     </remotesteps>
     <GUI>
       <xloc>80</xloc>
-      <yloc>112</yloc>
+      <yloc>128</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1201,8 +1240,8 @@ where   system_id = 'harmonization';</sql>
     </GUI>
   </step>
   <step>
-    <name>Execute row SQL script</name>
-    <type>ExecSQLRow</type>
+    <name>Execute SQL script</name>
+    <type>ExecSQL</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -1211,15 +1250,19 @@ where   system_id = 'harmonization';</sql>
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <commit>1</commit>
     <connection>OpenMRS Source DB</connection>
-    <sql_field/>
+    <execute_each_row>N</execute_each_row>
+    <single_statement>N</single_statement>
+    <replace_variables>N</replace_variables>
+    <quoteString>N</quoteString>
+    <sql>set global max_allowed_packet=404857600;</sql>
+    <set_params>N</set_params>
     <insert_field/>
     <update_field/>
     <delete_field/>
     <read_field/>
-    <sqlFromfile>Y</sqlFromfile>
-    <sendOneStatement>N</sendOneStatement>
+    <arguments>
+    </arguments>
     <attributes/>
     <cluster_schema/>
     <remotesteps>
@@ -1230,7 +1273,7 @@ where   system_id = 'harmonization';</sql>
     </remotesteps>
     <GUI>
       <xloc>80</xloc>
-      <yloc>240</yloc>
+      <yloc>16</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
