@@ -493,11 +493,11 @@
   <order>
     <hop>
       <from>drop old_encounter_type</from>
-      <to>drop flags from form</to>
+      <to>drop flag from form</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>drop flags from form</from>
+      <from>drop flag from form</from>
       <to>drop flag from encounter</to>
       <enabled>Y</enabled>
     </hop>
@@ -518,8 +518,7 @@
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>ALTER TABLE encounter DROP seen;
-ALTER TABLE encounter DROP updated;</sql>
+    <sql>ALTER TABLE encounter DROP updated;</sql>
     <set_params>N</set_params>
     <insert_field/>
     <update_field/>
@@ -542,7 +541,7 @@ ALTER TABLE encounter DROP updated;</sql>
     </GUI>
   </step>
   <step>
-    <name>drop flags from form</name>
+    <name>drop flag from form</name>
     <type>ExecSQL</type>
     <description/>
     <distribute>Y</distribute>
@@ -557,8 +556,7 @@ ALTER TABLE encounter DROP updated;</sql>
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>ALTER TABLE form DROP seen;
-ALTER TABLE form DROP updated;</sql>
+    <sql>ALTER TABLE form DROP updated;</sql>
     <set_params>N</set_params>
     <insert_field/>
     <update_field/>

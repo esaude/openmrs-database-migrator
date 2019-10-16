@@ -497,12 +497,12 @@
   <order>
     <hop>
       <from>create old_encounter_type</from>
-      <to>add flags to form</to>
+      <to>add flag to form</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>add flags to form</from>
-      <to>add flags to encounter</to>
+      <from>add flag to form</from>
+      <to>add flag to encounter</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
@@ -511,7 +511,7 @@
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>add flags to encounter</from>
+      <from>add flag to encounter</from>
       <to>Read encounter_type</to>
       <enabled>Y</enabled>
     </hop>
@@ -684,7 +684,7 @@ FROM encounter_type
     </GUI>
   </step>
   <step>
-    <name>add flags to encounter</name>
+    <name>add flag to encounter</name>
     <type>ExecSQL</type>
     <description/>
     <distribute>Y</distribute>
@@ -699,7 +699,7 @@ FROM encounter_type
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>ALTER TABLE encounter ADD (seen BOOLEAN DEFAULT 0, updated BOOLEAN DEFAULT 0);</sql>
+    <sql>ALTER TABLE encounter ADD (updated BOOLEAN DEFAULT 0);</sql>
     <set_params>N</set_params>
     <insert_field/>
     <update_field/>
@@ -722,7 +722,7 @@ FROM encounter_type
     </GUI>
   </step>
   <step>
-    <name>add flags to form</name>
+    <name>add flag to form</name>
     <type>ExecSQL</type>
     <description/>
     <distribute>Y</distribute>
@@ -737,7 +737,7 @@ FROM encounter_type
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>ALTER TABLE form ADD (seen BOOLEAN DEFAULT 0, updated BOOLEAN DEFAULT 0);</sql>
+    <sql>ALTER TABLE form ADD (updated BOOLEAN DEFAULT 0);</sql>
     <set_params>N</set_params>
     <insert_field/>
     <update_field/>
