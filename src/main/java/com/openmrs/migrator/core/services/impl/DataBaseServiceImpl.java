@@ -5,9 +5,6 @@ import com.openmrs.migrator.core.exceptions.SettingsException;
 import com.openmrs.migrator.core.model.DatabaseProps;
 import com.openmrs.migrator.core.model.DatabaseProps.DbEngine;
 import com.openmrs.migrator.core.services.DataBaseService;
-import org.apache.commons.lang.StringUtils;
-import org.springframework.stereotype.Service;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -20,6 +17,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.stereotype.Service;
 
 /** Database operations */
 @Service
