@@ -378,7 +378,7 @@
         <pass_all_parameters>Y</pass_all_parameters>
       </parameters>
       <parallel>N</parallel>
-      <draw>Y</draw>
+      <draw>N</draw>
       <nr>0</nr>
       <xloc>832</xloc>
       <yloc>272</yloc>
@@ -415,7 +415,7 @@
       </parameters>
       <set_append_logfile>N</set_append_logfile>
       <parallel>N</parallel>
-      <draw>Y</draw>
+      <draw>N</draw>
       <nr>0</nr>
       <xloc>400</xloc>
       <yloc>96</yloc>
@@ -452,7 +452,7 @@
       </parameters>
       <set_append_logfile>N</set_append_logfile>
       <parallel>N</parallel>
-      <draw>Y</draw>
+      <draw>N</draw>
       <nr>0</nr>
       <xloc>176</xloc>
       <yloc>96</yloc>
@@ -489,7 +489,7 @@
       </parameters>
       <set_append_logfile>N</set_append_logfile>
       <parallel>N</parallel>
-      <draw>Y</draw>
+      <draw>N</draw>
       <nr>0</nr>
       <xloc>832</xloc>
       <yloc>96</yloc>
@@ -526,7 +526,7 @@
       </parameters>
       <set_append_logfile>N</set_append_logfile>
       <parallel>N</parallel>
-      <draw>Y</draw>
+      <draw>N</draw>
       <nr>0</nr>
       <xloc>608</xloc>
       <yloc>96</yloc>
@@ -534,15 +534,6 @@
     </entry>
   </entries>
   <hops>
-    <hop>
-      <from>Start</from>
-      <to>harmonize program workflow states</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>Y</unconditional>
-    </hop>
     <hop>
       <from>Start</from>
       <to>program</to>
