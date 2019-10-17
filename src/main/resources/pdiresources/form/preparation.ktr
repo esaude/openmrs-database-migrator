@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <transformation>
   <info>
-    <name>preparation</name>
+    <name>form-preparation</name>
     <description/>
     <extended_description/>
     <trans_version/>
@@ -839,7 +839,7 @@
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>ALTER TABLE encounter ADD seen BOOLEAN DEFAULT 0;
+    <sql>ALTER TABLE encounter ADD updated BOOLEAN DEFAULT 0;
 </sql>
     <set_params>N</set_params>
     <insert_field/>
@@ -878,7 +878,7 @@
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>ALTER TABLE form_field ADD seen BOOLEAN DEFAULT 0;
+    <sql>ALTER TABLE form_field ADD updated BOOLEAN DEFAULT 0;
 </sql>
     <set_params>N</set_params>
     <insert_field/>
@@ -917,7 +917,7 @@
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>ALTER TABLE form_resource ADD seen BOOLEAN DEFAULT 0;
+    <sql>ALTER TABLE form_resource ADD updated BOOLEAN DEFAULT 0;
 </sql>
     <set_params>N</set_params>
     <insert_field/>
@@ -956,7 +956,7 @@
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>ALTER TABLE htmlformentry_html_form ADD seen BOOLEAN DEFAULT 0;
+    <sql>ALTER TABLE htmlformentry_html_form ADD updated BOOLEAN DEFAULT 0;
 </sql>
     <set_params>N</set_params>
     <insert_field/>
