@@ -543,6 +543,72 @@
     </hop>
   </order>
   <step>
+    <name>Filter changed ids</name>
+    <type>FilterRows</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <send_true_to>update patient_program</send_true_to>
+    <send_false_to/>
+    <compare>
+      <condition>
+        <negated>Y</negated>
+        <leftvalue>old_program_id</leftvalue>
+        <function>=</function>
+        <rightvalue>program_id</rightvalue>
+      </condition>
+    </compare>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1072</xloc>
+      <yloc>336</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Get current date</name>
+    <type>SystemInfo</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <fields>
+      <field>
+        <name>current_date</name>
+        <type>system date (fixed)</type>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>784</xloc>
+      <yloc>336</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
     <name>Join rows (cartesian product)</name>
     <type>JoinRows</type>
     <description/>
@@ -580,8 +646,8 @@
     </GUI>
   </step>
   <step>
-    <name>update patient_program</name>
-    <type>Update</type>
+    <name>Lookup harmonization user</name>
+    <type>DBJoin</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -590,44 +656,15 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <connection>OpenMRS source DB</connection>
-    <skip_lookup>N</skip_lookup>
-    <commit>100</commit>
-    <use_batch>N</use_batch>
-    <error_ignored>Y</error_ignored>
-    <ignore_flag_field/>
-    <lookup>
-      <schema/>
-      <table>patient_program</table>
-      <key>
-        <name>old_program_id</name>
-        <field>program_id</field>
-        <condition>=</condition>
-        <name2/>
-      </key>
-      <key>
-        <name>false</name>
-        <field>updated</field>
-        <condition>=</condition>
-        <name2/>
-      </key>
-      <value>
-        <name>program_id</name>
-        <rename>program_id</rename>
-      </value>
-      <value>
-        <name>updated</name>
-        <rename>true</rename>
-      </value>
-      <value>
-        <name>changed_by</name>
-        <rename>harmonization_user_id</rename>
-      </value>
-      <value>
-        <name>date_changed</name>
-        <rename>current_date</rename>
-      </value>
-    </lookup>
+    <connection/>
+    <rowlimit>0</rowlimit>
+    <sql>SELECT user_id AS harmonization_user_id 
+FROM users 
+WHERE system_id = 'harmonization';</sql>
+    <outer_join>Y</outer_join>
+    <replace_vars>N</replace_vars>
+    <parameter>
+    </parameter>
     <attributes/>
     <cluster_schema/>
     <remotesteps>
@@ -637,7 +674,7 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>1264</xloc>
+      <xloc>624</xloc>
       <yloc>336</yloc>
       <draw>Y</draw>
     </GUI>
@@ -908,6 +945,69 @@ where uuid=?</sql>
     </GUI>
   </step>
   <step>
+    <name>update patient_program</name>
+    <type>Update</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>OpenMRS source DB</connection>
+    <skip_lookup>N</skip_lookup>
+    <commit>100</commit>
+    <use_batch>N</use_batch>
+    <error_ignored>Y</error_ignored>
+    <ignore_flag_field/>
+    <lookup>
+      <schema/>
+      <table>patient_program</table>
+      <key>
+        <name>old_program_id</name>
+        <field>program_id</field>
+        <condition>=</condition>
+        <name2/>
+      </key>
+      <key>
+        <name>false</name>
+        <field>updated</field>
+        <condition>=</condition>
+        <name2/>
+      </key>
+      <value>
+        <name>program_id</name>
+        <rename>program_id</rename>
+      </value>
+      <value>
+        <name>updated</name>
+        <rename>true</rename>
+      </value>
+      <value>
+        <name>changed_by</name>
+        <rename>harmonization_user_id</rename>
+      </value>
+      <value>
+        <name>date_changed</name>
+        <rename>current_date</rename>
+      </value>
+    </lookup>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1264</xloc>
+      <yloc>336</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
     <name>update_program_workflow</name>
     <type>Update</type>
     <description/>
@@ -1054,106 +1154,6 @@ where uuid=?</sql>
     </remotesteps>
     <GUI>
       <xloc>240</xloc>
-      <yloc>336</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Get current date</name>
-    <type>SystemInfo</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <fields>
-      <field>
-        <name>current_date</name>
-        <type>system date (fixed)</type>
-      </field>
-    </fields>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>784</xloc>
-      <yloc>336</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Lookup harmonization user</name>
-    <type>DBJoin</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <connection/>
-    <rowlimit>0</rowlimit>
-    <sql>SELECT user_id AS harmonization_user_id 
-FROM users 
-WHERE system_id = 'harmonization';</sql>
-    <outer_join>Y</outer_join>
-    <replace_vars>N</replace_vars>
-    <parameter>
-    </parameter>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>624</xloc>
-      <yloc>336</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Filter changed ids</name>
-    <type>FilterRows</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <send_true_to>update patient_program</send_true_to>
-    <send_false_to/>
-    <compare>
-      <condition>
-        <negated>Y</negated>
-        <leftvalue>old_encounter_type_id</leftvalue>
-        <function>=</function>
-        <rightvalue>encounter_type_id</rightvalue>
-      </condition>
-    </compare>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>1072</xloc>
       <yloc>336</yloc>
       <draw>Y</draw>
     </GUI>
