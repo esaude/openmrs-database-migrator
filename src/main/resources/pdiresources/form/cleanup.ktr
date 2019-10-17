@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <transformation>
   <info>
-    <name>cleanup</name>
+    <name>form-cleanup</name>
     <description/>
     <extended_description/>
     <trans_version/>
@@ -567,7 +567,7 @@
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>ALTER TABLE encounter drop column seen;
+    <sql>ALTER TABLE encounter drop column updated;
 </sql>
     <set_params>N</set_params>
     <insert_field/>
@@ -606,7 +606,7 @@
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>ALTER TABLE form_field drop column seen;
+    <sql>ALTER TABLE form_field drop column updated;
 </sql>
     <set_params>N</set_params>
     <insert_field/>
@@ -645,7 +645,7 @@
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>ALTER TABLE form_resource drop column seen;
+    <sql>ALTER TABLE form_resource drop column updated;
 </sql>
     <set_params>N</set_params>
     <insert_field/>
@@ -684,7 +684,7 @@
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>ALTER TABLE htmlformentry_html_form drop column seen;
+    <sql>ALTER TABLE htmlformentry_html_form drop column updated;
 </sql>
     <set_params>N</set_params>
     <insert_field/>
