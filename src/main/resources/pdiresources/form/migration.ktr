@@ -503,26 +503,6 @@ set global max_allowed_packet=404857600;</attribute>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>wait</from>
-      <to>update_encounter</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>wait</from>
-      <to>update_form_field</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>wait</from>
-      <to>update_form_resouce</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>wait</from>
-      <to>update_htmlform</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
       <from>Join rows (cartesian product)</from>
       <to>lookup_harmonized_user</to>
       <enabled>Y</enabled>
@@ -538,18 +518,8 @@ set global max_allowed_packet=404857600;</attribute>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Table input</from>
-      <to>Join rows (cartesian product)</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
       <from>join_old_form</from>
       <to>Filter rows</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Filter rows</from>
-      <to>wait</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
@@ -558,8 +528,28 @@ set global max_allowed_packet=404857600;</attribute>
       <enabled>Y</enabled>
     </hop>
     <hop>
+      <from>Filter rows</from>
+      <to>update_encounter</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>update_encounter</from>
+      <to>update_form_field</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
       <from>Execute a process</from>
       <to>Blocking step</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>update_form_field</from>
+      <to>update_form_resouce</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>update_form_resouce</from>
+      <to>update_htmlform</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
@@ -568,16 +558,126 @@ set global max_allowed_packet=404857600;</attribute>
       <enabled>Y</enabled>
     </hop>
     <hop>
+      <from>Join rows (cartesian product) 2</from>
+      <to>Execute a process</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
       <from>Data grid</from>
       <to>Join rows (cartesian product) 2</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Join rows (cartesian product) 2</from>
-      <to>Execute a process</to>
+      <from>Table input</from>
+      <to>Blocking step 2</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Blocking step 2</from>
+      <to>Join rows (cartesian product)</to>
       <enabled>Y</enabled>
     </hop>
   </order>
+  <step>
+    <name>Join rows (cartesian product) 2</name>
+    <type>JoinRows</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <directory>%%java.io.tmpdir%%</directory>
+    <prefix>out</prefix>
+    <cache_size>500</cache_size>
+    <main/>
+    <compare>
+      <condition>
+        <negated>N</negated>
+        <leftvalue/>
+        <function>=</function>
+        <rightvalue/>
+      </condition>
+    </compare>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>64</xloc>
+      <yloc>448</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Get variables</name>
+    <type>GetVariable</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <fields>
+      <field>
+        <name>username</name>
+        <variable>${ETL_DATABASE_USER}</variable>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <length>-1</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>password</name>
+        <variable>${ETL_DATABASE_PASSWORD}</variable>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <length>-1</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>database</name>
+        <variable>${ETL_SOURCE_DATABASE}</variable>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <length>-1</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>256</xloc>
+      <yloc>448</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
   <step>
     <name>Blocking step</name>
     <type>BlockingStep</type>
@@ -589,7 +689,7 @@ set global max_allowed_packet=404857600;</attribute>
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <pass_all_rows>N</pass_all_rows>
+    <pass_all_rows>Y</pass_all_rows>
     <directory>%%java.io.tmpdir%%</directory>
     <prefix>block</prefix>
     <cache_size>5000</cache_size>
@@ -603,7 +703,7 @@ set global max_allowed_packet=404857600;</attribute>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>128</xloc>
+      <xloc>64</xloc>
       <yloc>112</yloc>
       <draw>Y</draw>
     </GUI>
@@ -658,7 +758,7 @@ set global max_allowed_packet=404857600;</attribute>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>128</xloc>
+      <xloc>64</xloc>
       <yloc>592</yloc>
       <draw>Y</draw>
     </GUI>
@@ -704,7 +804,7 @@ set global max_allowed_packet=404857600;</attribute>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>128</xloc>
+      <xloc>64</xloc>
       <yloc>240</yloc>
       <draw>Y</draw>
     </GUI>
@@ -720,7 +820,7 @@ set global max_allowed_packet=404857600;</attribute>
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <send_true_to>wait</send_true_to>
+    <send_true_to>update_encounter</send_true_to>
     <send_false_to/>
     <compare>
       <condition>
@@ -808,7 +908,7 @@ set global max_allowed_packet=404857600;</attribute>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>256</xloc>
+      <xloc>192</xloc>
       <yloc>112</yloc>
       <draw>Y</draw>
     </GUI>
@@ -1017,7 +1117,7 @@ where   system_id = 'harmonization';</sql>
       </key>
       <key>
         <name>false</name>
-        <field>seen</field>
+        <field>updated</field>
         <condition>=</condition>
         <name2/>
       </key>
@@ -1026,7 +1126,7 @@ where   system_id = 'harmonization';</sql>
         <rename>form_id</rename>
       </value>
       <value>
-        <name>seen</name>
+        <name>updated</name>
         <rename>true</rename>
       </value>
       <value>
@@ -1047,8 +1147,8 @@ where   system_id = 'harmonization';</sql>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>1360</xloc>
-      <yloc>16</yloc>
+      <xloc>1120</xloc>
+      <yloc>240</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1080,7 +1180,7 @@ where   system_id = 'harmonization';</sql>
       </key>
       <key>
         <name>false</name>
-        <field>seen</field>
+        <field>updated</field>
         <condition>=</condition>
         <name2/>
       </key>
@@ -1089,7 +1189,7 @@ where   system_id = 'harmonization';</sql>
         <rename>form_id</rename>
       </value>
       <value>
-        <name>seen</name>
+        <name>updated</name>
         <rename>true</rename>
       </value>
       <value>
@@ -1110,8 +1210,8 @@ where   system_id = 'harmonization';</sql>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>1392</xloc>
-      <yloc>128</yloc>
+      <xloc>1120</xloc>
+      <yloc>336</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1130,7 +1230,7 @@ where   system_id = 'harmonization';</sql>
     <skip_lookup>N</skip_lookup>
     <commit>100</commit>
     <use_batch>N</use_batch>
-    <error_ignored>N</error_ignored>
+    <error_ignored>Y</error_ignored>
     <ignore_flag_field/>
     <lookup>
       <schema/>
@@ -1143,7 +1243,7 @@ where   system_id = 'harmonization';</sql>
       </key>
       <key>
         <name>false</name>
-        <field>seen</field>
+        <field>updated</field>
         <condition>=</condition>
         <name2/>
       </key>
@@ -1152,7 +1252,7 @@ where   system_id = 'harmonization';</sql>
         <rename>form_id</rename>
       </value>
       <value>
-        <name>seen</name>
+        <name>updated</name>
         <rename>true</rename>
       </value>
     </lookup>
@@ -1165,8 +1265,8 @@ where   system_id = 'harmonization';</sql>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>1392</xloc>
-      <yloc>224</yloc>
+      <xloc>1120</xloc>
+      <yloc>448</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1198,7 +1298,7 @@ where   system_id = 'harmonization';</sql>
       </key>
       <key>
         <name>false</name>
-        <field>seen</field>
+        <field>updated</field>
         <condition>=</condition>
         <name2/>
       </key>
@@ -1207,7 +1307,7 @@ where   system_id = 'harmonization';</sql>
         <rename>form_id</rename>
       </value>
       <value>
-        <name>seen</name>
+        <name>updated</name>
         <rename>true</rename>
       </value>
       <value>
@@ -1228,16 +1328,16 @@ where   system_id = 'harmonization';</sql>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>1360</xloc>
-      <yloc>304</yloc>
+      <xloc>1120</xloc>
+      <yloc>544</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>wait</name>
+    <name>Blocking step 2</name>
     <type>BlockingStep</type>
     <description/>
-    <distribute>N</distribute>
+    <distribute>Y</distribute>
     <custom_distribution/>
     <copies>1</copies>
     <partitioning>
@@ -1258,108 +1358,8 @@ where   system_id = 'harmonization';</sql>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>1248</xloc>
-      <yloc>112</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Get variables</name>
-    <type>GetVariable</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <fields>
-      <field>
-        <name>username</name>
-        <variable>${ETL_DATABASE_USER}</variable>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <length>-1</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>password</name>
-        <variable>${ETL_DATABASE_PASSWORD}</variable>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <length>-1</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>database</name>
-        <variable>${ETL_SOURCE_DATABASE}</variable>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <length>-1</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-    </fields>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>320</xloc>
-      <yloc>448</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Join rows (cartesian product) 2</name>
-    <type>JoinRows</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <directory>%%java.io.tmpdir%%</directory>
-    <prefix>out</prefix>
-    <cache_size>500</cache_size>
-    <main/>
-    <compare>
-      <condition>
-        <negated>N</negated>
-        <leftvalue/>
-        <function>=</function>
-        <rightvalue/>
-      </condition>
-    </compare>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>128</xloc>
-      <yloc>448</yloc>
+      <xloc>288</xloc>
+      <yloc>272</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
