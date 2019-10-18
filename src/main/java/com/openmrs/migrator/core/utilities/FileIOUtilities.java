@@ -143,7 +143,7 @@ public class FileIOUtilities {
     InputStream resourceStream = getResourceAsStream(resourceFile);
 
     // copy files from resources to home directory
-    Files.copy(resourceStream, Paths.get(resourceFile), StandardCopyOption.REPLACE_EXISTING);
+    Files.copy(resourceStream, Paths.get(resourceFile), StandardCopyOption.COPY_ATTRIBUTES);
   }
 
   /**
