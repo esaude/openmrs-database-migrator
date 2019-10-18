@@ -18,6 +18,7 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -125,7 +126,8 @@ public class Migrator implements Callable<Optional<Void>> {
             fileIOUtilities.identifyResourceSubFolders(SettingsService.PDI_PLUGINS_DIR + "/"),
             ".j"));
 
-    fileIOUtilities.copyFileFromResources(SettingsService.SETTINGS_PROPERTIES);
+    fileIOUtilities.copyFileFromResources(
+        SettingsService.SETTINGS_PROPERTIES, StandardCopyOption.REPLACE_EXISTING);
 
     Map<String, InputStream> map = new HashMap<>();
     for (String s : set) {

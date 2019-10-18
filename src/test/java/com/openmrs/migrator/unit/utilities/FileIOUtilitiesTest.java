@@ -19,6 +19,7 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -119,7 +120,8 @@ public class FileIOUtilitiesTest {
   @Test
   public void copyFileFromResourcesShouldSucceed() throws IOException, InvalidParameterException {
     Path file = Paths.get(SettingsService.SETTINGS_PROPERTIES);
-    fileIOUtilities.copyFileFromResources(file.toFile().getName());
+    fileIOUtilities.copyFileFromResources(
+        file.toFile().getName(), StandardCopyOption.REPLACE_EXISTING);
 
     assertTrue(Files.exists(file));
 
@@ -131,13 +133,13 @@ public class FileIOUtilitiesTest {
   @Test(expected = InvalidParameterException.class)
   public void copyFileFromResourcesShouldFailGivenFileUndefined()
       throws IOException, InvalidParameterException {
-    fileIOUtilities.copyFileFromResources(null);
+    fileIOUtilities.copyFileFromResources(null, StandardCopyOption.REPLACE_EXISTING);
   }
 
   @Test(expected = IOException.class)
   public void copyFileFromResourcesShouldFailGivenFileNotExist()
       throws IOException, InvalidParameterException {
-    fileIOUtilities.copyFileFromResources("unknownFile");
+    fileIOUtilities.copyFileFromResources("unknownFile", StandardCopyOption.REPLACE_EXISTING);
   }
 
   @Test(expected = InvalidParameterException.class)

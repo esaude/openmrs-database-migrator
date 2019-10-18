@@ -133,7 +133,7 @@ public class FileIOUtilities {
    * @throws IOException
    * @throws InvalidParameterException
    */
-  public void copyFileFromResources(String resourceFile)
+  public void copyFileFromResources(String resourceFile, StandardCopyOption copyOption)
       throws IOException, InvalidParameterException {
     if (resourceFile == null || resourceFile.isEmpty()) {
       throw new InvalidParameterException(resourceFile);
@@ -143,7 +143,7 @@ public class FileIOUtilities {
     InputStream resourceStream = getResourceAsStream(resourceFile);
 
     // copy files from resources to home directory
-    Files.copy(resourceStream, Paths.get(resourceFile), StandardCopyOption.COPY_ATTRIBUTES);
+    Files.copy(resourceStream, Paths.get(resourceFile), copyOption);
   }
 
   /**
