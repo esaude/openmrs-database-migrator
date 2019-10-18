@@ -8,7 +8,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.Map;
 import org.slf4j.Logger;
@@ -73,7 +72,7 @@ public class BootstrapServiceImpl implements BootstrapService {
             || pdiFile.contains(".csv")
             || pdiFile.contains(".sh")
             || pdiFile.contains(".sql")) {
-          fileIOUtilities.copyFileFromResources(pdiFile, StandardCopyOption.COPY_ATTRIBUTES);
+          fileIOUtilities.copyFileFromResources(pdiFile);
           continue;
         }
         sourceFiles.get(pdiFile).read(buffer);
