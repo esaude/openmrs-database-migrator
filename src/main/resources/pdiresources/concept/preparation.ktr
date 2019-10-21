@@ -777,7 +777,7 @@
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>ALTER TABLE active_list ADD seen BOOLEAN DEFAULT 0;
+    <sql>ALTER TABLE active_list ADD updated BOOLEAN DEFAULT 0;
 </sql>
     <set_params>N</set_params>
     <insert_field/>
@@ -816,7 +816,7 @@
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>ALTER TABLE active_list_allergy ADD seen BOOLEAN DEFAULT 0;
+    <sql>ALTER TABLE active_list_allergy ADD updated BOOLEAN DEFAULT 0;
 </sql>
     <set_params>N</set_params>
     <insert_field/>
@@ -899,7 +899,7 @@
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>ALTER TABLE concept_answer ADD seen BOOLEAN DEFAULT 0;
+    <sql>ALTER TABLE concept_answer ADD updated BOOLEAN DEFAULT 0;
 </sql>
     <set_params>N</set_params>
     <insert_field/>
@@ -938,7 +938,7 @@
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>ALTER TABLE concept_complex ADD seen BOOLEAN DEFAULT 0;
+    <sql>ALTER TABLE concept_complex ADD updated BOOLEAN DEFAULT 0;
 </sql>
     <set_params>N</set_params>
     <insert_field/>
@@ -977,7 +977,7 @@
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>ALTER TABLE concept_derived ADD seen BOOLEAN DEFAULT 0;
+    <sql>ALTER TABLE concept_derived ADD updated BOOLEAN DEFAULT 0;
 </sql>
     <set_params>N</set_params>
     <insert_field/>
@@ -1016,7 +1016,7 @@
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>ALTER TABLE concept_description ADD seen BOOLEAN DEFAULT 0;
+    <sql>ALTER TABLE concept_description ADD updated BOOLEAN DEFAULT 0;
 </sql>
     <set_params>N</set_params>
     <insert_field/>
@@ -1055,7 +1055,7 @@
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>ALTER TABLE concept_name ADD seen BOOLEAN DEFAULT 0;
+    <sql>ALTER TABLE concept_name ADD updated BOOLEAN DEFAULT 0;
 </sql>
     <set_params>N</set_params>
     <insert_field/>
@@ -1094,7 +1094,7 @@
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>ALTER TABLE concept_numeric ADD seen BOOLEAN DEFAULT 0;
+    <sql>ALTER TABLE concept_numeric ADD updated BOOLEAN DEFAULT 0;
 </sql>
     <set_params>N</set_params>
     <insert_field/>
@@ -1133,7 +1133,7 @@
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>ALTER TABLE concept_proposal ADD seen BOOLEAN DEFAULT 0;
+    <sql>ALTER TABLE concept_proposal ADD updated BOOLEAN DEFAULT 0;
 </sql>
     <set_params>N</set_params>
     <insert_field/>
@@ -1172,7 +1172,7 @@
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>ALTER TABLE concept_reference_map ADD seen BOOLEAN DEFAULT 0;
+    <sql>ALTER TABLE concept_reference_map ADD updated BOOLEAN DEFAULT 0;
 </sql>
     <set_params>N</set_params>
     <insert_field/>
@@ -1211,7 +1211,7 @@
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>ALTER TABLE concept_set ADD seen BOOLEAN DEFAULT 0;
+    <sql>ALTER TABLE concept_set ADD updated BOOLEAN DEFAULT 0;
 </sql>
     <set_params>N</set_params>
     <insert_field/>
@@ -1250,7 +1250,7 @@
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>ALTER TABLE concept_state_conversion ADD seen BOOLEAN DEFAULT 0;</sql>
+    <sql>ALTER TABLE concept_state_conversion ADD updated BOOLEAN DEFAULT 0;</sql>
     <set_params>N</set_params>
     <insert_field/>
     <update_field/>
@@ -1288,7 +1288,7 @@
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>ALTER TABLE concept_word ADD seen BOOLEAN DEFAULT 0;
+    <sql>ALTER TABLE concept_word ADD updated BOOLEAN DEFAULT 0;
 </sql>
     <set_params>N</set_params>
     <insert_field/>
@@ -1327,7 +1327,7 @@
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>ALTER TABLE conditions ADD seen BOOLEAN DEFAULT 0;
+    <sql>ALTER TABLE conditions ADD updated BOOLEAN DEFAULT 0;
 </sql>
     <set_params>N</set_params>
     <insert_field/>
@@ -1466,7 +1466,7 @@
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>ALTER TABLE drug ADD seen BOOLEAN DEFAULT 0;
+    <sql>ALTER TABLE drug ADD updated BOOLEAN DEFAULT 0;
 </sql>
     <set_params>N</set_params>
     <insert_field/>
@@ -1505,7 +1505,7 @@
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>ALTER TABLE drug_ingredient ADD seen BOOLEAN DEFAULT 0;
+    <sql>ALTER TABLE drug_ingredient ADD updated BOOLEAN DEFAULT 0;
 </sql>
     <set_params>N</set_params>
     <insert_field/>
@@ -1544,7 +1544,7 @@
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>ALTER TABLE drug_order ADD seen BOOLEAN DEFAULT 0;
+    <sql>ALTER TABLE drug_order ADD updated BOOLEAN DEFAULT 0;
 </sql>
     <set_params>N</set_params>
     <insert_field/>
@@ -1583,7 +1583,7 @@
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>ALTER TABLE field ADD seen BOOLEAN DEFAULT 0;
+    <sql>ALTER TABLE field ADD updated BOOLEAN DEFAULT 0;
 </sql>
     <set_params>N</set_params>
     <insert_field/>
@@ -1622,7 +1622,7 @@
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>ALTER TABLE field_answer ADD seen BOOLEAN DEFAULT 0;
+    <sql>ALTER TABLE field_answer ADD updated BOOLEAN DEFAULT 0;
 </sql>
     <set_params>N</set_params>
     <insert_field/>
@@ -1661,8 +1661,8 @@
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>ALTER TABLE obs ADD seen BOOLEAN DEFAULT 0;
-ALTER TABLE obs ADD seen_value_coded BOOLEAN DEFAULT 0;
+    <sql>ALTER TABLE obs ADD updated BOOLEAN DEFAULT 0;
+ALTER TABLE obs ADD updated_value_coded BOOLEAN DEFAULT 0;
 
 </sql>
     <set_params>N</set_params>
@@ -1702,7 +1702,7 @@ ALTER TABLE obs ADD seen_value_coded BOOLEAN DEFAULT 0;
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>ALTER TABLE order_frequency ADD seen BOOLEAN DEFAULT 0;
+    <sql>ALTER TABLE order_frequency ADD updated BOOLEAN DEFAULT 0;
 </sql>
     <set_params>N</set_params>
     <insert_field/>
@@ -1741,7 +1741,7 @@ ALTER TABLE obs ADD seen_value_coded BOOLEAN DEFAULT 0;
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>ALTER TABLE orders ADD seen BOOLEAN DEFAULT 0;
+    <sql>ALTER TABLE orders ADD updated BOOLEAN DEFAULT 0;
 </sql>
     <set_params>N</set_params>
     <insert_field/>
@@ -1780,7 +1780,7 @@ ALTER TABLE obs ADD seen_value_coded BOOLEAN DEFAULT 0;
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>ALTER TABLE patient_program ADD seen BOOLEAN DEFAULT 0;
+    <sql>ALTER TABLE patient_program ADD updated BOOLEAN DEFAULT 0;
 </sql>
     <set_params>N</set_params>
     <insert_field/>
@@ -1819,7 +1819,7 @@ ALTER TABLE obs ADD seen_value_coded BOOLEAN DEFAULT 0;
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>ALTER TABLE person ADD seen BOOLEAN DEFAULT 0;
+    <sql>ALTER TABLE person ADD updated BOOLEAN DEFAULT 0;
 </sql>
     <set_params>N</set_params>
     <insert_field/>
@@ -1858,7 +1858,7 @@ ALTER TABLE obs ADD seen_value_coded BOOLEAN DEFAULT 0;
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>ALTER TABLE program ADD seen BOOLEAN DEFAULT 0;
+    <sql>ALTER TABLE program ADD updated BOOLEAN DEFAULT 0;
 </sql>
     <set_params>N</set_params>
     <insert_field/>
@@ -1897,7 +1897,7 @@ ALTER TABLE obs ADD seen_value_coded BOOLEAN DEFAULT 0;
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>ALTER TABLE program_workflow ADD seen BOOLEAN DEFAULT 0;
+    <sql>ALTER TABLE program_workflow ADD updated BOOLEAN DEFAULT 0;
 </sql>
     <set_params>N</set_params>
     <insert_field/>
@@ -1936,7 +1936,7 @@ ALTER TABLE obs ADD seen_value_coded BOOLEAN DEFAULT 0;
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>ALTER TABLE program_workflow_state ADD seen BOOLEAN DEFAULT 0;
+    <sql>ALTER TABLE program_workflow_state ADD updated BOOLEAN DEFAULT 0;
 </sql>
     <set_params>N</set_params>
     <insert_field/>
@@ -2007,7 +2007,7 @@ ALTER TABLE obs ADD seen_value_coded BOOLEAN DEFAULT 0;
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>ALTER TABLE test_order ADD seen BOOLEAN DEFAULT 0;
+    <sql>ALTER TABLE test_order ADD updated BOOLEAN DEFAULT 0;
 </sql>
     <set_params>N</set_params>
     <insert_field/>
@@ -2046,7 +2046,7 @@ ALTER TABLE obs ADD seen_value_coded BOOLEAN DEFAULT 0;
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>ALTER TABLE visit ADD seen BOOLEAN DEFAULT 0;
+    <sql>ALTER TABLE visit ADD updated BOOLEAN DEFAULT 0;
 </sql>
     <set_params>N</set_params>
     <insert_field/>

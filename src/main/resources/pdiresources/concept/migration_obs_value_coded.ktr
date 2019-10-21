@@ -753,7 +753,7 @@ where  uuid=?</sql>
       </key>
       <key>
         <name>false</name>
-        <field>seen_value_coded</field>
+        <field>updated_value_coded</field>
         <condition>=</condition>
         <name2/>
       </key>
@@ -762,7 +762,7 @@ where  uuid=?</sql>
         <rename>concept_id</rename>
       </value>
       <value>
-        <name>seen_value_coded</name>
+        <name>updated_value_coded</name>
         <rename>true</rename>
       </value>
     </lookup>
