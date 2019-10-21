@@ -377,7 +377,7 @@
         <pass_all_parameters>Y</pass_all_parameters>
       </parameters>
       <parallel>N</parallel>
-      <draw>N</draw>
+      <draw>Y</draw>
       <nr>0</nr>
       <xloc>336</xloc>
       <yloc>32</yloc>
@@ -415,7 +415,7 @@
         <pass_all_parameters>Y</pass_all_parameters>
       </parameters>
       <parallel>N</parallel>
-      <draw>N</draw>
+      <draw>Y</draw>
       <nr>0</nr>
       <xloc>592</xloc>
       <yloc>32</yloc>
@@ -453,7 +453,7 @@
         <pass_all_parameters>Y</pass_all_parameters>
       </parameters>
       <parallel>N</parallel>
-      <draw>N</draw>
+      <draw>Y</draw>
       <nr>0</nr>
       <xloc>832</xloc>
       <yloc>32</yloc>
@@ -491,7 +491,7 @@
         <pass_all_parameters>Y</pass_all_parameters>
       </parameters>
       <parallel>N</parallel>
-      <draw>N</draw>
+      <draw>Y</draw>
       <nr>0</nr>
       <xloc>128</xloc>
       <yloc>32</yloc>
@@ -529,20 +529,20 @@
         <pass_all_parameters>Y</pass_all_parameters>
       </parameters>
       <parallel>N</parallel>
-      <draw>N</draw>
+      <draw>Y</draw>
       <nr>0</nr>
       <xloc>832</xloc>
       <yloc>144</yloc>
       <attributes_kjc/>
     </entry>
     <entry>
-      <name>program</name>
+      <name>form</name>
       <description/>
       <type>TRANS</type>
       <attributes/>
       <specification_method>filename</specification_method>
       <trans_object_id/>
-      <filename>pdiresources/program/preparation.ktr</filename>
+      <filename>pdiresources/form/preparation.ktr</filename>
       <transname/>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
@@ -569,20 +569,65 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>592</xloc>
+      <xloc>832</xloc>
       <yloc>288</yloc>
       <attributes_kjc/>
     </entry>
   </entries>
   <hops>
     <hop>
+      <from>prepare-program-workflow-state</from>
+      <to>prepare-program-workflow</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
       <from>Start</from>
-      <to>program</to>
+      <to>create harmonization-user</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
       <evaluation>Y</evaluation>
       <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>create harmonization-user</from>
+      <to>prepare-program-workflow-state</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>prepare-program-workflow</from>
+      <to>visit-type</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>visit-type</from>
+      <to>patient-identifier-type</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>patient-identifier-type</from>
+      <to>form</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
     </hop>
   </hops>
   <notepads>
