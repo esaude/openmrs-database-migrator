@@ -342,8 +342,8 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>672</xloc>
-      <yloc>272</yloc>
+      <xloc>1024</xloc>
+      <yloc>96</yloc>
       <attributes_kjc/>
     </entry>
     <entry>
@@ -380,7 +380,7 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>832</xloc>
+      <xloc>1264</xloc>
       <yloc>272</yloc>
       <attributes_kjc/>
     </entry>
@@ -417,7 +417,7 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>400</xloc>
+      <xloc>576</xloc>
       <yloc>96</yloc>
       <attributes_kjc/>
     </entry>
@@ -454,7 +454,7 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>176</xloc>
+      <xloc>256</xloc>
       <yloc>96</yloc>
       <attributes_kjc/>
     </entry>
@@ -491,7 +491,7 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>832</xloc>
+      <xloc>1264</xloc>
       <yloc>96</yloc>
       <attributes_kjc/>
     </entry>
@@ -528,7 +528,7 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>608</xloc>
+      <xloc>832</xloc>
       <yloc>96</yloc>
       <attributes_kjc/>
     </entry>
@@ -565,7 +565,7 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>528</xloc>
+      <xloc>1040</xloc>
       <yloc>272</yloc>
       <attributes_kjc/>
     </entry>
@@ -594,7 +594,7 @@
       <to>encounter_type</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
-      <enabled>N</enabled>
+      <enabled>Y</enabled>
       <evaluation>Y</evaluation>
       <unconditional>N</unconditional>
     </hop>
@@ -608,15 +608,6 @@
       <unconditional>Y</unconditional>
     </hop>
     <hop>
-      <from>encounter_type</from>
-      <to>program</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
       <from>harmonize program workflow</from>
       <to>harmonize visit-type</to>
       <from_nr>0</from_nr>
@@ -626,8 +617,17 @@
       <unconditional>N</unconditional>
     </hop>
     <hop>
+      <from>encounter_type</from>
+      <to>form</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
       <from>harmonize visit-type</from>
-      <to>harmonize patient identifier types</to>
+      <to>program</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -636,7 +636,7 @@
     </hop>
     <hop>
       <from>program</from>
-      <to>form</to>
+      <to>harmonize patient identifier types</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
