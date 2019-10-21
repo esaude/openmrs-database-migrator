@@ -19,12 +19,14 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.attribute.PosixFilePermission;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -408,5 +410,37 @@ public class FileIOUtilitiesTest {
     assertFalse(set.isEmpty());
     assertTrue(set.contains("classpath:pdiresources/jobs/migration-jobs/*"));
     assertTrue(set.contains("classpath:pdiresources/jobs/*"));
+  }
+
+  @Test
+  public void changeFilePermissionShouldChangePermissionTo700()
+      throws IOException, InvalidParameterException {
+    Path path = Paths.get("dummy_permission.sh");
+
+    Set<PosixFilePermission> permissions =
+        Stream.of(
+                PosixFilePermission.OWNER_EXECUTE,
+                PosixFilePermission.OWNER_READ,
+                PosixFilePermission.OWNER_WRITE)
+            .collect(Collectors.toSet());
+    fileIOUtilities.createFile(path);
+    fileIOUtilities.changeFilePermission(path, permissions);
+
+    assertTrue(Files.isExecutable(path));
+    assertTrue(Files.isReadable(path));
+    assertTrue(Files.isWritable(path));
+
+    fileIOUtilities.removeDirectory(path.toFile());
+  }
+
+  @Test
+  public void changeFilePermissionShouldFailTo100Permission()
+      throws IOException, InvalidParameterException {
+    Path path = Paths.get("dummy_no_permission.sh");
+
+    fileIOUtilities.createFile(path);
+
+    assertFalse(Files.isExecutable(path));
+    fileIOUtilities.removeDirectory(path.toFile());
   }
 }
