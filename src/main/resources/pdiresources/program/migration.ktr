@@ -1020,7 +1020,7 @@ where uuid=?</sql>
     <fileNameField/>
     <create_parent_folder>Y</create_parent_folder>
     <file>
-      <name>output/patient-program-log</name>
+      <name>/home/cfaife/Desktop/MEPTS-149/output/patient-program-log</name>
       <servlet_output>N</servlet_output>
       <do_not_open_new_file_init>N</do_not_open_new_file_init>
       <extention>txt</extention>
@@ -1174,7 +1174,7 @@ where uuid=?</sql>
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <filename>config/program.csv</filename>
+    <filename>/home/cfaife/Desktop/MEPTS-149/program.csv</filename>
     <filename_field/>
     <rownum_field/>
     <include_filename>N</include_filename>
@@ -1223,12 +1223,12 @@ where uuid=?</sql>
       </field>
       <field>
         <name>date_created</name>
-        <type>String</type>
-        <format/>
+        <type>Date</type>
+        <format>yyyy-MM-dd HH:mm:ss</format>
         <currency>$</currency>
         <decimal>.</decimal>
         <group>,</group>
-        <length>15</length>
+        <length>-1</length>
         <precision>-1</precision>
         <trim_type>none</trim_type>
       </field>
@@ -1245,12 +1245,12 @@ where uuid=?</sql>
       </field>
       <field>
         <name>date_changed</name>
-        <type>String</type>
-        <format/>
+        <type>Date</type>
+        <format>yyyy-MM-dd HH:mm:ss</format>
         <currency>$</currency>
         <decimal>.</decimal>
         <group>,</group>
-        <length>15</length>
+        <length>-1</length>
         <precision>-1</precision>
         <trim_type>none</trim_type>
       </field>
@@ -1467,7 +1467,7 @@ where uuid=?</sql>
     <fileNameField/>
     <create_parent_folder>Y</create_parent_folder>
     <file>
-      <name>output/workflow-log</name>
+      <name>/home/cfaife/Desktop/MEPTS-149/output/workflow-log</name>
       <servlet_output>N</servlet_output>
       <do_not_open_new_file_init>N</do_not_open_new_file_init>
       <extention>txt</extention>
