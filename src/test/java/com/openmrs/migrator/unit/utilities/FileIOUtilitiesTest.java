@@ -344,7 +344,22 @@ public class FileIOUtilitiesTest {
     file.createNewFile();
 
     try (BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
-      bw.write("ETL_SOURCE_DATABASE=");
+      bw.write("ETL_SOURCE_DATABASE="); // line(=) splitter will return array of 1 item
+      bw.flush();
+    }
+
+    boolean value = fileIOUtilities.isSettingsFilesMissingSomeValue();
+
+    assertTrue(value);
+  }
+
+  @Test
+  public void isSettingsFilesMissingSomeValueShouldReturnTrueWithBlankValue() throws IOException {
+    File file = new File("settings.properties");
+    file.createNewFile();
+
+    try (BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
+      bw.write("ETL_SOURCE_DATABASE= "); // line(=) splitter will return array of 2 item
       bw.flush();
     }
 

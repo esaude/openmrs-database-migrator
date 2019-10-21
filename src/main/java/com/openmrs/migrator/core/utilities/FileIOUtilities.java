@@ -28,6 +28,7 @@ import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.stream.Collectors;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
@@ -257,22 +258,19 @@ public class FileIOUtilities {
 
   public boolean isSettingsFilesMissingSomeValue() throws IOException {
 
-    try (BufferedReader br = new BufferedReader(new FileReader(new File("settings.properties")))) {
-      String line = null;
-      while ((line = br.readLine()) != null) {
-
-        String value = line.split("=")[1];
-        if (("ETL_DATABASE_HOST".equals(line.split("=")[0])
-                || "ETL_DATABASE_PORT".equals(line.split("=")[0])
-                || "ETL_DATABASE_USER".equals(line.split("=")[0])
-                || "ETL_DATABASE_PASSWORD".equals(line.split("=")[0])
-                || "ETL_SOURCE_DATABASE".equals(line.split("=")[0]))
-            && ("".equals(value.trim()))) {
-          return true;
-        }
+    BufferedReader br = new BufferedReader(new FileReader(new File("settings.properties")));
+    String line = null;
+    while ((line = br.readLine()) != null) {
+      String[] prop = line.split("=");
+      if (prop.length == 1
+          || (("ETL_DATABASE_HOST".equals(prop[0])
+                  || "ETL_DATABASE_PORT".equals(prop[0])
+                  || "ETL_DATABASE_USER".equals(prop[0])
+                  || "ETL_DATABASE_PASSWORD".equals(prop[0])
+                  || "ETL_SOURCE_DATABASE".equals(prop[0]))
+              && (StringUtils.isBlank(prop[1].trim())))) {
+        return true;
       }
-    } catch (ArrayIndexOutOfBoundsException e) {
-      return true;
     }
     return false;
   }

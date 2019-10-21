@@ -56,6 +56,14 @@ public class BootstrapServiceTest {
   }
 
   @Test
+  public void createDirectoryStructureFailure() throws IOException {
+    boolean result = bootstrapService.createDirectoryStructure(Arrays.asList("/missing/"));
+
+    assertFalse(result);
+    assertFalse(Files.exists(Paths.get(folders.get(0))));
+  }
+
+  @Test
   public void populateDefaultResoucesSuccess()
       throws IOException, URISyntaxException, InvalidParameterException {
     String pdiFolder = "classpath:" + SettingsService.PDI_RESOURCES_DIR + "/*";
@@ -76,8 +84,7 @@ public class BootstrapServiceTest {
   }
 
   @Test
-  public void populateDefaultResoucesFailGivenFolderStructureDoesntExist()
-      throws IOException, InvalidParameterException {
+  public void populateDefaultResources() throws IOException, InvalidParameterException {
     List<String> pdiFiles = new ArrayList<>();
     pdiFiles.add("pdiresources/jobs/job.kjb");
     File file = new File("").createTempFile("pdiresources/jobs/job", "kjb");
@@ -86,6 +93,19 @@ public class BootstrapServiceTest {
     boolean result = bootstrapService.populateDefaultResources(sourceFiles);
 
     assertTrue(result);
+  }
+
+  @Test
+  public void populateDefaultResourcesShouldCatchIOIfFileIsMissing()
+      throws IOException, InvalidParameterException {
+    List<String> pdiFiles = new ArrayList<>();
+    pdiFiles.add("pdiresources/jobs/job.kjb");
+    File file = new File("").createTempFile("pdiresources/jobs/job", "kjb");
+    Map<String, InputStream> sourceFiles = new HashMap<>();
+    sourceFiles.put("pdiresources/jobs/job.csv", new FileInputStream(file));
+    boolean result = bootstrapService.populateDefaultResources(sourceFiles);
+
+    assertFalse(result);
   }
 
   @After

@@ -81,6 +81,19 @@ public class SettingsServiceTest {
   }
 
   @Test
+  public void addSettingToConfigFileShouldOverwriteProperty() throws Exception {
+    String source =
+        SettingsServiceTest.class
+            .getClassLoader()
+            .getResource(SettingsService.SETTINGS_PROPERTIES)
+            .getPath();
+    Files.copy(Paths.get(source), tempSettingsFile);
+    settingsService.addSettingToConfigFile(tempSettingsFile, "EPTS_DATABASES_DIRECTORY", 7, "~/in");
+    List<String> lines = Files.readAllLines(tempSettingsFile);
+    Assert.assertEquals("EPTS_DATABASES_DIRECTORY=~/in", lines.get(6));
+  }
+
+  @Test
   public void fillConfigFile() throws Exception {
     Map<String, String> connDB = new HashMap<>();
     connDB.put(SettingsService.DB_TEST_CONNECTION, "false");
@@ -97,5 +110,38 @@ public class SettingsServiceTest {
     Assert.assertEquals(SettingsService.DB_HOST + "=localhost", lines.get(3));
     Assert.assertEquals(SettingsService.DB_PORT + "=3306", lines.get(4));
     Assert.assertEquals(SettingsService.DBS_BACKUPS_DIRECTORY + "=./input", lines.get(5));
+  }
+
+  private void emptyTempValuesOfConfigFile() throws IOException {
+    settingsService.fillConfigFile(tempSettingsFile, new HashMap<>());
+    Assert.assertTrue(tempSettingsFile.toFile().exists());
+    List<String> lines = Files.readAllLines(tempSettingsFile);
+    Assert.assertEquals(SettingsService.DB_TEST_CONNECTION + "=null", lines.get(0));
+    Assert.assertEquals(SettingsService.DB_USER + "=null", lines.get(1));
+    Assert.assertEquals(SettingsService.DB_PASS + "=null", lines.get(2));
+    Assert.assertEquals(SettingsService.DB_HOST + "=null", lines.get(3));
+    Assert.assertEquals(SettingsService.DB_PORT + "=null", lines.get(4));
+    Assert.assertEquals(SettingsService.DBS_BACKUPS_DIRECTORY + "=null", lines.get(5));
+  }
+
+  @Test
+  public void fillConfigFileWithEmptyValues() throws IOException {
+    Assert.assertFalse(tempSettingsFile.toFile().exists());
+    emptyTempValuesOfConfigFile();
+  }
+
+  @Test(expected = SettingsException.class)
+  public void initializeKettleEnvironmentWithEmptyProperties()
+      throws IOException, SettingsException {
+    Assert.assertFalse(tempSettingsFile.toFile().exists());
+    emptyTempValuesOfConfigFile();
+    Path source =
+        Paths.get(
+            System.getProperty("user.dir") + File.separator + SettingsService.SETTINGS_PROPERTIES);
+    if (source.toFile().exists()) {
+      Files.delete(source);
+    }
+    Files.copy(tempSettingsFile, source);
+    settingsService.initializeKettleEnvironment();
   }
 }

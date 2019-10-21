@@ -5,14 +5,11 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import com.openmrs.migrator.MigratorApplication;
-import com.openmrs.migrator.core.exceptions.InvalidParameterException;
 import com.openmrs.migrator.core.services.SettingsService;
 import com.openmrs.migrator.core.utilities.FileIOUtilities;
 import java.io.File;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -40,8 +37,9 @@ public class MigratorApplicationTests {
           SettingsService.SETTINGS_PROPERTIES);
 
   @Before
-  public void init() {
+  public void init() throws Exception {
     assertNotNull(migratorApplication);
+    fileIOUtils.removeAllDirectories(structurePaths);
     pwd = System.getProperty("user.dir");
     notSetup();
   }
@@ -78,10 +76,5 @@ public class MigratorApplicationTests {
   @Test(expected = ExecutionException.class)
   public void executeRunCommandBeforeSetup() throws ExecutionException {
     migratorApplication.run("run");
-  }
-
-  @After
-  public void cleanUp() throws IOException, InvalidParameterException {
-    fileIOUtils.removeAllDirectories(structurePaths);
   }
 }
