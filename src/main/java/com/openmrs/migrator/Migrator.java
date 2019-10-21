@@ -39,6 +39,8 @@ import picocli.CommandLine.Option;
 @Command(name = "migrator", mixinStandardHelpOptions = true, helpCommand = true)
 public class Migrator implements Callable<Optional<Void>> {
 
+  public static final String FORM_IMPORT_SCRIPT = "form-import.sh";
+
   private PDIService pdiService;
 
   private FileIOUtilities fileIOUtilities;
@@ -145,7 +147,7 @@ public class Migrator implements Callable<Optional<Void>> {
                 PosixFilePermission.OWNER_WRITE)
             .collect(Collectors.toSet());
     fileIOUtilities.changeFilePermission(
-        Paths.get(SettingsService.PDI_CONFIG + "/form-import.sh"), permissions);
+        Paths.get(SettingsService.PDI_CONFIG + "/" + FORM_IMPORT_SCRIPT), permissions);
   }
 
   private MySQLProps getMysqlOptsFromConsoleConn(Map<String, String> connDB) {
