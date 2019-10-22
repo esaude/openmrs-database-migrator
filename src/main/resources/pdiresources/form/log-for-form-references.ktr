@@ -1279,7 +1279,7 @@ FROM form;</sql>
 , date_retired old_date_retired
 , retired_reason old_retired_reason
 , uuid old_uuid
-FROM form;</sql>
+FROM old_form;</sql>
     <limit>0</limit>
     <lookup/>
     <execute_each_row>N</execute_each_row>
