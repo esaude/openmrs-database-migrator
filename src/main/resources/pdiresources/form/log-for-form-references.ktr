@@ -430,7 +430,7 @@
     <created_date>2019/10/21 15:19:08.828</created_date>
     <modified_user>-</modified_user>
     <modified_date>2019/10/21 15:19:08.828</modified_date>
-    <key_for_session_key/>
+    <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
@@ -592,112 +592,8 @@
     </hop>
   </order>
   <step>
-    <name>get old form</name>
-    <type>TableInput</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <connection>OpenMRS source DB</connection>
-    <sql>SELECT
-  form_id old_form_id
-, name old_name
-, version old_version
-, build old_build
-, published old_published
-, description old_description
-, encounter_type old_encounter_type
-, template old_template
-, xslt old_xslt
-, creator old_creator
-, date_created old_date_created
-, changed_by old_changed_by
-, date_changed old_date_changed
-, retired old_retired
-, retired_by old_retired_by
-, date_retired old_date_retired
-, retired_reason old_retired_reason
-, uuid old_uuid
-, updated old_updated
-FROM form;</sql>
-    <limit>0</limit>
-    <lookup/>
-    <execute_each_row>N</execute_each_row>
-    <variables_active>N</variables_active>
-    <lazy_conversion_active>N</lazy_conversion_active>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>96</xloc>
-      <yloc>144</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>get harmonized form</name>
-    <type>TableInput</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <connection>OpenMRS source DB</connection>
-    <sql>SELECT
-  form_id harmonized_form_id
-, name harmonized_name
-, version harmonized_version
-, build harmonized_build
-, published harmonized_published
-, description harmonized_description
-, encounter_type harmonized_encounter_type
-, template harmonized_template
-, xslt harmonized_xslt
-, creator harmonized_creator
-, date_created harmonized_date_created
-, changed_by harmonized_changed_by
-, date_changed harmonized_date_changed
-, retired harmonized_retired
-, retired_by harmonized_retired_by
-, date_retired harmonized_date_retired
-, retired_reason harmonized_retired_reason
-, uuid harmonized_uuid
-, updated harmonized_updated
-FROM form;</sql>
-    <limit>0</limit>
-    <lookup/>
-    <execute_each_row>N</execute_each_row>
-    <variables_active>N</variables_active>
-    <lazy_conversion_active>N</lazy_conversion_active>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>96</xloc>
-      <yloc>288</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>sort old</name>
-    <type>SortRows</type>
+    <name>Dummy (do nothing)</name>
+    <type>Dummy</type>
     <description/>
     <distribute>N</distribute>
     <custom_distribution/>
@@ -706,23 +602,6 @@ FROM form;</sql>
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <directory>%%java.io.tmpdir%%</directory>
-    <prefix>out</prefix>
-    <sort_size>1000000</sort_size>
-    <free_memory/>
-    <compress>N</compress>
-    <compress_variable/>
-    <unique_rows>N</unique_rows>
-    <fields>
-      <field>
-        <name>old_uuid</name>
-        <ascending>Y</ascending>
-        <case_sensitive>N</case_sensitive>
-        <collator_enabled>N</collator_enabled>
-        <collator_strength>0</collator_strength>
-        <presorted>N</presorted>
-      </field>
-    </fields>
     <attributes/>
     <cluster_schema/>
     <remotesteps>
@@ -732,123 +611,7 @@ FROM form;</sql>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>256</xloc>
-      <yloc>144</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>sort harmonized</name>
-    <type>SortRows</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <directory>%%java.io.tmpdir%%</directory>
-    <prefix>out</prefix>
-    <sort_size>1000000</sort_size>
-    <free_memory/>
-    <compress>N</compress>
-    <compress_variable/>
-    <unique_rows>N</unique_rows>
-    <fields>
-      <field>
-        <name>harmonized_uuid</name>
-        <ascending>Y</ascending>
-        <case_sensitive>N</case_sensitive>
-        <collator_enabled>N</collator_enabled>
-        <collator_strength>0</collator_strength>
-        <presorted>N</presorted>
-      </field>
-    </fields>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>256</xloc>
-      <yloc>288</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Merge join</name>
-    <type>MergeJoin</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <join_type>INNER</join_type>
-    <step1>sort harmonized</step1>
-    <step2>sort old</step2>
-    <keys_1>
-      <key>harmonized_uuid</key>
-    </keys_1>
-    <keys_2>
-      <key>old_uuid</key>
-    </keys_2>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>400</xloc>
-      <yloc>224</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Select values</name>
-    <type>SelectValues</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <fields>
-      <field>
-        <name>harmonized_uuid</name>
-        <rename/>
-      </field>
-      <field>
-        <name>old_form_id</name>
-        <rename/>
-      </field>
-      <field>
-        <name>harmonized_form_id</name>
-        <rename/>
-      </field>
-      <select_unspecified>N</select_unspecified>
-    </fields>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>528</xloc>
+      <xloc>832</xloc>
       <yloc>224</yloc>
       <draw>Y</draw>
     </GUI>
@@ -884,31 +647,6 @@ FROM form;</sql>
     </remotesteps>
     <GUI>
       <xloc>672</xloc>
-      <yloc>224</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Dummy (do nothing)</name>
-    <type>Dummy</type>
-    <description/>
-    <distribute>N</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>832</xloc>
       <yloc>224</yloc>
       <draw>Y</draw>
     </GUI>
@@ -1062,8 +800,8 @@ FROM form;</sql>
     </GUI>
   </step>
   <step>
-    <name>update-htmlform</name>
-    <type>TableInput</type>
+    <name>Merge join</name>
+    <type>MergeJoin</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -1072,30 +810,15 @@ FROM form;</sql>
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <connection>OpenMRS source DB</connection>
-    <sql>SELECT
-  id updated_id
-, form_id updated_form_id
-, name updated_name
-, xml_data updated_xml_data
-, creator updated_creator
-, date_created updated_date_created
-, changed_by updated_changed_by
-, date_changed updated_date_changed
-, retired updated_retired
-, uuid updated_uuid
-, description updated_description
-, retired_by updated_retired_by
-, date_retired updated_date_retired
-, retire_reason updated_retire_reason
-, updated updated_updated
-FROM htmlformentry_html_form where updated=1
-</sql>
-    <limit>0</limit>
-    <lookup/>
-    <execute_each_row>N</execute_each_row>
-    <variables_active>N</variables_active>
-    <lazy_conversion_active>N</lazy_conversion_active>
+    <join_type>INNER</join_type>
+    <step1>sort harmonized</step1>
+    <step2>sort old</step2>
+    <keys_1>
+      <key>harmonized_uuid</key>
+    </keys_1>
+    <keys_2>
+      <key>old_uuid</key>
+    </keys_2>
     <attributes/>
     <cluster_schema/>
     <remotesteps>
@@ -1105,14 +828,14 @@ FROM htmlformentry_html_form where updated=1
       </output>
     </remotesteps>
     <GUI>
-      <xloc>768</xloc>
-      <yloc>368</yloc>
+      <xloc>400</xloc>
+      <yloc>224</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>updated form_resource</name>
-    <type>TableInput</type>
+    <name>Select values</name>
+    <type>SelectValues</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -1121,25 +844,18 @@ FROM htmlformentry_html_form where updated=1
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <connection>OpenMRS source DB</connection>
-    <sql>SELECT
-  form_resource_id updated_form_resource_id
-, form_id updated_form_id
-, name updated_name
-, value_reference updated_value_reference
-, datatype updated_datatype
-, datatype_config updated_datatype_config
-, preferred_handler updated_preferred_handler
-, handler_config updated_handler_config
-, uuid updated_uuid
-, updated updated_updated
-FROM form_resource where  updated=1
-</sql>
-    <limit>0</limit>
-    <lookup/>
-    <execute_each_row>N</execute_each_row>
-    <variables_active>N</variables_active>
-    <lazy_conversion_active>N</lazy_conversion_active>
+    <fields>
+      <field>
+        <name>harmonized_uuid</name>
+      </field>
+      <field>
+        <name>old_form_id</name>
+      </field>
+      <field>
+        <name>harmonized_form_id</name>
+      </field>
+      <select_unspecified>N</select_unspecified>
+    </fields>
     <attributes/>
     <cluster_schema/>
     <remotesteps>
@@ -1149,110 +865,8 @@ FROM form_resource where  updated=1
       </output>
     </remotesteps>
     <GUI>
-      <xloc>1216</xloc>
-      <yloc>400</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>updated form_field</name>
-    <type>TableInput</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <connection>OpenMRS source DB</connection>
-    <sql>SELECT
-  form_field_id updated_form_field_id
-, form_id updated_form_id
-, field_id updated_field_id
-, field_number updated_field_number
-, field_part updated_field_part
-, page_number updated_page_number
-, parent_form_field updated_parent_form_field
-, min_occurs updated_min_occurs
-, max_occurs updated_max_occurs
-, required updated_required
-, changed_by updated_changed_by
-, date_changed updated_date_changed
-, creator updated_creator
-, date_created updated_date_created
-, sort_weight updated_sort_weight
-, uuid updated_uuid
-, updated updated_updated
-FROM form_field where  updated=1;
-
-</sql>
-    <limit>0</limit>
-    <lookup/>
-    <execute_each_row>N</execute_each_row>
-    <variables_active>N</variables_active>
-    <lazy_conversion_active>N</lazy_conversion_active>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>1168</xloc>
-      <yloc>96</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>updated encounters</name>
-    <type>TableInput</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <connection>OpenMRS source DB</connection>
-    <sql>SELECT
-  encounter_id updated_encounter_id
-, encounter_type   updated_encounter_type
-, patient_id updated_patient_id
-, location_id updated_location_id
-, form_id updated_form_id
-, encounter_datetime updated_encounter_datetime
-, creator updated_creator
-, date_created updated_date_created
-, voided updated_voided
-, voided_by updated_voided_by
-, date_voided updated_date_voided
-, void_reason updated_void_reason
-, uuid updated_uuid
-, changed_by updated_changed_by
-, date_changed updated_date_changed
-, visit_id updated_visit_id
-FROM encounter  where  updated=1;
- </sql>
-    <limit>0</limit>
-    <lookup/>
-    <execute_each_row>N</execute_each_row>
-    <variables_active>N</variables_active>
-    <lazy_conversion_active>N</lazy_conversion_active>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>688</xloc>
-      <yloc>80</yloc>
+      <xloc>528</xloc>
+      <yloc>224</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1584,6 +1198,108 @@ FROM encounter  where  updated=1;
     </GUI>
   </step>
   <step>
+    <name>get harmonized form</name>
+    <type>TableInput</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>OpenMRS source DB</connection>
+    <sql>SELECT
+  form_id harmonized_form_id
+, name harmonized_name
+, version harmonized_version
+, build harmonized_build
+, published harmonized_published
+, description harmonized_description
+, encounter_type harmonized_encounter_type
+, template harmonized_template
+, xslt harmonized_xslt
+, creator harmonized_creator
+, date_created harmonized_date_created
+, changed_by harmonized_changed_by
+, date_changed harmonized_date_changed
+, retired harmonized_retired
+, retired_by harmonized_retired_by
+, date_retired harmonized_date_retired
+, retired_reason harmonized_retired_reason
+, uuid harmonized_uuid
+FROM form;</sql>
+    <limit>0</limit>
+    <lookup/>
+    <execute_each_row>N</execute_each_row>
+    <variables_active>N</variables_active>
+    <lazy_conversion_active>N</lazy_conversion_active>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>96</xloc>
+      <yloc>288</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>get old form</name>
+    <type>TableInput</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>OpenMRS source DB</connection>
+    <sql>SELECT
+  form_id old_form_id
+, name old_name
+, version old_version
+, build old_build
+, published old_published
+, description old_description
+, encounter_type old_encounter_type
+, template old_template
+, xslt old_xslt
+, creator old_creator
+, date_created old_date_created
+, changed_by old_changed_by
+, date_changed old_date_changed
+, retired old_retired
+, retired_by old_retired_by
+, date_retired old_date_retired
+, retired_reason old_retired_reason
+, uuid old_uuid
+FROM form;</sql>
+    <limit>0</limit>
+    <lookup/>
+    <execute_each_row>N</execute_each_row>
+    <variables_active>N</variables_active>
+    <lazy_conversion_active>N</lazy_conversion_active>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>96</xloc>
+      <yloc>144</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
     <name>htmlform-flog</name>
     <type>TextFileOutput</type>
     <description/>
@@ -1697,6 +1413,285 @@ FROM encounter  where  updated=1;
     <GUI>
       <xloc>1072</xloc>
       <yloc>448</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>sort harmonized</name>
+    <type>SortRows</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <directory>%%java.io.tmpdir%%</directory>
+    <prefix>out</prefix>
+    <sort_size>1000000</sort_size>
+    <free_memory/>
+    <compress>N</compress>
+    <compress_variable/>
+    <unique_rows>N</unique_rows>
+    <fields>
+      <field>
+        <name>harmonized_uuid</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>256</xloc>
+      <yloc>288</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>sort old</name>
+    <type>SortRows</type>
+    <description/>
+    <distribute>N</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <directory>%%java.io.tmpdir%%</directory>
+    <prefix>out</prefix>
+    <sort_size>1000000</sort_size>
+    <free_memory/>
+    <compress>N</compress>
+    <compress_variable/>
+    <unique_rows>N</unique_rows>
+    <fields>
+      <field>
+        <name>old_uuid</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>256</xloc>
+      <yloc>144</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>update-htmlform</name>
+    <type>TableInput</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>OpenMRS source DB</connection>
+    <sql>SELECT
+  id updated_id
+, form_id updated_form_id
+, name updated_name
+, xml_data updated_xml_data
+, creator updated_creator
+, date_created updated_date_created
+, changed_by updated_changed_by
+, date_changed updated_date_changed
+, retired updated_retired
+, uuid updated_uuid
+, description updated_description
+, retired_by updated_retired_by
+, date_retired updated_date_retired
+, retire_reason updated_retire_reason
+, updated updated_updated
+FROM htmlformentry_html_form where updated=1
+</sql>
+    <limit>0</limit>
+    <lookup/>
+    <execute_each_row>N</execute_each_row>
+    <variables_active>N</variables_active>
+    <lazy_conversion_active>N</lazy_conversion_active>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>768</xloc>
+      <yloc>368</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>updated encounters</name>
+    <type>TableInput</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>OpenMRS source DB</connection>
+    <sql>SELECT
+  encounter_id updated_encounter_id
+, encounter_type   updated_encounter_type
+, patient_id updated_patient_id
+, location_id updated_location_id
+, form_id updated_form_id
+, encounter_datetime updated_encounter_datetime
+, creator updated_creator
+, date_created updated_date_created
+, voided updated_voided
+, voided_by updated_voided_by
+, date_voided updated_date_voided
+, void_reason updated_void_reason
+, uuid updated_uuid
+, changed_by updated_changed_by
+, date_changed updated_date_changed
+, visit_id updated_visit_id
+FROM encounter  where  updated=1;
+ </sql>
+    <limit>0</limit>
+    <lookup/>
+    <execute_each_row>N</execute_each_row>
+    <variables_active>N</variables_active>
+    <lazy_conversion_active>N</lazy_conversion_active>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>688</xloc>
+      <yloc>80</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>updated form_field</name>
+    <type>TableInput</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>OpenMRS source DB</connection>
+    <sql>SELECT
+  form_field_id updated_form_field_id
+, form_id updated_form_id
+, field_id updated_field_id
+, field_number updated_field_number
+, field_part updated_field_part
+, page_number updated_page_number
+, parent_form_field updated_parent_form_field
+, min_occurs updated_min_occurs
+, max_occurs updated_max_occurs
+, required updated_required
+, changed_by updated_changed_by
+, date_changed updated_date_changed
+, creator updated_creator
+, date_created updated_date_created
+, sort_weight updated_sort_weight
+, uuid updated_uuid
+, updated updated_updated
+FROM form_field where  updated=1;
+
+</sql>
+    <limit>0</limit>
+    <lookup/>
+    <execute_each_row>N</execute_each_row>
+    <variables_active>N</variables_active>
+    <lazy_conversion_active>N</lazy_conversion_active>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1168</xloc>
+      <yloc>96</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>updated form_resource</name>
+    <type>TableInput</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>OpenMRS source DB</connection>
+    <sql>SELECT
+  form_resource_id updated_form_resource_id
+, form_id updated_form_id
+, name updated_name
+, value_reference updated_value_reference
+, datatype updated_datatype
+, datatype_config updated_datatype_config
+, preferred_handler updated_preferred_handler
+, handler_config updated_handler_config
+, uuid updated_uuid
+, updated updated_updated
+FROM form_resource where  updated=1
+</sql>
+    <limit>0</limit>
+    <lookup/>
+    <execute_each_row>N</execute_each_row>
+    <variables_active>N</variables_active>
+    <lazy_conversion_active>N</lazy_conversion_active>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1216</xloc>
+      <yloc>400</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
