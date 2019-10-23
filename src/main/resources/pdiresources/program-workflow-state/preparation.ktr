@@ -528,8 +528,8 @@ INSERT program_workflow_state_backup SELECT * FROM program_workflow_state;</sql>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>144</xloc>
-      <yloc>16</yloc>
+      <xloc>240</xloc>
+      <yloc>64</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
