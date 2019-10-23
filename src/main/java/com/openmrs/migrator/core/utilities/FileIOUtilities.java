@@ -1,6 +1,5 @@
 package com.openmrs.migrator.core.utilities;
 
-import com.openmrs.migrator.core.exceptions.EmptyFileException;
 import com.openmrs.migrator.core.exceptions.InvalidParameterException;
 import com.openmrs.migrator.core.services.SettingsService;
 import java.io.BufferedReader;
@@ -30,40 +29,22 @@ import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.stream.Collectors;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.stereotype.Component;
-import org.springframework.web.multipart.MultipartFile;
 
 @Component
 public class FileIOUtilities {
 
   private static Logger logger = LoggerFactory.getLogger(FileIOUtilities.class);
-  private static final String UPLOADED_FOLDER = "~";
   private Path settingProperties = Paths.get(SettingsService.SETTINGS_PROPERTIES);
-  private final String KETTLE_PROPERTIES = "kettle.properties";
-  private final String KETTLE_DIR = ".kettle";
   private List<String> dirList = new ArrayList<>();
 
   private Map<String, InputStream> map = new HashMap<>();
-
-  public void UploadFile(MultipartFile file) throws EmptyFileException {
-    if (file.isEmpty()) {
-      throw new EmptyFileException(file.getOriginalFilename());
-    }
-
-    try {
-      // Get the file and save it somewhere
-      byte[] bytes = file.getBytes();
-      Path path = Paths.get(UPLOADED_FOLDER + file.getOriginalFilename());
-      Files.write(path, bytes);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-  }
 
   /**
    * Loads resources from the jar file
@@ -203,25 +184,6 @@ public class FileIOUtilities {
     }
   }
 
-  public File getKettlePropertiesLocation() throws IOException {
-    logger.info("Getting the default location of kettle.properties");
-    String homeDirectory = System.getProperty("user.home");
-
-    Path kettleDir = Paths.get(homeDirectory + "/" + KETTLE_DIR);
-    Path kettleFile = Paths.get(kettleDir + "/" + KETTLE_PROPERTIES);
-
-    if (!Files.exists(kettleDir)) {
-      Files.createDirectories(kettleDir);
-      Files.createFile(kettleFile);
-    }
-    if (!Files.exists(kettleFile)) {
-      Files.createFile(kettleFile);
-    }
-
-    File file = new File(homeDirectory + "/" + KETTLE_DIR + "/" + KETTLE_PROPERTIES);
-    return file;
-  }
-
   public List<String> getAllDataBaseNamesFromConfigFile(Path path)
       throws FileNotFoundException, IOException {
     logger.info("retrieving all data base  names in " + settingProperties + " file");
@@ -297,22 +259,19 @@ public class FileIOUtilities {
 
   public boolean isSettingsFilesMissingSomeValue() throws IOException {
 
-    try (BufferedReader br = new BufferedReader(new FileReader(new File("settings.properties")))) {
-      String line = null;
-      while ((line = br.readLine()) != null) {
-
-        String value = line.split("=")[1];
-        if (("ETL_DATABASE_HOST".equals(line.split("=")[0])
-                || "ETL_DATABASE_PORT".equals(line.split("=")[0])
-                || "ETL_DATABASE_USER".equals(line.split("=")[0])
-                || "ETL_DATABASE_PASSWORD".equals(line.split("=")[0])
-                || "ETL_SOURCE_DATABASE".equals(line.split("=")[0]))
-            && ("".equals(value.trim()))) {
-          return true;
-        }
+    BufferedReader br = new BufferedReader(new FileReader(new File("settings.properties")));
+    String line = null;
+    while ((line = br.readLine()) != null) {
+      String[] prop = line.split("=");
+      if (prop.length == 1
+          || (("ETL_DATABASE_HOST".equals(prop[0])
+                  || "ETL_DATABASE_PORT".equals(prop[0])
+                  || "ETL_DATABASE_USER".equals(prop[0])
+                  || "ETL_DATABASE_PASSWORD".equals(prop[0])
+                  || "ETL_SOURCE_DATABASE".equals(prop[0]))
+              && (StringUtils.isBlank(prop[1].trim())))) {
+        return true;
       }
-    } catch (ArrayIndexOutOfBoundsException e) {
-      return true;
     }
     return false;
   }
