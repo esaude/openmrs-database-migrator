@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <transformation>
   <info>
-    <name>update-visit-type-references-using-mappings</name>
+    <name>migrating-visit-type</name>
     <description/>
     <extended_description/>
     <trans_version/>
@@ -492,19 +492,49 @@
   </connection>
   <order>
     <hop>
-      <from>Mis-matched referenced visit_type</from>
-      <to>harmonization user</to>
+      <from>Filter changed ids</from>
+      <to>Update visit</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>harmonization user</from>
-      <to>update references</to>
+      <from>Get current date</from>
+      <to>Join visit_type_backup</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Join visit_type_backup</from>
+      <to>Filter changed ids</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Join rows (cartesian product)</from>
+      <to>Lookup harmonization user</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Lookup harmonization user</from>
+      <to>Get current date</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Read harmonized visit_type</from>
+      <to>Write visit_type</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Write visit_type</from>
+      <to>Join rows (cartesian product)</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>true/false</from>
+      <to>Join rows (cartesian product)</to>
       <enabled>Y</enabled>
     </hop>
   </order>
   <step>
-    <name>Mis-matched referenced visit_type</name>
-    <type>TableInput</type>
+    <name>Filter changed ids</name>
+    <type>FilterRows</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -513,17 +543,16 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <connection>source</connection>
-    <sql>SELECT v.visit_type_id as current_visit_type_id, vtb.visit_type_id as former_visit_type_id FROM visit v
-INNER JOIN visit_type vt ON v.visit_type_id = vt.visit_type_id 
-INNER JOIN visit_type_backup vtb ON vt.uuid = vtb.uuid 
-WHERE v.visit_type_id != vtb.visit_type_id
-AND v.updated = 0;</sql>
-    <limit>0</limit>
-    <lookup/>
-    <execute_each_row>N</execute_each_row>
-    <variables_active>N</variables_active>
-    <lazy_conversion_active>Y</lazy_conversion_active>
+    <send_true_to>Update visit_type</send_true_to>
+    <send_false_to/>
+    <compare>
+      <condition>
+        <negated>Y</negated>
+        <leftvalue>old_visit_type_id</leftvalue>
+        <function>=</function>
+        <rightvalue>visit_type_id</rightvalue>
+      </condition>
+    </compare>
     <attributes/>
     <cluster_schema/>
     <remotesteps>
@@ -533,13 +562,131 @@ AND v.updated = 0;</sql>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>128</xloc>
-      <yloc>128</yloc>
+      <xloc>1200</xloc>
+      <yloc>208</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>harmonization user</name>
+    <name>Get current date</name>
+    <type>SystemInfo</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <fields>
+      <field>
+        <name>current_date</name>
+        <type>system date (fixed)</type>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>880</xloc>
+      <yloc>208</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Join visit_type_backup</name>
+    <type>DBJoin</type>
+    <description/>
+    <distribute>N</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>source</connection>
+    <rowlimit>0</rowlimit>
+    <sql>SELECT
+  visit_type_id old_visit_type_id,
+  name old_name,
+  description old_description,
+  creator old_creator,
+  date_created old_date_created,
+  changed_by old_changed_by,
+  date_changed old_date_changed,
+  retired old_retired,
+  retired_by old_retired_by,
+  date_retired old_date_retired,
+  retire_reason old_retire_reason,
+  uuid old_uuid
+FROM visit_type_backup 
+WHERE uuid=?</sql>
+    <outer_join>N</outer_join>
+    <replace_vars>N</replace_vars>
+    <parameter>
+      <field>
+        <name>uuid</name>
+        <type>None</type>
+      </field>
+    </parameter>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1040</xloc>
+      <yloc>208</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Join rows (cartesian product)</name>
+    <type>JoinRows</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <directory>%%java.io.tmpdir%%</directory>
+    <prefix>out</prefix>
+    <cache_size>500</cache_size>
+    <main/>
+    <compare>
+      <condition>
+        <negated>N</negated>
+        <leftvalue/>
+        <function>=</function>
+        <rightvalue/>
+      </condition>
+    </compare>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>496</xloc>
+      <yloc>208</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Lookup harmonization user</name>
     <type>DBJoin</type>
     <description/>
     <distribute>Y</distribute>
@@ -549,10 +696,12 @@ AND v.updated = 0;</sql>
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <connection>source</connection>
+    <connection/>
     <rowlimit>0</rowlimit>
-    <sql>SELECT user_id AS harmonization_user_id FROM users where system_id = 'harmonization';</sql>
-    <outer_join>N</outer_join>
+    <sql>SELECT user_id AS harmonization_user_id 
+FROM users 
+WHERE system_id = 'harmonization';</sql>
+    <outer_join>Y</outer_join>
     <replace_vars>N</replace_vars>
     <parameter>
     </parameter>
@@ -565,14 +714,14 @@ AND v.updated = 0;</sql>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>400</xloc>
-      <yloc>128</yloc>
+      <xloc>704</xloc>
+      <yloc>208</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>update references</name>
-    <type>ExecSQL</type>
+    <name>Read harmonized visit_type</name>
+    <type>CsvInput</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -581,28 +730,154 @@ AND v.updated = 0;</sql>
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <connection>source</connection>
-    <execute_each_row>Y</execute_each_row>
-    <single_statement>Y</single_statement>
-    <replace_variables>Y</replace_variables>
-    <quoteString>N</quoteString>
-    <sql>UPDATE visit SET visit_type_id = ?, updated = 1, date_changed = NOW(), changed_by = ? WHERE visit_type_id = ? AND updated = 0;</sql>
-    <set_params>N</set_params>
-    <insert_field/>
-    <update_field/>
-    <delete_field/>
-    <read_field/>
-    <arguments>
-      <argument>
-        <name>former_visit_type_id</name>
-      </argument>
-      <argument>
-        <name>harmonization_user_id</name>
-      </argument>
-      <argument>
-        <name>current_visit_type_id</name>
-      </argument>
-    </arguments>
+    <filename>config/visit-types.csv</filename>
+    <filename_field/>
+    <rownum_field/>
+    <include_filename>N</include_filename>
+    <separator>,</separator>
+    <enclosure>"</enclosure>
+    <header>Y</header>
+    <buffer_size>50000</buffer_size>
+    <lazy_conversion>Y</lazy_conversion>
+    <add_filename_result>N</add_filename_result>
+    <parallel>N</parallel>
+    <newline_possible>N</newline_possible>
+    <format/>
+    <encoding/>
+    <fields>
+      <field>
+        <name>visit_type_id</name>
+        <type>Integer</type>
+        <format>#</format>
+        <currency>$</currency>
+        <decimal>.</decimal>
+        <group>,</group>
+        <length>15</length>
+        <precision>0</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>name</name>
+        <type>String</type>
+        <format/>
+        <currency>$</currency>
+        <decimal>.</decimal>
+        <group>,</group>
+        <length>27</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>description</name>
+        <type>String</type>
+        <format/>
+        <currency>$</currency>
+        <decimal>.</decimal>
+        <group>,</group>
+        <length>62</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>uuid</name>
+        <type>String</type>
+        <format/>
+        <currency>$</currency>
+        <decimal>.</decimal>
+        <group>,</group>
+        <length>36</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>creator</name>
+        <type>Integer</type>
+        <format>#</format>
+        <currency>$</currency>
+        <decimal>.</decimal>
+        <group>,</group>
+        <length>15</length>
+        <precision>0</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>date_created</name>
+        <type>Date</type>
+        <format>yyyy-MM-dd HH:mm:ss</format>
+        <currency>$</currency>
+        <decimal>.</decimal>
+        <group>,</group>
+        <length>-1</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>changed_by</name>
+        <type>Integer</type>
+        <format>#</format>
+        <currency>$</currency>
+        <decimal>.</decimal>
+        <group>,</group>
+        <length>15</length>
+        <precision>0</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>date_changed</name>
+        <type>Date</type>
+        <format>yyyy-MM-dd HH:mm:ss</format>
+        <currency>$</currency>
+        <decimal>.</decimal>
+        <group>,</group>
+        <length>-1</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>retired</name>
+        <type>Integer</type>
+        <format>#</format>
+        <currency>$</currency>
+        <decimal>.</decimal>
+        <group>,</group>
+        <length>15</length>
+        <precision>0</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>retired_by</name>
+        <type>Boolean</type>
+        <format/>
+        <currency>$</currency>
+        <decimal>.</decimal>
+        <group>,</group>
+        <length>-1</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>date_retired</name>
+        <type>Boolean</type>
+        <format/>
+        <currency>$</currency>
+        <decimal>.</decimal>
+        <group>,</group>
+        <length>-1</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>retire_reason</name>
+        <type>Boolean</type>
+        <format/>
+        <currency>$</currency>
+        <decimal>.</decimal>
+        <group>,</group>
+        <length>-1</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+    </fields>
     <attributes/>
     <cluster_schema/>
     <remotesteps>
@@ -612,8 +887,218 @@ AND v.updated = 0;</sql>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>704</xloc>
-      <yloc>128</yloc>
+      <xloc>112</xloc>
+      <yloc>208</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Update visit</name>
+    <type>Update</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>source</connection>
+    <skip_lookup>N</skip_lookup>
+    <commit>100</commit>
+    <use_batch>N</use_batch>
+    <error_ignored>Y</error_ignored>
+    <ignore_flag_field/>
+    <lookup>
+      <schema/>
+      <table>visit</table>
+      <key>
+        <name>old_visit_type_id</name>
+        <field>visit_type_id</field>
+        <condition>=</condition>
+        <name2/>
+      </key>
+      <key>
+        <name>false</name>
+        <field>updated</field>
+        <condition>=</condition>
+        <name2/>
+      </key>
+      <value>
+        <name>visit_type_id</name>
+        <rename>visit_type_id</rename>
+      </value>
+      <value>
+        <name>updated</name>
+        <rename>true</rename>
+      </value>
+      <value>
+        <name>changed_by</name>
+        <rename>harmonization_user_id</rename>
+      </value>
+      <value>
+        <name>date_changed</name>
+        <rename>current_date</rename>
+      </value>
+    </lookup>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1344</xloc>
+      <yloc>208</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Write visit_type</name>
+    <type>TableOutput</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>source</connection>
+    <schema/>
+    <table>visit_type</table>
+    <commit>1000</commit>
+    <truncate>N</truncate>
+    <ignore_errors>N</ignore_errors>
+    <use_batch>Y</use_batch>
+    <specify_fields>Y</specify_fields>
+    <partitioning_enabled>N</partitioning_enabled>
+    <partitioning_field/>
+    <partitioning_daily>N</partitioning_daily>
+    <partitioning_monthly>Y</partitioning_monthly>
+    <tablename_in_field>N</tablename_in_field>
+    <tablename_field/>
+    <tablename_in_table>Y</tablename_in_table>
+    <return_keys>N</return_keys>
+    <return_field/>
+    <fields>
+      <field>
+        <column_name>visit_type_id</column_name>
+        <stream_name>visit_type_id</stream_name>
+      </field>
+      <field>
+        <column_name>name</column_name>
+        <stream_name>name</stream_name>
+      </field>
+      <field>
+        <column_name>description</column_name>
+        <stream_name>description</stream_name>
+      </field>
+      <field>
+        <column_name>uuid</column_name>
+        <stream_name>uuid</stream_name>
+      </field>
+      <field>
+        <column_name>creator</column_name>
+        <stream_name>creator</stream_name>
+      </field>
+      <field>
+        <column_name>date_created</column_name>
+        <stream_name>date_created</stream_name>
+      </field>
+      <field>
+        <column_name>changed_by</column_name>
+        <stream_name>changed_by</stream_name>
+      </field>
+      <field>
+        <column_name>date_changed</column_name>
+        <stream_name>date_changed</stream_name>
+      </field>
+      <field>
+        <column_name>retired</column_name>
+        <stream_name>retired</stream_name>
+      </field>
+      <field>
+        <column_name>retired_by</column_name>
+        <stream_name>retired_by</stream_name>
+      </field>
+      <field>
+        <column_name>date_retired</column_name>
+        <stream_name>date_retired</stream_name>
+      </field>
+      <field>
+        <column_name>retire_reason</column_name>
+        <stream_name>retire_reason</stream_name>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>304</xloc>
+      <yloc>208</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>true/false</name>
+    <type>DataGrid</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <fields>
+      <field>
+        <name>true</name>
+        <type>Integer</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <length>-1</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+      <field>
+        <name>false</name>
+        <type>Integer</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <length>-1</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+    </fields>
+    <data>
+      <line>
+        <item>1</item>
+        <item>0</item>
+      </line>
+    </data>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>496</xloc>
+      <yloc>80</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
