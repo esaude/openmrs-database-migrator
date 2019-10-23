@@ -17,6 +17,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.nio.file.attribute.PosixFilePermission;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -346,5 +347,10 @@ public class FileIOUtilities {
             .map(x -> "classpath:" + x + "*")
             .collect(Collectors.toSet());
     return set;
+  }
+
+  public void changeFilePermission(Path path, Set<PosixFilePermission> permissions)
+      throws IOException {
+    Files.setPosixFilePermissions(path, permissions);
   }
 }

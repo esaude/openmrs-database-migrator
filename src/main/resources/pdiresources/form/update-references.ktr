@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <transformation>
   <info>
-    <name>order-type-preparation</name>
+    <name>form-update-references</name>
     <description/>
     <extended_description/>
     <trans_version/>
@@ -428,21 +428,21 @@
     <clusterschemas>
     </clusterschemas>
     <created_user>-</created_user>
-    <created_date>2019/09/26 10:57:10.824</created_date>
+    <created_date>2019/10/09 14:52:03.047</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2019/09/26 10:57:10.824</modified_date>
+    <modified_date>2019/10/09 14:52:03.047</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
   </notepads>
   <connection>
-    <name>OpenMRS Source</name>
+    <name>OpenMRS Source DB</name>
     <server>${ETL_DATABASE_HOST}</server>
     <type>MYSQL</type>
     <access>Native</access>
     <database>${ETL_SOURCE_DATABASE}</database>
-    <port>3306</port>
+    <port>${ETL_DATABASE_PORT}</port>
     <username>${ETL_DATABASE_USER}</username>
     <password>${ETL_DATABASE_PASSWORD}</password>
     <servername/>
@@ -463,7 +463,7 @@
       </attribute>
       <attribute>
         <code>PORT_NUMBER</code>
-        <attribute>3306</attribute>
+        <attribute>${ETL_DATABASE_PORT}</attribute>
       </attribute>
       <attribute>
         <code>PRESERVE_RESERVED_WORD_CASE</code>
@@ -475,7 +475,8 @@
       </attribute>
       <attribute>
         <code>SQL_CONNECT</code>
-        <attribute>SET FOREIGN_KEY_CHECKS=0;</attribute>
+        <attribute>set  foreign_key_checks=0;
+set global max_allowed_packet=404857600;</attribute>
       </attribute>
       <attribute>
         <code>STREAM_RESULTS</code>
@@ -497,87 +498,63 @@
   </connection>
   <order>
     <hop>
-      <from>create old_order_type</from>
-      <to>add flag to order_type</to>
+      <from>true/false</from>
+      <to>Join rows (cartesian product)</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>add flag to order_type</from>
-      <to>add flag to order_type_class_map</to>
+      <from>Join rows (cartesian product)</from>
+      <to>lookup_harmonized_user</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Read order_type</from>
-      <to>Backup order_type</to>
+      <from>lookup_harmonized_user</from>
+      <to>get_current_date</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Backup order_type</from>
-      <to>Blocking step</to>
+      <from>get_current_date</from>
+      <to>join_old_form</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Blocking step</from>
-      <to>Delete order_type</to>
+      <from>join_old_form</from>
+      <to>Filter rows</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>add flag to order_type_class_map</from>
-      <to>add flag to orders</to>
+      <from>Filter rows</from>
+      <to>update_encounter</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>add flag to orders</from>
-      <to>Read order_type</to>
+      <from>update_encounter</from>
+      <to>update_form_field</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>update_form_field</from>
+      <to>update_form_resouce</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>update_form_resouce</from>
+      <to>update_htmlform</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Table input</from>
+      <to>Blocking step 2</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Blocking step 2</from>
+      <to>Join rows (cartesian product)</to>
       <enabled>Y</enabled>
     </hop>
   </order>
   <step>
-    <name>Backup order_type</name>
-    <type>TableOutput</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <connection>OpenMRS Source</connection>
-    <schema/>
-    <table>old_order_type</table>
-    <commit>1000</commit>
-    <truncate>N</truncate>
-    <ignore_errors>N</ignore_errors>
-    <use_batch>N</use_batch>
-    <specify_fields>N</specify_fields>
-    <partitioning_enabled>N</partitioning_enabled>
-    <partitioning_field/>
-    <partitioning_daily>N</partitioning_daily>
-    <partitioning_monthly>Y</partitioning_monthly>
-    <tablename_in_field>N</tablename_in_field>
-    <tablename_field/>
-    <tablename_in_table>Y</tablename_in_table>
-    <return_keys>N</return_keys>
-    <return_field/>
-    <fields>
-    </fields>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>1088</xloc>
-      <yloc>240</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Blocking step</name>
+    <name>Blocking step 2</name>
     <type>BlockingStep</type>
     <description/>
     <distribute>Y</distribute>
@@ -601,14 +578,14 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>1280</xloc>
-      <yloc>240</yloc>
+      <xloc>416</xloc>
+      <yloc>368</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Delete order_type</name>
-    <type>Delete</type>
+    <name>Filter rows</name>
+    <type>FilterRows</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -617,18 +594,16 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <connection>OpenMRS Source</connection>
-    <commit>100</commit>
-    <lookup>
-      <schema/>
-      <table>order_type</table>
-      <key>
-        <name>order_type_id</name>
-        <field>order_type_id</field>
-        <condition>=</condition>
-        <name2/>
-      </key>
-    </lookup>
+    <send_true_to>update_encounter</send_true_to>
+    <send_false_to/>
+    <compare>
+      <condition>
+        <negated>Y</negated>
+        <leftvalue>old_form_id</leftvalue>
+        <function>=</function>
+        <rightvalue>form_id</rightvalue>
+      </condition>
+    </compare>
     <attributes/>
     <cluster_schema/>
     <remotesteps>
@@ -638,40 +613,61 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>1456</xloc>
-      <yloc>240</yloc>
+      <xloc>1248</xloc>
+      <yloc>208</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Read order_type</name>
-    <type>TableInput</type>
+    <name>Join rows (cartesian product)</name>
+    <type>JoinRows</type>
     <description/>
-    <distribute>N</distribute>
+    <distribute>Y</distribute>
     <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <connection>OpenMRS Source</connection>
-    <sql>SELECT
-  order_type_id
-, name
-, description
-, creator
-, date_created
-, retired
-, retired_by
-, date_retired
-, retire_reason
-, uuid
-, java_class_name
-, parent
-, changed_by
-, date_changed
-FROM order_type
-</sql>
+    <directory>%%java.io.tmpdir%%</directory>
+    <prefix>out</prefix>
+    <cache_size>500</cache_size>
+    <main/>
+    <compare>
+      <condition>
+        <negated>N</negated>
+        <leftvalue/>
+        <function>=</function>
+        <rightvalue/>
+      </condition>
+    </compare>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>528</xloc>
+      <yloc>208</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Table input</name>
+    <type>TableInput</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>OpenMRS Source DB</connection>
+    <sql>select  *  from form;</sql>
     <limit>0</limit>
     <lookup/>
     <execute_each_row>N</execute_each_row>
@@ -686,14 +682,14 @@ FROM order_type
       </output>
     </remotesteps>
     <GUI>
-      <xloc>880</xloc>
-      <yloc>240</yloc>
+      <xloc>320</xloc>
+      <yloc>208</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>add flag to order_type</name>
-    <type>ExecSQL</type>
+    <name>get_current_date</name>
+    <type>SystemInfo</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -702,19 +698,12 @@ FROM order_type
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <connection>OpenMRS Source</connection>
-    <execute_each_row>N</execute_each_row>
-    <single_statement>N</single_statement>
-    <replace_variables>N</replace_variables>
-    <quoteString>N</quoteString>
-    <sql>ALTER TABLE order_type ADD updated BOOLEAN DEFAULT 0;</sql>
-    <set_params>N</set_params>
-    <insert_field/>
-    <update_field/>
-    <delete_field/>
-    <read_field/>
-    <arguments>
-    </arguments>
+    <fields>
+      <field>
+        <name>current_date</name>
+        <type>system date (fixed)</type>
+      </field>
+    </fields>
     <attributes/>
     <cluster_schema/>
     <remotesteps>
@@ -724,14 +713,14 @@ FROM order_type
       </output>
     </remotesteps>
     <GUI>
-      <xloc>272</xloc>
-      <yloc>240</yloc>
+      <xloc>944</xloc>
+      <yloc>208</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>add flag to order_type_class_map</name>
-    <type>ExecSQL</type>
+    <name>join_old_form</name>
+    <type>DBJoin</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -740,19 +729,37 @@ FROM order_type
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <connection>OpenMRS Source</connection>
-    <execute_each_row>N</execute_each_row>
-    <single_statement>N</single_statement>
-    <replace_variables>N</replace_variables>
-    <quoteString>N</quoteString>
-    <sql>ALTER TABLE order_type_class_map ADD updated BOOLEAN DEFAULT 0;</sql>
-    <set_params>N</set_params>
-    <insert_field/>
-    <update_field/>
-    <delete_field/>
-    <read_field/>
-    <arguments>
-    </arguments>
+    <connection>OpenMRS Source DB</connection>
+    <rowlimit>0</rowlimit>
+    <sql>select 
+	form_id old_form_id,
+	name  old_name,
+	version old_version,
+	build old_build,
+	published  old_published,
+	description old_description,
+	encounter_type old_encounter_type,
+	template old_template,
+	xslt old_xslt,
+	creator old_creator,
+	date_created old_date_created,
+	changed_by old_changed_by,
+	date_changed old_date_changed,
+	retired old_retired,
+	retired_by old_retired_by,
+	date_retired  old_date_retired,
+	retired_reason  old_retired_reason,
+	uuid old_uuid
+from old_form
+where uuid=?</sql>
+    <outer_join>N</outer_join>
+    <replace_vars>N</replace_vars>
+    <parameter>
+      <field>
+        <name>uuid</name>
+        <type>None</type>
+      </field>
+    </parameter>
     <attributes/>
     <cluster_schema/>
     <remotesteps>
@@ -762,14 +769,14 @@ FROM order_type
       </output>
     </remotesteps>
     <GUI>
-      <xloc>496</xloc>
-      <yloc>240</yloc>
+      <xloc>1104</xloc>
+      <yloc>208</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>add flag to orders</name>
-    <type>ExecSQL</type>
+    <name>lookup_harmonized_user</name>
+    <type>DBJoin</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -778,19 +785,15 @@ FROM order_type
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <connection>OpenMRS Source</connection>
-    <execute_each_row>N</execute_each_row>
-    <single_statement>N</single_statement>
-    <replace_variables>N</replace_variables>
-    <quoteString>N</quoteString>
-    <sql>ALTER TABLE orders ADD updated BOOLEAN DEFAULT 0;</sql>
-    <set_params>N</set_params>
-    <insert_field/>
-    <update_field/>
-    <delete_field/>
-    <read_field/>
-    <arguments>
-    </arguments>
+    <connection>OpenMRS Source DB</connection>
+    <rowlimit>0</rowlimit>
+    <sql>select user_id AS   harmonized_user_id
+from  users
+where   system_id = 'harmonization';</sql>
+    <outer_join>Y</outer_join>
+    <replace_vars>N</replace_vars>
+    <parameter>
+    </parameter>
     <attributes/>
     <cluster_schema/>
     <remotesteps>
@@ -800,14 +803,14 @@ FROM order_type
       </output>
     </remotesteps>
     <GUI>
-      <xloc>704</xloc>
-      <yloc>240</yloc>
+      <xloc>752</xloc>
+      <yloc>208</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>create old_order_type</name>
-    <type>ExecSQL</type>
+    <name>true/false</name>
+    <type>DataGrid</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -816,42 +819,36 @@ FROM order_type
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <connection>OpenMRS Source</connection>
-    <execute_each_row>N</execute_each_row>
-    <single_statement>N</single_statement>
-    <replace_variables>N</replace_variables>
-    <quoteString>N</quoteString>
-    <sql>CREATE TABLE `old_order_type` (
-  `order_type_id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL DEFAULT '',
-  `description` text,
-  `creator` int(11) NOT NULL DEFAULT '0',
-  `date_created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `retired` tinyint(1) NOT NULL DEFAULT '0',
-  `retired_by` int(11) DEFAULT NULL,
-  `date_retired` datetime DEFAULT NULL,
-  `retire_reason` varchar(255) DEFAULT NULL,
-  `uuid` char(38) NOT NULL,
-  `java_class_name` varchar(255) NOT NULL,
-  `parent` int(11) DEFAULT NULL,
-  `changed_by` int(11) DEFAULT NULL,
-  `date_changed` datetime DEFAULT NULL,
-  PRIMARY KEY (`order_type_id`),
-  UNIQUE KEY `order_type_uuid_index` (`uuid`),
-  UNIQUE KEY `name` (`name`),
-  KEY `type_created_by` (`creator`),
-  KEY `user_who_retired_order_type` (`retired_by`),
-  KEY `retired_status` (`retired`),
-  KEY `order_type_changed_by` (`changed_by`),
-  KEY `order_type_parent` (`parent`)
-);</sql>
-    <set_params>N</set_params>
-    <insert_field/>
-    <update_field/>
-    <delete_field/>
-    <read_field/>
-    <arguments>
-    </arguments>
+    <fields>
+      <field>
+        <name>true</name>
+        <type>Integer</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <length>-1</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+      <field>
+        <name>false</name>
+        <type>Integer</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <length>-1</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+    </fields>
+    <data>
+      <line>
+        <item>1</item>
+        <item>0</item>
+      </line>
+    </data>
     <attributes/>
     <cluster_schema/>
     <remotesteps>
@@ -861,8 +858,252 @@ FROM order_type
       </output>
     </remotesteps>
     <GUI>
-      <xloc>80</xloc>
-      <yloc>240</yloc>
+      <xloc>528</xloc>
+      <yloc>112</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>update_encounter</name>
+    <type>Update</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>OpenMRS Source DB</connection>
+    <skip_lookup>N</skip_lookup>
+    <commit>100</commit>
+    <use_batch>N</use_batch>
+    <error_ignored>Y</error_ignored>
+    <ignore_flag_field/>
+    <lookup>
+      <schema/>
+      <table>encounter</table>
+      <key>
+        <name>old_form_id</name>
+        <field>form_id</field>
+        <condition>=</condition>
+        <name2/>
+      </key>
+      <key>
+        <name>false</name>
+        <field>updated</field>
+        <condition>=</condition>
+        <name2/>
+      </key>
+      <value>
+        <name>form_id</name>
+        <rename>form_id</rename>
+      </value>
+      <value>
+        <name>updated</name>
+        <rename>true</rename>
+      </value>
+      <value>
+        <name>changed_by</name>
+        <rename>harmonized_user_id</rename>
+      </value>
+      <value>
+        <name>date_changed</name>
+        <rename>current_date</rename>
+      </value>
+    </lookup>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1248</xloc>
+      <yloc>336</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>update_form_field</name>
+    <type>Update</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>OpenMRS Source DB</connection>
+    <skip_lookup>N</skip_lookup>
+    <commit>100</commit>
+    <use_batch>N</use_batch>
+    <error_ignored>Y</error_ignored>
+    <ignore_flag_field/>
+    <lookup>
+      <schema/>
+      <table>form_field</table>
+      <key>
+        <name>old_form_id</name>
+        <field>form_id</field>
+        <condition>=</condition>
+        <name2/>
+      </key>
+      <key>
+        <name>false</name>
+        <field>updated</field>
+        <condition>=</condition>
+        <name2/>
+      </key>
+      <value>
+        <name>form_id</name>
+        <rename>form_id</rename>
+      </value>
+      <value>
+        <name>updated</name>
+        <rename>true</rename>
+      </value>
+      <value>
+        <name>changed_by</name>
+        <rename>harmonized_user_id</rename>
+      </value>
+      <value>
+        <name>date_changed</name>
+        <rename>current_date</rename>
+      </value>
+    </lookup>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1248</xloc>
+      <yloc>432</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>update_form_resouce</name>
+    <type>Update</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>OpenMRS Source DB</connection>
+    <skip_lookup>N</skip_lookup>
+    <commit>100</commit>
+    <use_batch>N</use_batch>
+    <error_ignored>Y</error_ignored>
+    <ignore_flag_field/>
+    <lookup>
+      <schema/>
+      <table>form_resource</table>
+      <key>
+        <name>old_form_id</name>
+        <field>form_id</field>
+        <condition>=</condition>
+        <name2/>
+      </key>
+      <key>
+        <name>false</name>
+        <field>updated</field>
+        <condition>=</condition>
+        <name2/>
+      </key>
+      <value>
+        <name>form_id</name>
+        <rename>form_id</rename>
+      </value>
+      <value>
+        <name>updated</name>
+        <rename>true</rename>
+      </value>
+    </lookup>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1088</xloc>
+      <yloc>432</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>update_htmlform</name>
+    <type>Update</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>OpenMRS Source DB</connection>
+    <skip_lookup>N</skip_lookup>
+    <commit>100</commit>
+    <use_batch>N</use_batch>
+    <error_ignored>Y</error_ignored>
+    <ignore_flag_field/>
+    <lookup>
+      <schema/>
+      <table>htmlformentry_html_form</table>
+      <key>
+        <name>old_form_id</name>
+        <field>form_id</field>
+        <condition>=</condition>
+        <name2/>
+      </key>
+      <key>
+        <name>false</name>
+        <field>updated</field>
+        <condition>=</condition>
+        <name2/>
+      </key>
+      <value>
+        <name>form_id</name>
+        <rename>form_id</rename>
+      </value>
+      <value>
+        <name>updated</name>
+        <rename>true</rename>
+      </value>
+      <value>
+        <name>changed_by</name>
+        <rename>harmonized_user_id</rename>
+      </value>
+      <value>
+        <name>date_changed</name>
+        <rename>current_date</rename>
+      </value>
+    </lookup>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>928</xloc>
+      <yloc>432</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

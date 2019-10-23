@@ -68,7 +68,10 @@ public class BootstrapServiceImpl implements BootstrapService {
       try {
         decomposePath(pdiFile);
         byte[] buffer = new byte[sourceFiles.get(pdiFile).available()];
-        if (pdiFile.contains(".jar") || pdiFile.contains(".csv")) {
+        if (pdiFile.contains(".jar")
+            || pdiFile.contains(".csv")
+            || pdiFile.contains(".sh")
+            || pdiFile.contains(".sql")) {
           fileIOUtilities.copyFileFromResources(pdiFile);
           continue;
         }

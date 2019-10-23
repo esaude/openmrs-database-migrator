@@ -572,7 +572,7 @@
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>ALTER TABLE patient_program ADD seen BOOLEAN DEFAULT 0;</sql>
+    <sql>ALTER TABLE patient_program ADD updated BOOLEAN DEFAULT 0;</sql>
     <set_params>N</set_params>
     <insert_field/>
     <update_field/>
@@ -610,7 +610,7 @@
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>ALTER TABLE program_workflow ADD seen BOOLEAN DEFAULT 0;</sql>
+    <sql>ALTER TABLE program_workflow ADD updated BOOLEAN DEFAULT 0;</sql>
     <set_params>N</set_params>
     <insert_field/>
     <update_field/>

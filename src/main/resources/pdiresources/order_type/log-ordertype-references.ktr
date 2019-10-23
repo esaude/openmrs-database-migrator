@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <transformation>
   <info>
-    <name>migrate_program</name>
+    <name>log-ordertype-references</name>
     <description/>
     <extended_description/>
     <trans_version/>
@@ -427,9 +427,9 @@
     <clusterschemas>
     </clusterschemas>
     <created_user>-</created_user>
-    <created_date>2019/09/27 15:41:04.544</created_date>
+    <created_date>2019/10/21 16:15:55.758</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2019/09/27 15:41:04.544</modified_date>
+    <modified_date>2019/10/21 16:15:55.758</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -496,59 +496,89 @@
   </connection>
   <order>
     <hop>
-      <from>read_harmonized_program</from>
-      <to>write_program</to>
+      <from>harmonized</from>
+      <to>sort-horminized</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>true/false</from>
+      <from>old</from>
+      <to>sort-old</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>sort-horminized</from>
+      <to>Merge join</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>sort-old</from>
+      <to>Merge join</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Merge join</from>
+      <to>Select values</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Select values</from>
+      <to>Filter rows</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Filter rows</from>
+      <to>Dummy (do nothing)</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Dummy (do nothing)</from>
       <to>Join rows (cartesian product)</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>write_program</from>
+      <from>Dummy (do nothing)</from>
+      <to>Join rows (cartesian product) 2</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Dummy (do nothing)</from>
+      <to>Join rows (cartesian product) 3</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>updated orders</from>
+      <to>Join rows (cartesian product) 3</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>updated  order_type</from>
       <to>Join rows (cartesian product)</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Blocking step</from>
-      <to>patient_program</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Blocking step</from>
-      <to>update_program_workflow</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
       <from>Join rows (cartesian product)</from>
-      <to>Lookup harmonization user</to>
+      <to>order_type log</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Lookup harmonization user</from>
-      <to>Get current date</to>
+      <from>updated order_type_class_map</from>
+      <to>Join rows (cartesian product) 2</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Get current date</from>
-      <to>join_old_program</to>
+      <from>Join rows (cartesian product) 2</from>
+      <to>order_type_class_map log</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>join_old_program</from>
-      <to>Filter changed ids</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Filter changed ids</from>
-      <to>Blocking step</to>
+      <from>Join rows (cartesian product) 3</from>
+      <to>updated orders </to>
       <enabled>Y</enabled>
     </hop>
   </order>
   <step>
-    <name>Blocking step</name>
-    <type>BlockingStep</type>
+    <name>Dummy (do nothing)</name>
+    <type>Dummy</type>
     <description/>
     <distribute>N</distribute>
     <custom_distribution/>
@@ -557,11 +587,6 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <pass_all_rows>Y</pass_all_rows>
-    <directory>%%java.io.tmpdir%%</directory>
-    <prefix>block</prefix>
-    <cache_size>5000</cache_size>
-    <compress>Y</compress>
     <attributes/>
     <cluster_schema/>
     <remotesteps>
@@ -571,13 +596,13 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>1216</xloc>
-      <yloc>272</yloc>
+      <xloc>960</xloc>
+      <yloc>160</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Filter changed ids</name>
+    <name>Filter rows</name>
     <type>FilterRows</type>
     <description/>
     <distribute>Y</distribute>
@@ -587,14 +612,14 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <send_true_to>Blocking step</send_true_to>
+    <send_true_to>Dummy (do nothing)</send_true_to>
     <send_false_to/>
     <compare>
       <condition>
-        <negated>Y</negated>
-        <leftvalue>old_program_id</leftvalue>
-        <function>=</function>
-        <rightvalue>program_id</rightvalue>
+        <negated>N</negated>
+        <leftvalue>old_order_type_id</leftvalue>
+        <function>&lt;></function>
+        <rightvalue>harmonized_order_type_id</rightvalue>
       </condition>
     </compare>
     <attributes/>
@@ -606,39 +631,8 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>1056</xloc>
-      <yloc>272</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Get current date</name>
-    <type>SystemInfo</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <fields>
-      <field>
-        <name>current_date</name>
-        <type>system date (fixed)</type>
-      </field>
-    </fields>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
       <xloc>768</xloc>
-      <yloc>272</yloc>
+      <yloc>160</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -656,13 +650,13 @@
     <directory>%%java.io.tmpdir%%</directory>
     <prefix>out</prefix>
     <cache_size>500</cache_size>
-    <main/>
+    <main>Dummy (do nothing)</main>
     <compare>
       <condition>
         <negated>N</negated>
-        <leftvalue/>
+        <leftvalue>harmonized_order_type_id</leftvalue>
         <function>=</function>
-        <rightvalue/>
+        <rightvalue>updated_order_type_id</rightvalue>
       </condition>
     </compare>
     <attributes/>
@@ -674,14 +668,14 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>416</xloc>
-      <yloc>272</yloc>
+      <xloc>960</xloc>
+      <yloc>32</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Lookup harmonization user</name>
-    <type>DBJoin</type>
+    <name>Join rows (cartesian product) 2</name>
+    <type>JoinRows</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -690,15 +684,18 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <connection>OpenMRS source DB</connection>
-    <rowlimit>0</rowlimit>
-    <sql>SELECT user_id AS harmonization_user_id 
-FROM users 
-WHERE system_id = 'harmonization';</sql>
-    <outer_join>Y</outer_join>
-    <replace_vars>N</replace_vars>
-    <parameter>
-    </parameter>
+    <directory>%%java.io.tmpdir%%</directory>
+    <prefix>out</prefix>
+    <cache_size>500</cache_size>
+    <main>Dummy (do nothing)</main>
+    <compare>
+      <condition>
+        <negated>N</negated>
+        <leftvalue>harmonized_order_type_id</leftvalue>
+        <function>=</function>
+        <rightvalue>update_order_type_id</rightvalue>
+      </condition>
+    </compare>
     <attributes/>
     <cluster_schema/>
     <remotesteps>
@@ -708,126 +705,14 @@ WHERE system_id = 'harmonization';</sql>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>608</xloc>
-      <yloc>272</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>join_old_program</name>
-    <type>DBJoin</type>
-    <description/>
-    <distribute>N</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <connection>OpenMRS source DB</connection>
-    <rowlimit>0</rowlimit>
-    <sql>select  
-	program_id old_program_id,
-	concept_id old_concept_id,
-	creator old_creator,
-	date_created old_date_created,
-	changed_by old_changed_by,
-	date_changed old_date_changed,
-	retired old_retired,
-	name old_name,
-	description old_description,
-	uuid old_uuid,
-	outcomes_concept_id  old_outcomes_concept_id 
-from old_program 
-where uuid=?</sql>
-    <outer_join>N</outer_join>
-    <replace_vars>N</replace_vars>
-    <parameter>
-      <field>
-        <name>uuid</name>
-        <type>None</type>
-      </field>
-    </parameter>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>912</xloc>
-      <yloc>272</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>patient_program</name>
-    <type>Update</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <connection>OpenMRS source DB</connection>
-    <skip_lookup>N</skip_lookup>
-    <commit>100</commit>
-    <use_batch>N</use_batch>
-    <error_ignored>Y</error_ignored>
-    <ignore_flag_field/>
-    <lookup>
-      <schema/>
-      <table>patient_program</table>
-      <key>
-        <name>old_program_id</name>
-        <field>program_id</field>
-        <condition>=</condition>
-        <name2/>
-      </key>
-      <key>
-        <name>false</name>
-        <field>updated</field>
-        <condition>=</condition>
-        <name2/>
-      </key>
-      <value>
-        <name>program_id</name>
-        <rename>program_id</rename>
-      </value>
-      <value>
-        <name>updated</name>
-        <rename>true</rename>
-      </value>
-      <value>
-        <name>changed_by</name>
-        <rename>harmonization_user_id</rename>
-      </value>
-      <value>
-        <name>date_changed</name>
-        <rename>current_date</rename>
-      </value>
-    </lookup>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>1216</xloc>
+      <xloc>1280</xloc>
       <yloc>160</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>read_harmonized_program</name>
-    <type>CsvInput</type>
+    <name>Join rows (cartesian product) 3</name>
+    <type>JoinRows</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -836,142 +721,18 @@ where uuid=?</sql>
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <filename>config/program.csv</filename>
-    <filename_field/>
-    <rownum_field/>
-    <include_filename>N</include_filename>
-    <separator>,</separator>
-    <enclosure>"</enclosure>
-    <header>Y</header>
-    <buffer_size>50000</buffer_size>
-    <lazy_conversion>Y</lazy_conversion>
-    <add_filename_result>N</add_filename_result>
-    <parallel>N</parallel>
-    <newline_possible>N</newline_possible>
-    <encoding/>
-    <fields>
-      <field>
-        <name>program_id</name>
-        <type>Integer</type>
-        <format>#</format>
-        <currency>$</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>15</length>
-        <precision>0</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>concept_id</name>
-        <type>Integer</type>
-        <format>#</format>
-        <currency>$</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>15</length>
-        <precision>0</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>creator</name>
-        <type>Integer</type>
-        <format>#</format>
-        <currency>$</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>15</length>
-        <precision>0</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>date_created</name>
-        <type>Date</type>
-        <format>yyyy-MM-dd HH:mm:ss</format>
-        <currency>$</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>-1</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>changed_by</name>
-        <type>Integer</type>
-        <format>#</format>
-        <currency>$</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>15</length>
-        <precision>0</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>date_changed</name>
-        <type>Date</type>
-        <format>yyyy-MM-dd HH:mm:ss</format>
-        <currency>$</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>-1</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>retired</name>
-        <type>Integer</type>
-        <format>#</format>
-        <currency>$</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>15</length>
-        <precision>0</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>name</name>
-        <type>String</type>
-        <format/>
-        <currency>$</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>25</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>description</name>
-        <type>String</type>
-        <format/>
-        <currency>$</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>66</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>uuid</name>
-        <type>String</type>
-        <format/>
-        <currency>$</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>36</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>outcomes_concept_id</name>
-        <type>Number</type>
-        <format>#.#</format>
-        <currency>$</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>15</length>
-        <precision>0</precision>
-        <trim_type>both</trim_type>
-      </field>
-    </fields>
+    <directory>%%java.io.tmpdir%%</directory>
+    <prefix>out</prefix>
+    <cache_size>500</cache_size>
+    <main>Dummy (do nothing)</main>
+    <compare>
+      <condition>
+        <negated>N</negated>
+        <leftvalue>harmonized_order_type_id</leftvalue>
+        <function>=</function>
+        <rightvalue>updated_order_type_id</rightvalue>
+      </condition>
+    </compare>
     <attributes/>
     <cluster_schema/>
     <remotesteps>
@@ -981,14 +742,14 @@ where uuid=?</sql>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>96</xloc>
-      <yloc>272</yloc>
+      <xloc>960</xloc>
+      <yloc>336</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>true/false</name>
-    <type>DataGrid</type>
+    <name>Merge join</name>
+    <type>MergeJoin</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -997,36 +758,15 @@ where uuid=?</sql>
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <fields>
-      <field>
-        <name>true</name>
-        <type>Integer</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>false</name>
-        <type>Integer</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-    </fields>
-    <data>
-      <line>
-        <item>1</item>
-        <item>0</item>
-      </line>
-    </data>
+    <join_type>INNER</join_type>
+    <step1>sort-horminized</step1>
+    <step2>sort-old</step2>
+    <keys_1>
+      <key>harmonized_uuid</key>
+    </keys_1>
+    <keys_2>
+      <key>old_uuid</key>
+    </keys_2>
     <attributes/>
     <cluster_schema/>
     <remotesteps>
@@ -1037,13 +777,13 @@ where uuid=?</sql>
     </remotesteps>
     <GUI>
       <xloc>416</xloc>
-      <yloc>128</yloc>
+      <yloc>160</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>update_program_workflow</name>
-    <type>Update</type>
+    <name>Select values</name>
+    <type>SelectValues</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -1052,44 +792,18 @@ where uuid=?</sql>
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <connection>OpenMRS source DB</connection>
-    <skip_lookup>N</skip_lookup>
-    <commit>100</commit>
-    <use_batch>N</use_batch>
-    <error_ignored>Y</error_ignored>
-    <ignore_flag_field/>
-    <lookup>
-      <schema/>
-      <table>program_workflow</table>
-      <key>
-        <name>old_program_id</name>
-        <field>program_id</field>
-        <condition>=</condition>
-        <name2/>
-      </key>
-      <key>
-        <name>false</name>
-        <field>updated</field>
-        <condition>=</condition>
-        <name2/>
-      </key>
-      <value>
-        <name>program_id</name>
-        <rename>program_id</rename>
-      </value>
-      <value>
-        <name>updated</name>
-        <rename>true</rename>
-      </value>
-      <value>
-        <name>changed_by</name>
-        <rename>harmonization_user_id</rename>
-      </value>
-      <value>
-        <name>date_changed</name>
-        <rename>current_date</rename>
-      </value>
-    </lookup>
+    <fields>
+      <field>
+        <name>harmonized_uuid</name>
+      </field>
+      <field>
+        <name>old_order_type_id</name>
+      </field>
+      <field>
+        <name>harmonized_order_type_id</name>
+      </field>
+      <select_unspecified>N</select_unspecified>
+    </fields>
     <attributes/>
     <cluster_schema/>
     <remotesteps>
@@ -1099,16 +813,16 @@ where uuid=?</sql>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>1216</xloc>
-      <yloc>432</yloc>
+      <xloc>592</xloc>
+      <yloc>160</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>write_program</name>
-    <type>TableOutput</type>
+    <name>harmonized</name>
+    <type>TableInput</type>
     <description/>
-    <distribute>N</distribute>
+    <distribute>Y</distribute>
     <custom_distribution/>
     <copies>1</copies>
     <partitioning>
@@ -1116,66 +830,191 @@ where uuid=?</sql>
       <schema_name/>
     </partitioning>
     <connection>OpenMRS source DB</connection>
-    <schema/>
-    <table>program</table>
-    <commit>1000</commit>
-    <truncate>N</truncate>
-    <ignore_errors>N</ignore_errors>
-    <use_batch>Y</use_batch>
-    <specify_fields>Y</specify_fields>
-    <partitioning_enabled>N</partitioning_enabled>
-    <partitioning_field/>
-    <partitioning_daily>N</partitioning_daily>
-    <partitioning_monthly>Y</partitioning_monthly>
-    <tablename_in_field>N</tablename_in_field>
-    <tablename_field/>
-    <tablename_in_table>Y</tablename_in_table>
-    <return_keys>N</return_keys>
-    <return_field/>
+    <sql>SELECT
+  order_type_id harmonized_order_type_id
+, name harmonized_name
+, description harmonized_description
+, creator harmonized_creator
+, date_created harmonized_date_created
+, retired harmonized_retired
+, retired_by harmonized_retired_by
+, date_retired harmonized_date_retired
+, retire_reason harmonized_retire_reason
+, uuid harmonized_uuid
+, java_class_name harmonized_java_class_name
+, parent harmonized_parent
+, changed_by harmonized_changed_by
+, date_changed harmonized_date_changed
+FROM order_type
+</sql>
+    <limit>0</limit>
+    <lookup/>
+    <execute_each_row>N</execute_each_row>
+    <variables_active>N</variables_active>
+    <lazy_conversion_active>N</lazy_conversion_active>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>128</xloc>
+      <yloc>224</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>old</name>
+    <type>TableInput</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>OpenMRS source DB</connection>
+    <sql>SELECT
+  order_type_id old_order_type_id
+, name old_name
+, description old_description
+, creator old_creator
+, date_created old_date_created
+, retired old_retired
+, retired_by old_retired_by
+, date_retired old_date_retired
+, retire_reason old_retire_reason
+, uuid old_uuid
+, java_class_name old_java_class_name
+, parent old_parent
+, changed_by old_changed_by
+, date_changed old_date_changed
+FROM old_order_type
+</sql>
+    <limit>0</limit>
+    <lookup/>
+    <execute_each_row>N</execute_each_row>
+    <variables_active>N</variables_active>
+    <lazy_conversion_active>N</lazy_conversion_active>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>128</xloc>
+      <yloc>96</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>order_type log</name>
+    <type>TextFileOutput</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <separator>;</separator>
+    <enclosure>"</enclosure>
+    <enclosure_forced>N</enclosure_forced>
+    <enclosure_fix_disabled>N</enclosure_fix_disabled>
+    <header>Y</header>
+    <footer>N</footer>
+    <format>UNIX</format>
+    <compression>None</compression>
+    <encoding/>
+    <endedLine/>
+    <fileNameInField>N</fileNameInField>
+    <fileNameField/>
+    <create_parent_folder>Y</create_parent_folder>
+    <file>
+      <name>output/order-type-log</name>
+      <servlet_output>N</servlet_output>
+      <do_not_open_new_file_init>N</do_not_open_new_file_init>
+      <extention>csv</extention>
+      <append>N</append>
+      <split>N</split>
+      <haspartno>N</haspartno>
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <SpecifyFormat>N</SpecifyFormat>
+      <date_time_format/>
+      <add_to_result_filenames>Y</add_to_result_filenames>
+      <pad>N</pad>
+      <fast_dump>N</fast_dump>
+      <splitevery/>
+    </file>
     <fields>
       <field>
-        <column_name>program_id</column_name>
-        <stream_name>program_id</stream_name>
+        <name>updated_order_type_id</name>
+        <type>None</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <trim_type>none</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
       </field>
       <field>
-        <column_name>concept_id</column_name>
-        <stream_name>concept_id</stream_name>
+        <name>old_order_type_id</name>
+        <type>None</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <trim_type>none</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
       </field>
       <field>
-        <column_name>creator</column_name>
-        <stream_name>creator</stream_name>
+        <name>harmonized_order_type_id</name>
+        <type>None</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <trim_type>none</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
       </field>
       <field>
-        <column_name>date_created</column_name>
-        <stream_name>date_created</stream_name>
+        <name>updated_date_changed</name>
+        <type>None</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <trim_type>none</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
       </field>
       <field>
-        <column_name>changed_by</column_name>
-        <stream_name>changed_by</stream_name>
-      </field>
-      <field>
-        <column_name>date_changed</column_name>
-        <stream_name>date_changed</stream_name>
-      </field>
-      <field>
-        <column_name>retired</column_name>
-        <stream_name>retired</stream_name>
-      </field>
-      <field>
-        <column_name>name</column_name>
-        <stream_name>name</stream_name>
-      </field>
-      <field>
-        <column_name>description</column_name>
-        <stream_name>description</stream_name>
-      </field>
-      <field>
-        <column_name>uuid</column_name>
-        <stream_name>uuid</stream_name>
-      </field>
-      <field>
-        <column_name>outcomes_concept_id</column_name>
-        <stream_name>outcomes_concept_id</stream_name>
+        <name>updated_changed_by</name>
+        <type>None</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <trim_type>none</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
       </field>
     </fields>
     <attributes/>
@@ -1187,8 +1026,424 @@ where uuid=?</sql>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>240</xloc>
-      <yloc>272</yloc>
+      <xloc>1168</xloc>
+      <yloc>32</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>order_type_class_map log</name>
+    <type>TextFileOutput</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <separator>;</separator>
+    <enclosure>"</enclosure>
+    <enclosure_forced>N</enclosure_forced>
+    <enclosure_fix_disabled>N</enclosure_fix_disabled>
+    <header>Y</header>
+    <footer>N</footer>
+    <format>UNIX</format>
+    <compression>None</compression>
+    <encoding/>
+    <endedLine/>
+    <fileNameInField>N</fileNameInField>
+    <fileNameField/>
+    <create_parent_folder>Y</create_parent_folder>
+    <file>
+      <name>output/order-type-class-map-log</name>
+      <servlet_output>N</servlet_output>
+      <do_not_open_new_file_init>N</do_not_open_new_file_init>
+      <extention>csv</extention>
+      <append>N</append>
+      <split>N</split>
+      <haspartno>N</haspartno>
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <SpecifyFormat>N</SpecifyFormat>
+      <date_time_format/>
+      <add_to_result_filenames>Y</add_to_result_filenames>
+      <pad>N</pad>
+      <fast_dump>N</fast_dump>
+      <splitevery/>
+    </file>
+    <fields>
+      <field>
+        <name>harmonized_order_type_id</name>
+        <type>None</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <trim_type>none</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>old_order_type_id</name>
+        <type>None</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <trim_type>none</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>update_order_type_id</name>
+        <type>None</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <trim_type>none</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1456</xloc>
+      <yloc>160</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>sort-horminized</name>
+    <type>SortRows</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <directory>%%java.io.tmpdir%%</directory>
+    <prefix>out</prefix>
+    <sort_size>1000000</sort_size>
+    <free_memory/>
+    <compress>N</compress>
+    <compress_variable/>
+    <unique_rows>N</unique_rows>
+    <fields>
+      <field>
+        <name>harmonized_uuid</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>272</xloc>
+      <yloc>224</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>sort-old</name>
+    <type>SortRows</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <directory>%%java.io.tmpdir%%</directory>
+    <prefix>out</prefix>
+    <sort_size>1000000</sort_size>
+    <free_memory/>
+    <compress>N</compress>
+    <compress_variable/>
+    <unique_rows>N</unique_rows>
+    <fields>
+      <field>
+        <name>old_uuid</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>272</xloc>
+      <yloc>96</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>updated  order_type</name>
+    <type>TableInput</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>OpenMRS source DB</connection>
+    <sql>SELECT
+  order_type_id updated_order_type_id
+, name updated_name
+, description updated_description
+, creator updated_creator
+, date_created updated_date_created
+, retired updated_retired
+, retired_by updated_retired_by
+, date_retired updated_date_retired
+, retire_reason updated_retire_reason
+, uuid updated_uuid
+, java_class_name updated_java_class_name
+, parent updated_parent
+, changed_by updated_changed_by
+, date_changed updated_date_changed
+FROM order_type where updated=1;
+ </sql>
+    <limit>0</limit>
+    <lookup/>
+    <execute_each_row>N</execute_each_row>
+    <variables_active>N</variables_active>
+    <lazy_conversion_active>N</lazy_conversion_active>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>768</xloc>
+      <yloc>32</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>updated order_type_class_map</name>
+    <type>TableInput</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>OpenMRS source DB</connection>
+    <sql>SELECT
+  order_type_id update_order_type_id
+, concept_class_id  update_concept_class_id
+
+FROM order_type_class_map  where updated=1;
+</sql>
+    <limit>0</limit>
+    <lookup/>
+    <execute_each_row>N</execute_each_row>
+    <variables_active>N</variables_active>
+    <lazy_conversion_active>N</lazy_conversion_active>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1280</xloc>
+      <yloc>288</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>updated orders</name>
+    <type>TableInput</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>OpenMRS source DB</connection>
+    <sql>SELECT
+  order_id updated_order_id
+, order_type_id updated_order_type_id
+, concept_id updated_concept_id
+, orderer updated_orderer
+, encounter_id updated_encounter_id
+, instructions updated_instructions
+, date_activated updated_date_activated
+, auto_expire_date updated_auto_expire_date
+, date_stopped updated_date_stopped
+, order_reason updated_order_reason
+, creator updated_creator
+, date_created updated_date_created
+, voided updated_voided
+, voided_by updated_voided_by
+, date_voided updated_date_voided
+, void_reason updated_void_reason
+, patient_id updated_patient_id
+, accession_number updated_accession_number
+, uuid updated_uuid
+, order_reason_non_coded updated_order_reason_non_coded
+, urgency updated_urgency
+, order_number updated_order_number
+, previous_order_id updated_previous_order_id
+, order_action updated_order_action
+, comment_to_fulfiller updated_comment_to_fulfiller
+, care_setting updated_care_setting
+, scheduled_date updated_scheduled_date
+
+FROM orders where updated=1;</sql>
+    <limit>0</limit>
+    <lookup/>
+    <execute_each_row>N</execute_each_row>
+    <variables_active>N</variables_active>
+    <lazy_conversion_active>N</lazy_conversion_active>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>880</xloc>
+      <yloc>448</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>updated orders </name>
+    <type>TextFileOutput</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <separator>;</separator>
+    <enclosure>"</enclosure>
+    <enclosure_forced>N</enclosure_forced>
+    <enclosure_fix_disabled>N</enclosure_fix_disabled>
+    <header>Y</header>
+    <footer>N</footer>
+    <format>UNIX</format>
+    <compression>None</compression>
+    <encoding/>
+    <endedLine/>
+    <fileNameInField>N</fileNameInField>
+    <fileNameField/>
+    <create_parent_folder>Y</create_parent_folder>
+    <file>
+      <name>output/orders-log</name>
+      <servlet_output>N</servlet_output>
+      <do_not_open_new_file_init>N</do_not_open_new_file_init>
+      <extention>csv</extention>
+      <append>N</append>
+      <split>N</split>
+      <haspartno>N</haspartno>
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <SpecifyFormat>N</SpecifyFormat>
+      <date_time_format/>
+      <add_to_result_filenames>Y</add_to_result_filenames>
+      <pad>N</pad>
+      <fast_dump>N</fast_dump>
+      <splitevery/>
+    </file>
+    <fields>
+      <field>
+        <name>updated_order_id</name>
+        <type>None</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <trim_type>none</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>old_order_type_id</name>
+        <type>None</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <trim_type>none</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>updated_order_type_id</name>
+        <type>None</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <trim_type>none</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1104</xloc>
+      <yloc>432</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
