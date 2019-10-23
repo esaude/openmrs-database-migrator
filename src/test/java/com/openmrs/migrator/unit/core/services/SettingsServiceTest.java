@@ -66,7 +66,7 @@ public class SettingsServiceTest {
   }
 
   @Test
-  public void addSettingToConfigFile() throws Exception {
+  public void addSettingToConfigFileShouldAddAPropertyAtAGivenLine() throws Exception {
     String source =
         SettingsServiceTest.class
             .getClassLoader()
@@ -94,7 +94,7 @@ public class SettingsServiceTest {
   }
 
   @Test
-  public void fillConfigFile() throws Exception {
+  public void fillConfigFileShouldPopulateConfigurations() throws Exception {
     Map<String, String> connDB = new HashMap<>();
     connDB.put(SettingsService.DB_TEST_CONNECTION, "false");
     connDB.put(SettingsService.DB_USER, "user");
@@ -125,13 +125,13 @@ public class SettingsServiceTest {
   }
 
   @Test
-  public void fillConfigFileWithEmptyValues() throws IOException {
+  public void fillConfigFileShouldEmptyConfiguratonsWithEmptyValues() throws IOException {
     Assert.assertFalse(tempSettingsFile.toFile().exists());
     emptyTempValuesOfConfigFile();
   }
 
   @Test(expected = SettingsException.class)
-  public void initializeKettleEnvironmentWithEmptyProperties()
+  public void initializeKettleEnvironmentShouldThrowSettingsExceptionWithEmptyProperties()
       throws IOException, SettingsException {
     Assert.assertFalse(tempSettingsFile.toFile().exists());
     emptyTempValuesOfConfigFile();

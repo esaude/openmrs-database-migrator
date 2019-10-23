@@ -56,7 +56,8 @@ public class BootstrapServiceTest {
   }
 
   @Test
-  public void createDirectoryStructureFailure() throws IOException {
+  public void createDirectoryStructureFailureShouldThrowIOExceptionWithMissingPaths()
+      throws IOException {
     boolean result = bootstrapService.createDirectoryStructure(Arrays.asList("/missing/"));
 
     assertFalse(result);
@@ -84,7 +85,8 @@ public class BootstrapServiceTest {
   }
 
   @Test
-  public void populateDefaultResources() throws IOException, InvalidParameterException {
+  public void populateDefaultResoucesFailGivenFolderStructureDoesntExist()
+      throws IOException, InvalidParameterException {
     List<String> pdiFiles = new ArrayList<>();
     pdiFiles.add("pdiresources/jobs/job.kjb");
     File file = new File("").createTempFile("pdiresources/jobs/job", "kjb");

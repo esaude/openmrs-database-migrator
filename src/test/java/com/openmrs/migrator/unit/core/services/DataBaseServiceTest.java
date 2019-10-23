@@ -54,24 +54,27 @@ public class DataBaseServiceTest {
   }
 
   @Test
-  public void oneColumnSQLSelectorCommand() throws IOException, SQLException {
+  public void oneColumnSQLSelectorCommandShouldReturnListOfDatabases()
+      throws IOException, SQLException {
     List<String> alreadyLoadedDataBases =
         dataBaseService.oneColumnSQLSelectorCommand(databaseProps, "show databases", "SCHEMA_NAME");
     Assert.assertTrue(alreadyLoadedDataBases.size() > 0);
   }
 
   @Test
-  public void testConnection() throws Exception {
+  public void testConnectionShouldReturnTrueWithRightPropertiesWithExceptionNotExpected()
+      throws Exception {
     Assert.assertTrue(dataBaseService.testConnection(databaseProps, false));
   }
 
   @Test
-  public void testConnectionWithException() throws Exception {
+  public void testConnectionShouldReturnTrueWithRightPropertiesWithExceptionExpected()
+      throws Exception {
     Assert.assertTrue(dataBaseService.testConnection(databaseProps, true));
   }
 
   @Test
-  public void importDatabaseFile() throws Exception {
+  public void importDatabaseFileShouldInstallMysqlDatabaseBackup() throws Exception {
     databaseProps.setDb("TESTS");
     List<String> loadedDataBases =
         dataBaseService.oneColumnSQLSelectorCommand(databaseProps, "show databases", "SCHEMA_NAME");

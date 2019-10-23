@@ -45,7 +45,7 @@ public class MigratorApplicationTests {
   }
 
   @Test
-  public void executeWrongCommand() {
+  public void runShouldFailWithoutSetupWithAWrongCommand() {
     migratorApplication.run("wrongCommand");
     assertNotNull(migratorApplication);
     notSetup();
@@ -74,7 +74,7 @@ public class MigratorApplicationTests {
   }
 
   @Test(expected = ExecutionException.class)
-  public void executeRunCommandBeforeSetup() throws ExecutionException {
+  public void executeRunCommandBeforeSetupShouldFail() throws ExecutionException {
     migratorApplication.run("run");
   }
 }
