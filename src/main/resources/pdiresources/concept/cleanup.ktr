@@ -654,7 +654,7 @@
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>ALTER TABLE active_list drop column seen;
+    <sql>ALTER TABLE active_list drop column updated;
 </sql>
     <set_params>N</set_params>
     <insert_field/>
@@ -693,7 +693,7 @@
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>ALTER TABLE active_list_allergy drop column seen;
+    <sql>ALTER TABLE active_list_allergy drop column updated;
 </sql>
     <set_params>N</set_params>
     <insert_field/>
@@ -732,7 +732,7 @@
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>ALTER TABLE concept_answer drop column seen;
+    <sql>ALTER TABLE concept_answer drop column updated;
 </sql>
     <set_params>N</set_params>
     <insert_field/>
@@ -771,7 +771,7 @@
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>ALTER TABLE concept_complex drop column seen;
+    <sql>ALTER TABLE concept_complex drop column updated;
 </sql>
     <set_params>N</set_params>
     <insert_field/>
@@ -810,7 +810,7 @@
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>ALTER TABLE concept_derived drop column seen;
+    <sql>ALTER TABLE concept_derived drop column updated;
 </sql>
     <set_params>N</set_params>
     <insert_field/>
@@ -849,7 +849,7 @@
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>ALTER TABLE concept_description drop column seen;
+    <sql>ALTER TABLE concept_description drop column updated;
 </sql>
     <set_params>N</set_params>
     <insert_field/>
@@ -888,7 +888,7 @@
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>ALTER TABLE concept_name drop column seen;
+    <sql>ALTER TABLE concept_name drop column updated;
 </sql>
     <set_params>N</set_params>
     <insert_field/>
@@ -927,7 +927,7 @@
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>ALTER TABLE concept_numeric drop column seen;
+    <sql>ALTER TABLE concept_numeric drop column updated;
 </sql>
     <set_params>N</set_params>
     <insert_field/>
@@ -966,7 +966,7 @@
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>ALTER TABLE concept_proposal drop column seen;
+    <sql>ALTER TABLE concept_proposal drop column updated;
 </sql>
     <set_params>N</set_params>
     <insert_field/>
@@ -1005,7 +1005,7 @@
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>ALTER TABLE concept_reference_map drop column seen;
+    <sql>ALTER TABLE concept_reference_map drop column updated;
 </sql>
     <set_params>N</set_params>
     <insert_field/>
@@ -1044,7 +1044,7 @@
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>ALTER TABLE concept_set drop column seen;
+    <sql>ALTER TABLE concept_set drop column updated;
 </sql>
     <set_params>N</set_params>
     <insert_field/>
@@ -1083,7 +1083,7 @@
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>ALTER TABLE concept_state_conversion drop column seen;</sql>
+    <sql>ALTER TABLE concept_state_conversion drop column updated;</sql>
     <set_params>N</set_params>
     <insert_field/>
     <update_field/>
@@ -1121,7 +1121,7 @@
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>ALTER TABLE concept_word drop column seen;
+    <sql>ALTER TABLE concept_word drop column updated;
 </sql>
     <set_params>N</set_params>
     <insert_field/>
@@ -1160,7 +1160,7 @@
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>ALTER TABLE conditions drop column seen;
+    <sql>ALTER TABLE conditions drop column updated;
 </sql>
     <set_params>N</set_params>
     <insert_field/>
@@ -1238,7 +1238,7 @@
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>ALTER TABLE drug drop column seen;
+    <sql>ALTER TABLE drug drop column updated;
 </sql>
     <set_params>N</set_params>
     <insert_field/>
@@ -1277,7 +1277,7 @@
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>ALTER TABLE drug_ingredient drop column seen;
+    <sql>ALTER TABLE drug_ingredient drop column updated;
 </sql>
     <set_params>N</set_params>
     <insert_field/>
@@ -1316,7 +1316,7 @@
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>ALTER TABLE drug_order drop column seen;
+    <sql>ALTER TABLE drug_order drop column updated;
 </sql>
     <set_params>N</set_params>
     <insert_field/>
@@ -1355,7 +1355,7 @@
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>ALTER TABLE field drop column seen;
+    <sql>ALTER TABLE field drop column updated;
 </sql>
     <set_params>N</set_params>
     <insert_field/>
@@ -1394,7 +1394,7 @@
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>ALTER TABLE field_answer drop column seen;
+    <sql>ALTER TABLE field_answer drop column updated;
 </sql>
     <set_params>N</set_params>
     <insert_field/>
@@ -1433,8 +1433,8 @@
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>ALTER TABLE obs drop column seen;
-ALTER TABLE obs drop column seen_value_coded;
+    <sql>ALTER TABLE obs drop column updated;
+ALTER TABLE obs drop column updated_value_coded;
 </sql>
     <set_params>N</set_params>
     <insert_field/>
@@ -1473,7 +1473,7 @@ ALTER TABLE obs drop column seen_value_coded;
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>ALTER TABLE order_frequency drop column seen;
+    <sql>ALTER TABLE order_frequency drop column updated;
 </sql>
     <set_params>N</set_params>
     <insert_field/>
@@ -1512,7 +1512,7 @@ ALTER TABLE obs drop column seen_value_coded;
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>ALTER TABLE orders drop column seen;
+    <sql>ALTER TABLE orders drop column updated;
 </sql>
     <set_params>N</set_params>
     <insert_field/>
@@ -1551,7 +1551,7 @@ ALTER TABLE obs drop column seen_value_coded;
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>ALTER TABLE patient_program drop column seen;
+    <sql>ALTER TABLE patient_program drop column updated;
 </sql>
     <set_params>N</set_params>
     <insert_field/>
@@ -1590,7 +1590,7 @@ ALTER TABLE obs drop column seen_value_coded;
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>ALTER TABLE person drop column seen;
+    <sql>ALTER TABLE person drop column updated;
 </sql>
     <set_params>N</set_params>
     <insert_field/>
@@ -1629,7 +1629,7 @@ ALTER TABLE obs drop column seen_value_coded;
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>ALTER TABLE program drop column seen;
+    <sql>ALTER TABLE program drop column updated;
 </sql>
     <set_params>N</set_params>
     <insert_field/>
@@ -1668,7 +1668,7 @@ ALTER TABLE obs drop column seen_value_coded;
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>ALTER TABLE program_workflow drop column seen;
+    <sql>ALTER TABLE program_workflow drop column updated;
 </sql>
     <set_params>N</set_params>
     <insert_field/>
@@ -1707,7 +1707,7 @@ ALTER TABLE obs drop column seen_value_coded;
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>ALTER TABLE program_workflow_state drop column seen;
+    <sql>ALTER TABLE program_workflow_state drop column updated;
 </sql>
     <set_params>N</set_params>
     <insert_field/>
@@ -1746,7 +1746,7 @@ ALTER TABLE obs drop column seen_value_coded;
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>ALTER TABLE test_order drop column seen;
+    <sql>ALTER TABLE test_order drop column updated;
 </sql>
     <set_params>N</set_params>
     <insert_field/>
@@ -1785,7 +1785,7 @@ ALTER TABLE obs drop column seen_value_coded;
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>ALTER TABLE visit drop column seen;
+    <sql>ALTER TABLE visit drop column updated;
 </sql>
     <set_params>N</set_params>
     <insert_field/>
