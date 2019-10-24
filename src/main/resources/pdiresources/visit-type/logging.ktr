@@ -508,7 +508,7 @@
     </hop>
     <hop>
       <from>Join rows (cartesian product)</from>
-      <to>form-log</to>
+      <to>visit-log</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
@@ -542,7 +542,7 @@
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>updated forms</from>
+      <from>updated visits</from>
       <to>Join rows (cartesian product)</to>
       <enabled>Y</enabled>
     </hop>
@@ -692,15 +692,12 @@
     <fields>
       <field>
         <name>harmonized_uuid</name>
-        <rename/>
       </field>
       <field>
         <name>old_visit_type_id</name>
-        <rename/>
       </field>
       <field>
         <name>harmonized_visit_type_id</name>
-        <rename/>
       </field>
       <select_unspecified>N</select_unspecified>
     </fields>
@@ -715,123 +712,6 @@
     <GUI>
       <xloc>464</xloc>
       <yloc>176</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>form-log</name>
-    <type>TextFileOutput</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <separator>;</separator>
-    <enclosure>"</enclosure>
-    <enclosure_forced>N</enclosure_forced>
-    <enclosure_fix_disabled>N</enclosure_fix_disabled>
-    <header>Y</header>
-    <footer>N</footer>
-    <format>UNIX</format>
-    <compression>None</compression>
-    <encoding/>
-    <endedLine/>
-    <fileNameInField>N</fileNameInField>
-    <fileNameField/>
-    <create_parent_folder>Y</create_parent_folder>
-    <file>
-      <name>output/visit-log</name>
-      <servlet_output>N</servlet_output>
-      <do_not_open_new_file_init>N</do_not_open_new_file_init>
-      <extention>csv</extention>
-      <append>N</append>
-      <split>N</split>
-      <haspartno>N</haspartno>
-      <add_date>N</add_date>
-      <add_time>N</add_time>
-      <SpecifyFormat>N</SpecifyFormat>
-      <date_time_format/>
-      <add_to_result_filenames>Y</add_to_result_filenames>
-      <pad>N</pad>
-      <fast_dump>N</fast_dump>
-      <splitevery/>
-    </file>
-    <fields>
-      <field>
-        <name>updated_form_id</name>
-        <type>None</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif/>
-        <trim_type>none</trim_type>
-        <length>-1</length>
-        <precision>-1</precision>
-      </field>
-      <field>
-        <name>old_encounter_type_id</name>
-        <type>None</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif/>
-        <trim_type>none</trim_type>
-        <length>-1</length>
-        <precision>-1</precision>
-      </field>
-      <field>
-        <name>harmonized_encounter_type_id</name>
-        <type>None</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif/>
-        <trim_type>none</trim_type>
-        <length>-1</length>
-        <precision>-1</precision>
-      </field>
-      <field>
-        <name>updated_date_changed</name>
-        <type>None</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif/>
-        <trim_type>none</trim_type>
-        <length>-1</length>
-        <precision>-1</precision>
-      </field>
-      <field>
-        <name>updated_changed_by</name>
-        <type>None</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif/>
-        <trim_type>none</trim_type>
-        <length>-1</length>
-        <precision>-1</precision>
-      </field>
-    </fields>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>1104</xloc>
-      <yloc>32</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -877,51 +757,6 @@ FROM visit_type_backup</sql>
     <GUI>
       <xloc>32</xloc>
       <yloc>240</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>visit_type backup</name>
-    <type>TableInput</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <connection>OpenMRS Source</connection>
-    <sql>SELECT
-  visit_type_id old_visit_type_id,
-  name old_name,
-  description old_description,
-  creator old_creator,
-  date_created old_date_created,
-  changed_by old_changed_by,
-  date_changed old_date_changed,
-  retired old_retired,
-  retired_by old_retired_by,
-  date_retired old_date_retired,
-  retire_reason old_retire_reason,
-  uuid old_uuid
-FROM visit_type_backup</sql>
-    <limit>0</limit>
-    <lookup/>
-    <execute_each_row>N</execute_each_row>
-    <variables_active>N</variables_active>
-    <lazy_conversion_active>N</lazy_conversion_active>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>48</xloc>
-      <yloc>112</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1010,7 +845,7 @@ FROM visit_type_backup</sql>
     </GUI>
   </step>
   <step>
-    <name>updated forms</name>
+    <name>updated visits</name>
     <type>TableInput</type>
     <description/>
     <distribute>Y</distribute>
@@ -1055,6 +890,168 @@ FROM visit where  updated = 1;</sql>
     <GUI>
       <xloc>1088</xloc>
       <yloc>336</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>visit-log</name>
+    <type>TextFileOutput</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <separator>;</separator>
+    <enclosure>"</enclosure>
+    <enclosure_forced>N</enclosure_forced>
+    <enclosure_fix_disabled>N</enclosure_fix_disabled>
+    <header>Y</header>
+    <footer>N</footer>
+    <format>UNIX</format>
+    <compression>None</compression>
+    <encoding/>
+    <endedLine/>
+    <fileNameInField>N</fileNameInField>
+    <fileNameField/>
+    <create_parent_folder>Y</create_parent_folder>
+    <file>
+      <name>output/visit-log</name>
+      <servlet_output>N</servlet_output>
+      <do_not_open_new_file_init>N</do_not_open_new_file_init>
+      <extention>csv</extention>
+      <append>N</append>
+      <split>N</split>
+      <haspartno>N</haspartno>
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <SpecifyFormat>N</SpecifyFormat>
+      <date_time_format/>
+      <add_to_result_filenames>Y</add_to_result_filenames>
+      <pad>N</pad>
+      <fast_dump>N</fast_dump>
+      <splitevery/>
+    </file>
+    <fields>
+      <field>
+        <name>updated_visit_id</name>
+        <type>None</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <trim_type>none</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>old_visit_type_id</name>
+        <type>None</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <trim_type>none</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>harmonized_visit_type_id</name>
+        <type>None</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <trim_type>none</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>updated_date_changed</name>
+        <type>None</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <trim_type>none</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>updated_changed_by</name>
+        <type>None</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <trim_type>none</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1104</xloc>
+      <yloc>32</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>visit_type backup</name>
+    <type>TableInput</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>OpenMRS Source</connection>
+    <sql>SELECT
+  visit_type_id old_visit_type_id,
+  name old_name,
+  description old_description,
+  creator old_creator,
+  date_created old_date_created,
+  changed_by old_changed_by,
+  date_changed old_date_changed,
+  retired old_retired,
+  retired_by old_retired_by,
+  date_retired old_date_retired,
+  retire_reason old_retire_reason,
+  uuid old_uuid
+FROM visit_type_backup</sql>
+    <limit>0</limit>
+    <lookup/>
+    <execute_each_row>N</execute_each_row>
+    <variables_active>N</variables_active>
+    <lazy_conversion_active>N</lazy_conversion_active>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>48</xloc>
+      <yloc>112</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

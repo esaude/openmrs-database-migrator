@@ -473,6 +473,10 @@
         <attribute>N</attribute>
       </attribute>
       <attribute>
+        <code>SQL_CONNECT</code>
+        <attribute>SET foreign_key_checks = 0;</attribute>
+      </attribute>
+      <attribute>
         <code>STREAM_RESULTS</code>
         <attribute>Y</attribute>
       </attribute>
