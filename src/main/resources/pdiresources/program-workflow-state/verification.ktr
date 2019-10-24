@@ -596,7 +596,7 @@
 INNER JOIN program_workflow_state pws ON cs.program_workflow_state_id = pws.program_workflow_state_id 
 INNER JOIN old_program_workflow_state psb ON psb.uuid = cs.uuid
 WHERE cs.program_workflow_state_id != psb.program_workflow_state_id
-AND cs.updated = 0;</sql>
+AND cs.program_workflow_state_updated = 0;</sql>
     <limit>0</limit>
     <lookup/>
     <execute_each_row>N</execute_each_row>

@@ -917,7 +917,7 @@ WHERE system_id = 'harmonization';</sql>
       </key>
       <key>
         <name>false</name>
-        <field>updated</field>
+        <field>program_workflow_state_updated</field>
         <condition>=</condition>
         <name2/>
       </key>
@@ -926,7 +926,7 @@ WHERE system_id = 'harmonization';</sql>
         <rename>program_workflow_state_id</rename>
       </value>
       <value>
-        <name>updated</name>
+        <name>program_workflow_state_updated</name>
         <rename>true</rename>
       </value>
     </lookup>

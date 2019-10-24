@@ -1166,7 +1166,7 @@ FROM old_program_workflow_state
 , program_workflow_state_id updated_program_workflow_state_id
 , uuid updated_uuid
 FROM concept_state_conversion
-WHERE updated = 1;
+WHERE program_workflow_state_updated = 1;
 </sql>
     <limit>0</limit>
     <lookup/>

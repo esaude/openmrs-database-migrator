@@ -519,7 +519,7 @@
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>ALTER TABLE concept_state_conversion DROP updated;
+    <sql>ALTER TABLE concept_state_conversion DROP program_workflow_state_updated;
 </sql>
     <set_params>N</set_params>
     <insert_field/>
