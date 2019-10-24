@@ -391,7 +391,7 @@
       <attributes/>
       <specification_method>filename</specification_method>
       <job_object_id/>
-      <filename>pdiresources/program-workflow/migration.kjb</filename>
+      <filename>pdiresources/program-workflow/migration-workflow.kjb</filename>
       <jobname/>
       <directory/>
       <arg_from_previous>N</arg_from_previous>
