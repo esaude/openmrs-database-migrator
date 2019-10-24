@@ -45,6 +45,11 @@ public class PDIServiceTest {
     assertTrue(runnedCorrectly);
   }
 
+  @Test(expected = SettingsException.class)
+  public void runJobShouldThrowSettingeExptionWithWrongOrNullForJobXML() throws SettingsException {
+    pdiService.runJob(null);
+  }
+
   @Ignore
   @Test
   public void runMainJob() throws SettingsException, IOException {

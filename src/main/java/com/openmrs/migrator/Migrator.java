@@ -2,7 +2,7 @@ package com.openmrs.migrator;
 
 import com.openmrs.migrator.core.exceptions.InvalidParameterException;
 import com.openmrs.migrator.core.exceptions.SettingsException;
-import com.openmrs.migrator.core.model.MySQLProps;
+import com.openmrs.migrator.core.model.DatabaseProps;
 import com.openmrs.migrator.core.services.BootstrapService;
 import com.openmrs.migrator.core.services.DataBaseService;
 import com.openmrs.migrator.core.services.PDIService;
@@ -113,8 +113,7 @@ public class Migrator implements Callable<Optional<Void>> {
   }
 
   private void executeSetupCommand()
-      throws IOException, SQLException, SettingsException, URISyntaxException,
-          InvalidParameterException {
+      throws IOException, URISyntaxException, InvalidParameterException {
 
     Set<String> set =
         fileIOUtilities.prepareResourceFolder(
@@ -150,8 +149,8 @@ public class Migrator implements Callable<Optional<Void>> {
         Paths.get(SettingsService.PDI_CONFIG + "/" + FORM_IMPORT_SCRIPT), permissions);
   }
 
-  private MySQLProps getMysqlOptsFromConsoleConn(Map<String, String> connDB) {
-    return new MySQLProps(
+  private DatabaseProps getMysqlOptsFromConsoleConn(Map<String, String> connDB) {
+    return new DatabaseProps(
         connDB.get(SettingsService.DB_HOST),
         connDB.get(SettingsService.DB_PORT),
         connDB.get(SettingsService.DB_USER),
@@ -159,10 +158,10 @@ public class Migrator implements Callable<Optional<Void>> {
         "");
   }
 
-  private void chooseDatabase(MySQLProps mySQLProps) throws IOException, SQLException {
+  private void chooseDatabase(DatabaseProps databaseProps) throws IOException, SQLException {
     int choice = ConsoleUtils.startMigrationAproach(console);
     List<String> alreadyLoadedDataBases =
-        dataBaseService.oneColumnSQLSelectorCommand(mySQLProps, "show databases", "Database");
+        dataBaseService.oneColumnSQLSelectorCommand(databaseProps, "show databases", "Database");
     switch (choice) {
       case 1:
         {
@@ -179,16 +178,17 @@ public class Migrator implements Callable<Optional<Void>> {
           }
 
           // import database if it doesn't exist in mysql
-          MySQLProps db =
-              new MySQLProps(
-                  mySQLProps.getHost(),
-                  mySQLProps.getPort(),
-                  mySQLProps.getUsername(),
-                  mySQLProps.getPassword(),
+          DatabaseProps db =
+              new DatabaseProps(
+                  databaseProps.getHost(),
+                  databaseProps.getPort(),
+                  databaseProps.getUsername(),
+                  databaseProps.getPassword(),
                   FilenameUtils.removeExtension(new File(sqlDumpFile).getName()));
           dataBaseService.importDatabaseFile(sqlDumpFile, db);
           alreadyLoadedDataBases =
-              dataBaseService.oneColumnSQLSelectorCommand(mySQLProps, "show databases", "Database");
+              dataBaseService.oneColumnSQLSelectorCommand(
+                  databaseProps, "show databases", "Database");
           selectExistingSourceAndMergeDatabase(alreadyLoadedDataBases);
           break;
         }
@@ -235,8 +235,8 @@ public class Migrator implements Callable<Optional<Void>> {
     }
   }
 
-  private MySQLProps getMysqlConn() throws IOException {
-    return new MySQLProps(
+  private DatabaseProps getMysqlConn() throws IOException {
+    return new DatabaseProps(
         fileIOUtilities.getValueFromConfig(SettingsService.DB_HOST, "=", settingProperties),
         fileIOUtilities.getValueFromConfig(SettingsService.DB_PORT, "=", settingProperties),
         fileIOUtilities.getValueFromConfig(SettingsService.DB_USER, "=", settingProperties),
@@ -249,7 +249,7 @@ public class Migrator implements Callable<Optional<Void>> {
     if (fileIOUtilities.isSettingsFilesMissingSomeValue()) {
       Map<String, String> connDB = ConsoleUtils.readSettingsFromConsole(console);
 
-      MySQLProps mysqlConn = getMysqlOptsFromConsoleConn(connDB);
+      DatabaseProps mysqlConn = getMysqlOptsFromConsoleConn(connDB);
       while (!dataBaseService.testConnection(mysqlConn, false)) {
         console.writer().println("You have provided Wrong Connection details, please try again!");
         connDB = ConsoleUtils.readSettingsFromConsole(console);
@@ -258,8 +258,8 @@ public class Migrator implements Callable<Optional<Void>> {
 
       settingsService.fillConfigFile(settingProperties, connDB);
 
-      MySQLProps mySQLProps = getMysqlConn();
-      chooseDatabase(mySQLProps);
+      DatabaseProps databaseProps = getMysqlConn();
+      chooseDatabase(databaseProps);
     }
 
     if (Files.exists(Paths.get(SettingsService.PDI_RESOURCES_DIR))

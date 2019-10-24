@@ -518,7 +518,7 @@
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>ALTER TABLE patient_program DROP seen;</sql>
+    <sql>ALTER TABLE patient_program DROP updated;</sql>
     <set_params>N</set_params>
     <insert_field/>
     <update_field/>
@@ -556,7 +556,7 @@
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>ALTER TABLE program_workflow DROP seen;</sql>
+    <sql>ALTER TABLE program_workflow DROP updated;</sql>
     <set_params>N</set_params>
     <insert_field/>
     <update_field/>
