@@ -740,7 +740,7 @@
   date_retired harmonized_date_retired,
   retire_reason harmonized_retire_reason,
   uuid harmonized_uuid
-FROM visit_type_backup</sql>
+FROM visit_type</sql>
     <limit>0</limit>
     <lookup/>
     <execute_each_row>N</execute_each_row>
