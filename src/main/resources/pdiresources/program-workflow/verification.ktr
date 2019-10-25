@@ -435,81 +435,11 @@
   </info>
   <notepads>
   </notepads>
-  <connection>
-    <name>source</name>
-    <server>${ETL_DATABASE_HOST}</server>
-    <type>MYSQL</type>
-    <access>Native</access>
-    <database>${ETL_SOURCE_DATABASE}</database>
-    <port>${ETL_DATABASE_PORT}</port>
-    <username>${ETL_DATABASE_USER}</username>
-    <password>${ETL_DATABASE_PASSWORD}</password>
-    <servername/>
-    <data_tablespace/>
-    <index_tablespace/>
-    <attributes>
-      <attribute>
-        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>IS_CLUSTERED</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>PORT_NUMBER</code>
-        <attribute>${ETL_DATABASE_PORT}</attribute>
-      </attribute>
-      <attribute>
-        <code>PRESERVE_RESERVED_WORD_CASE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>QUOTE_ALL_FIELDS</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>STREAM_RESULTS</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>USE_POOLING</code>
-        <attribute>N</attribute>
-      </attribute>
-    </attributes>
-  </connection>
   <order>
-    <hop>
-      <from>Miss-match</from>
-      <to>Abort</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Mis-Matched patient states</from>
-      <to>zero count</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>zero count</from>
-      <to>Miss-match</to>
-      <enabled>Y</enabled>
-    </hop>
   </order>
   <step>
-    <name>Abort</name>
-    <type>Abort</type>
+    <name>Dummy (do nothing)</name>
+    <type>Dummy</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -518,10 +448,6 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <row_threshold>0</row_threshold>
-    <message/>
-    <always_log_rows>Y</always_log_rows>
-    <abort_option>ABORT</abort_option>
     <attributes/>
     <cluster_schema/>
     <remotesteps>
@@ -531,111 +457,8 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>768</xloc>
-      <yloc>96</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Mis-Matched patient states</name>
-    <type>TableInput</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <connection>source</connection>
-    <sql>SELECT COUNT(pws.program_workflow_id) as miss_matched_program_workflows FROM program_workflow_state pws
-INNER JOIN program_workflow pw ON pws.program_workflow_id = pw.program_workflow_id 
-INNER JOIN program_workflow_backup pwb ON pwb.uuid = pw.uuid 
-WHERE pws.program_workflow_id != pwb.program_workflow_id
-AND pws.updated = 0;</sql>
-    <limit>0</limit>
-    <lookup/>
-    <execute_each_row>N</execute_each_row>
-    <variables_active>N</variables_active>
-    <lazy_conversion_active>N</lazy_conversion_active>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>112</xloc>
-      <yloc>96</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Miss-match</name>
-    <type>FilterRows</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <send_true_to>Abort</send_true_to>
-    <send_false_to/>
-    <compare>
-      <condition>
-        <negated>Y</negated>
-        <leftvalue>miss_matched_program_workflows</leftvalue>
-        <function>=</function>
-        <rightvalue>zero_count</rightvalue>
-      </condition>
-    </compare>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>592</xloc>
-      <yloc>96</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>zero count</name>
-    <type>DBJoin</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <connection>source</connection>
-    <rowlimit>0</rowlimit>
-    <sql>select 0 as zero_count;</sql>
-    <outer_join>N</outer_join>
-    <replace_vars>N</replace_vars>
-    <parameter>
-    </parameter>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>352</xloc>
-      <yloc>96</yloc>
+      <xloc>160</xloc>
+      <yloc>144</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
