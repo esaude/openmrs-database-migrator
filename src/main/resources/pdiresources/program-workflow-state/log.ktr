@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <transformation>
   <info>
-    <name>update-program-workflow-state-references-using-mappings</name>
+    <name>program-workflow-state-log</name>
     <description/>
     <extended_description/>
     <trans_version/>
@@ -493,28 +493,371 @@
   </connection>
   <order>
     <hop>
-      <from>Mis-matched referenced patient_state</from>
-      <to>harmonization user</to>
+      <from>Dummy (do nothing)</from>
+      <to>Join rows (cartesian product)</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>harmonization user</from>
-      <to>update program workflow state references in patient_state</to>
+      <from>Dummy (do nothing)</from>
+      <to>Join rows (cartesian product) 2</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Mis-matched referenced concept_state_conversion</from>
-      <to>harmonization user 2</to>
+      <from>Filter rows</from>
+      <to>Dummy (do nothing)</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>harmonization user 2</from>
-      <to>update program workflow state references in concept_state_conversion</to>
+      <from>Join rows (cartesian product)</from>
+      <to>petient_state log</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Join rows (cartesian product) 2</from>
+      <to>concept_state_conversion log</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Merge join</from>
+      <to>Select values</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Select values</from>
+      <to>Filter rows</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>harmonized program_workflow_state</from>
+      <to>sort-harmonized</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>old program_workflow_state</from>
+      <to>sort-old</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>sort-harmonized</from>
+      <to>Merge join</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>sort-old</from>
+      <to>Merge join</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>updated concept_state_conversion</from>
+      <to>Join rows (cartesian product) 2</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>updated patient_state</from>
+      <to>Join rows (cartesian product)</to>
       <enabled>Y</enabled>
     </hop>
   </order>
   <step>
-    <name>Mis-matched referenced concept_state_conversion</name>
+    <name>Dummy (do nothing)</name>
+    <type>Dummy</type>
+    <description/>
+    <distribute>N</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1184</xloc>
+      <yloc>368</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Filter rows</name>
+    <type>FilterRows</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <send_true_to>Dummy (do nothing)</send_true_to>
+    <send_false_to/>
+    <compare>
+      <condition>
+        <negated>N</negated>
+        <leftvalue>old_program_workflow_state_id</leftvalue>
+        <function>&lt;></function>
+        <rightvalue>harmonized_program_workflow_state_id</rightvalue>
+      </condition>
+    </compare>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>992</xloc>
+      <yloc>368</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Join rows (cartesian product)</name>
+    <type>JoinRows</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <directory>%%java.io.tmpdir%%</directory>
+    <prefix>out</prefix>
+    <cache_size>500</cache_size>
+    <main>Dummy (do nothing)</main>
+    <compare>
+      <condition>
+        <negated>N</negated>
+        <leftvalue>harmonized_program_workflow_state_id</leftvalue>
+        <function>=</function>
+        <rightvalue>updated_state</rightvalue>
+      </condition>
+    </compare>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1184</xloc>
+      <yloc>224</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Join rows (cartesian product) 2</name>
+    <type>JoinRows</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <directory>%%java.io.tmpdir%%</directory>
+    <prefix>out</prefix>
+    <cache_size>500</cache_size>
+    <main>Dummy (do nothing)</main>
+    <compare>
+      <condition>
+        <negated>N</negated>
+        <leftvalue>harmonized_program_workflow_state_id</leftvalue>
+        <function>=</function>
+        <rightvalue>updated_program_workflow_state_id</rightvalue>
+      </condition>
+    </compare>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1184</xloc>
+      <yloc>496</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Merge join</name>
+    <type>MergeJoin</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <join_type>INNER</join_type>
+    <step1>sort-harmonized</step1>
+    <step2>sort-old</step2>
+    <keys_1>
+      <key>harmonized_uuid</key>
+    </keys_1>
+    <keys_2>
+      <key>old_uuid</key>
+    </keys_2>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>672</xloc>
+      <yloc>368</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Select values</name>
+    <type>SelectValues</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <fields>
+      <field>
+        <name>harmonized_uuid</name>
+      </field>
+      <field>
+        <name>old_program_workflow_state_id</name>
+      </field>
+      <field>
+        <name>harmonized_program_workflow_state_id</name>
+      </field>
+      <select_unspecified>N</select_unspecified>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>832</xloc>
+      <yloc>368</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>concept_state_conversion log</name>
+    <type>TextFileOutput</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <separator>;</separator>
+    <enclosure>"</enclosure>
+    <enclosure_forced>N</enclosure_forced>
+    <enclosure_fix_disabled>N</enclosure_fix_disabled>
+    <header>Y</header>
+    <footer>N</footer>
+    <format>UNIX</format>
+    <compression>None</compression>
+    <encoding/>
+    <endedLine/>
+    <fileNameInField>N</fileNameInField>
+    <fileNameField/>
+    <create_parent_folder>Y</create_parent_folder>
+    <file>
+      <name>output/concept_state_conversion</name>
+      <servlet_output>N</servlet_output>
+      <do_not_open_new_file_init>N</do_not_open_new_file_init>
+      <extention>csv</extention>
+      <append>N</append>
+      <split>N</split>
+      <haspartno>N</haspartno>
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <SpecifyFormat>N</SpecifyFormat>
+      <date_time_format/>
+      <add_to_result_filenames>Y</add_to_result_filenames>
+      <pad>N</pad>
+      <fast_dump>N</fast_dump>
+      <splitevery/>
+    </file>
+    <fields>
+      <field>
+        <name>updated_concept_state_conversion_id</name>
+        <type>None</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <trim_type>none</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>old_program_workflow_state_id</name>
+        <type>None</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <trim_type>none</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>harmonized_program_workflow_state_id</name>
+        <type>None</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <trim_type>none</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1328</xloc>
+      <yloc>624</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>harmonized program_workflow_state</name>
     <type>TableInput</type>
     <description/>
     <distribute>Y</distribute>
@@ -525,11 +868,20 @@
       <schema_name/>
     </partitioning>
     <connection>source</connection>
-    <sql>SELECT cs.program_workflow_state_id as current_concept_state_convertion_id, psb.program_workflow_state_id as former_concept_state_convertion_id FROM concept_state_conversion cs
-INNER JOIN program_workflow_state pws ON cs.program_workflow_state_id = pws.program_workflow_state_id 
-INNER JOIN program_workflow_state_backup psb ON psb.uuid = cs.uuid
-WHERE cs.program_workflow_state_id != psb.program_workflow_state_id
-AND cs.updated = 0;</sql>
+    <sql>SELECT
+  program_workflow_state_id harmonized_program_workflow_state_id
+, program_workflow_id harmonized_program_workflow_id
+, concept_id harmonized_concept_id
+, initial harmonized_initial
+, terminal harmonized_terminal
+, creator harmonized_creator
+, date_created harmonized_date_created
+, retired harmonized_retired
+, changed_by harmonized_changed_by
+, date_changed harmonized_date_changed
+, uuid harmonized_uuid
+FROM program_workflow_state
+</sql>
     <limit>0</limit>
     <lookup/>
     <execute_each_row>N</execute_each_row>
@@ -544,13 +896,13 @@ AND cs.updated = 0;</sql>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>128</xloc>
-      <yloc>256</yloc>
+      <xloc>288</xloc>
+      <yloc>496</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Mis-matched referenced patient_state</name>
+    <name>old program_workflow_state</name>
     <type>TableInput</type>
     <description/>
     <distribute>Y</distribute>
@@ -561,16 +913,25 @@ AND cs.updated = 0;</sql>
       <schema_name/>
     </partitioning>
     <connection>source</connection>
-    <sql>SELECT ps.state as current_patient_state_id, psb.program_workflow_state_id as former_patient_state_id, ps.updated FROM patient_state ps
-INNER JOIN program_workflow_state pws ON ps.state = pws.program_workflow_state_id 
-INNER JOIN program_workflow_state_backup psb ON psb.uuid = pws.uuid 
-WHERE ps.state != psb.program_workflow_state_id
-AND ps.updated = 0;</sql>
+    <sql>SELECT
+  program_workflow_state_id old_program_workflow_state_id
+, program_workflow_id old_program_workflow_id
+, concept_id old_concept_id
+, initial old_initial
+, terminal old_terminal
+, creator old_creator
+, date_created old_date_created
+, retired old_retired
+, changed_by old_changed_by
+, date_changed old_date_changed
+, uuid old_uuid
+FROM old_program_workflow_state
+</sql>
     <limit>0</limit>
     <lookup/>
     <execute_each_row>N</execute_each_row>
     <variables_active>N</variables_active>
-    <lazy_conversion_active>Y</lazy_conversion_active>
+    <lazy_conversion_active>N</lazy_conversion_active>
     <attributes/>
     <cluster_schema/>
     <remotesteps>
@@ -580,61 +941,14 @@ AND ps.updated = 0;</sql>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>128</xloc>
-      <yloc>16</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>update program workflow state references in concept_state_conversion</name>
-    <type>ExecSQL</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <connection>source</connection>
-    <execute_each_row>Y</execute_each_row>
-    <single_statement>N</single_statement>
-    <replace_variables>Y</replace_variables>
-    <quoteString>N</quoteString>
-    <sql>UPDATE concept_state_conversion SET program_workflow_state_id = ?, updated = 1, date_changed = NOW(), changed_by = ? WHERE program_workflow_state_id = ? AND updated = 0;</sql>
-    <set_params>N</set_params>
-    <insert_field/>
-    <update_field/>
-    <delete_field/>
-    <read_field/>
-    <arguments>
-      <argument>
-        <name>former_concept_state_convertion_id</name>
-      </argument>
-      <argument>
-        <name>harmonization_user_id</name>
-      </argument>
-      <argument>
-        <name>current_concept_state_convertion_id</name>
-      </argument>
-    </arguments>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>704</xloc>
+      <xloc>288</xloc>
       <yloc>256</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>update program workflow state references in patient_state</name>
-    <type>ExecSQL</type>
+    <name>petient_state log</name>
+    <type>TextFileOutput</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -643,28 +957,98 @@ AND ps.updated = 0;</sql>
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <connection>source</connection>
-    <execute_each_row>Y</execute_each_row>
-    <single_statement>Y</single_statement>
-    <replace_variables>Y</replace_variables>
-    <quoteString>N</quoteString>
-    <sql>UPDATE patient_state SET state = ?, updated = 1, date_changed = NOW(), changed_by = ? WHERE state = ? AND updated = 0;</sql>
-    <set_params>N</set_params>
-    <insert_field/>
-    <update_field/>
-    <delete_field/>
-    <read_field/>
-    <arguments>
-      <argument>
-        <name>former_patient_state_id</name>
-      </argument>
-      <argument>
-        <name>harmonization_user_id</name>
-      </argument>
-      <argument>
-        <name>current_patient_state_id</name>
-      </argument>
-    </arguments>
+    <separator>;</separator>
+    <enclosure>"</enclosure>
+    <enclosure_forced>N</enclosure_forced>
+    <enclosure_fix_disabled>N</enclosure_fix_disabled>
+    <header>Y</header>
+    <footer>N</footer>
+    <format>UNIX</format>
+    <compression>None</compression>
+    <encoding/>
+    <endedLine/>
+    <fileNameInField>N</fileNameInField>
+    <fileNameField/>
+    <create_parent_folder>Y</create_parent_folder>
+    <file>
+      <name>output/program_workflow_state/patient_state</name>
+      <servlet_output>N</servlet_output>
+      <do_not_open_new_file_init>N</do_not_open_new_file_init>
+      <extention>csv</extention>
+      <append>N</append>
+      <split>N</split>
+      <haspartno>N</haspartno>
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <SpecifyFormat>N</SpecifyFormat>
+      <date_time_format/>
+      <add_to_result_filenames>Y</add_to_result_filenames>
+      <pad>N</pad>
+      <fast_dump>N</fast_dump>
+      <splitevery/>
+    </file>
+    <fields>
+      <field>
+        <name>updated_patient_state_id</name>
+        <type>None</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <trim_type>none</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>old_program_workflow_state_id</name>
+        <type>None</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <trim_type>none</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>harmonized_program_workflow_state_id</name>
+        <type>None</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <trim_type>none</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>updated_date_changed</name>
+        <type>None</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <trim_type>none</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>updated_changed_by</name>
+        <type>None</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <trim_type>none</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+    </fields>
     <attributes/>
     <cluster_schema/>
     <remotesteps>
@@ -674,14 +1058,14 @@ AND ps.updated = 0;</sql>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>704</xloc>
-      <yloc>16</yloc>
+      <xloc>1296</xloc>
+      <yloc>80</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>harmonization user</name>
-    <type>DBJoin</type>
+    <name>sort-harmonized</name>
+    <type>SortRows</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -690,13 +1074,23 @@ AND ps.updated = 0;</sql>
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <connection>source</connection>
-    <rowlimit>0</rowlimit>
-    <sql>SELECT user_id AS harmonization_user_id FROM users where system_id = 'harmonization';</sql>
-    <outer_join>N</outer_join>
-    <replace_vars>N</replace_vars>
-    <parameter>
-    </parameter>
+    <directory>%%java.io.tmpdir%%</directory>
+    <prefix>out</prefix>
+    <sort_size>1000000</sort_size>
+    <free_memory/>
+    <compress>N</compress>
+    <compress_variable/>
+    <unique_rows>N</unique_rows>
+    <fields>
+      <field>
+        <name>harmonized_uuid</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
+      </field>
+    </fields>
     <attributes/>
     <cluster_schema/>
     <remotesteps>
@@ -706,14 +1100,14 @@ AND ps.updated = 0;</sql>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>416</xloc>
-      <yloc>16</yloc>
+      <xloc>512</xloc>
+      <yloc>496</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>harmonization user 2</name>
-    <type>DBJoin</type>
+    <name>sort-old</name>
+    <type>SortRows</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -722,13 +1116,23 @@ AND ps.updated = 0;</sql>
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <connection>source</connection>
-    <rowlimit>0</rowlimit>
-    <sql>SELECT user_id AS harmonization_user_id FROM users where system_id = 'harmonization';</sql>
-    <outer_join>N</outer_join>
-    <replace_vars>N</replace_vars>
-    <parameter>
-    </parameter>
+    <directory>%%java.io.tmpdir%%</directory>
+    <prefix>out</prefix>
+    <sort_size>1000000</sort_size>
+    <free_memory/>
+    <compress>N</compress>
+    <compress_variable/>
+    <unique_rows>N</unique_rows>
+    <fields>
+      <field>
+        <name>old_uuid</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
+      </field>
+    </fields>
     <attributes/>
     <cluster_schema/>
     <remotesteps>
@@ -738,8 +1142,97 @@ AND ps.updated = 0;</sql>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>400</xloc>
+      <xloc>512</xloc>
       <yloc>256</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>updated concept_state_conversion</name>
+    <type>TableInput</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>source</connection>
+    <sql>SELECT
+  concept_state_conversion_id updated_concept_state_conversion_id
+, concept_id updated_concept_id
+, program_workflow_id updated_program_workflow_id
+, program_workflow_state_id updated_program_workflow_state_id
+, uuid updated_uuid
+FROM concept_state_conversion
+WHERE program_workflow_state_updated = 1;
+</sql>
+    <limit>0</limit>
+    <lookup/>
+    <execute_each_row>N</execute_each_row>
+    <variables_active>N</variables_active>
+    <lazy_conversion_active>N</lazy_conversion_active>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1088</xloc>
+      <yloc>624</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>updated patient_state</name>
+    <type>TableInput</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>source</connection>
+    <sql>SELECT
+  patient_state_id updated_patient_state_id
+, patient_program_id updated_patient_program_id
+, state updated_state
+, start_date updated_start_date
+, end_date updated_end_date
+, creator updated_creator
+, date_created updated_date_created
+, changed_by updated_changed_by
+, date_changed updated_date_changed
+, voided updated_voided
+, voided_by updated_voided_by
+, date_voided updated_date_voided
+, void_reason updated_void_reason
+, uuid updated_uuid
+FROM patient_state
+WHERE updated = 1;
+</sql>
+    <limit>0</limit>
+    <lookup/>
+    <execute_each_row>N</execute_each_row>
+    <variables_active>N</variables_active>
+    <lazy_conversion_active>N</lazy_conversion_active>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1056</xloc>
+      <yloc>80</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

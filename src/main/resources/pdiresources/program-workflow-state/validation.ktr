@@ -701,7 +701,7 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <filename>config/program-workflow-states.csv</filename>
+    <filename>config/program_workflow_state.csv</filename>
     <filename_field/>
     <rownum_field/>
     <include_filename>N</include_filename>
@@ -713,7 +713,6 @@
     <add_filename_result>N</add_filename_result>
     <parallel>N</parallel>
     <newline_possible>N</newline_possible>
-    <format>mixed</format>
     <encoding/>
     <fields>
       <field>

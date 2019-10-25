@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <transformation>
   <info>
-    <name>cleanup-program-workflow-state</name>
+    <name>program-workflow-state-cleanup</name>
     <description/>
     <extended_description/>
     <trans_version/>
     <trans_type>Normal</trans_type>
+    <trans_status>0</trans_status>
     <directory>/</directory>
     <parameters>
     </parameters>
@@ -491,9 +492,19 @@
     </attributes>
   </connection>
   <order>
+    <hop>
+      <from>drop flag from patient_state</from>
+      <to>drop flag from concept_state_concversion</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>drop flag from concept_state_concversion</from>
+      <to>drop old_program_workflow_state</to>
+      <enabled>Y</enabled>
+    </hop>
   </order>
   <step>
-    <name>Backup program workflow state mappings</name>
+    <name>drop flag from concept_state_concversion</name>
     <type>ExecSQL</type>
     <description/>
     <distribute>Y</distribute>
@@ -508,9 +519,7 @@
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>ALTER TABLE patient_state DROP updated;
-ALTER TABLE concept_state_conversion DROP updated;
-DROP TABLE IF EXISTS program_workflow_state_backup;
+    <sql>ALTER TABLE concept_state_conversion DROP program_workflow_state_updated;
 </sql>
     <set_params>N</set_params>
     <insert_field/>
@@ -528,8 +537,85 @@ DROP TABLE IF EXISTS program_workflow_state_backup;
       </output>
     </remotesteps>
     <GUI>
-      <xloc>128</xloc>
-      <yloc>16</yloc>
+      <xloc>736</xloc>
+      <yloc>224</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>drop flag from patient_state</name>
+    <type>ExecSQL</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>source</connection>
+    <execute_each_row>N</execute_each_row>
+    <single_statement>N</single_statement>
+    <replace_variables>N</replace_variables>
+    <quoteString>N</quoteString>
+    <sql>ALTER TABLE patient_state DROP updated;</sql>
+    <set_params>N</set_params>
+    <insert_field/>
+    <update_field/>
+    <delete_field/>
+    <read_field/>
+    <arguments>
+    </arguments>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>400</xloc>
+      <yloc>224</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>drop old_program_workflow_state</name>
+    <type>ExecSQL</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>source</connection>
+    <execute_each_row>N</execute_each_row>
+    <single_statement>N</single_statement>
+    <replace_variables>N</replace_variables>
+    <quoteString>N</quoteString>
+    <sql>DROP TABLE IF EXISTS old_program_workflow_state;
+</sql>
+    <set_params>N</set_params>
+    <insert_field/>
+    <update_field/>
+    <delete_field/>
+    <read_field/>
+    <arguments>
+    </arguments>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1088</xloc>
+      <yloc>224</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
