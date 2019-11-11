@@ -44,6 +44,7 @@ dependencies {
 	runtimeOnly 'com.h2database:h2'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	compile 'info.picocli:picocli:3.9.6'
+	testCompile 'com.h2database:h2:1.4.197'
 }
 
 spotless {

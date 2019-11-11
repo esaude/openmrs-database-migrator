@@ -1,6 +1,7 @@
 package com.openmrs.migrator.core.services.impl;
 
 import com.openmrs.migrator.core.exceptions.SettingsException;
+import com.openmrs.migrator.core.model.DatabaseProps;
 import com.openmrs.migrator.core.services.DataBaseService;
 import com.openmrs.migrator.core.services.SettingsService;
 import com.openmrs.migrator.core.utilities.FileIOUtilities;
@@ -77,7 +78,7 @@ public class SettingsServiceImpl implements SettingsService {
       String db = props.getProperty(SettingsService.SOURCE_DB);
       String user = props.getProperty(SettingsService.DB_USER);
       String pass = props.getProperty(SettingsService.DB_PASS);
-      MySQLProps mysqlOpts = new MySQLProps(host, port, user, pass, db);
+      DatabaseProps mysqlOpts = new DatabaseProps(host, port, user, pass, db);
       if ("false".equals(testConnection) || dataBaseService.testConnection(mysqlOpts, true)) {
         // initialize kettle environment
         KettleEnvironment.init();

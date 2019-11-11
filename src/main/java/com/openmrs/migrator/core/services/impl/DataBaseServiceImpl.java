@@ -2,11 +2,11 @@ package com.openmrs.migrator.core.services.impl;
 
 import com.ibatis.common.jdbc.ScriptRunner;
 import com.openmrs.migrator.core.exceptions.SettingsException;
-import com.openmrs.migrator.core.services.CommandService;
+import com.openmrs.migrator.core.model.DatabaseProps;
+import com.openmrs.migrator.core.model.DatabaseProps.DbEngine;
 import com.openmrs.migrator.core.services.DataBaseService;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
@@ -16,58 +16,30 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /** Database operations */
 @Service
 public class DataBaseServiceImpl implements DataBaseService {
 
-  private final CommandService commandService;
-
-  @Autowired
-  public DataBaseServiceImpl(CommandService commandService) {
-    this.commandService = commandService;
-  }
-
   @Override
-  public void importDatabaseFile(String fileName, MySQLProps mySQLProps)
+  public void importDatabaseFile(String fileName, DatabaseProps databaseProps)
       throws SQLException, IOException {
-    loadDatabase(new File(fileName), mySQLProps);
+    loadDatabase(new File(fileName), databaseProps);
   }
 
   @Override
   public List<String> oneColumnSQLSelectorCommand(
-      MySQLProps mySQLProps, String sqlCommand, String column) throws IOException, SQLException {
+      DatabaseProps databaseProps, String sqlCommand, String column) throws SQLException {
     List<String> results = new ArrayList<>();
-    ResultSet res = runExecuteSQL(mySQLProps, sqlCommand);
+    ResultSet res = runExecuteSQL(databaseProps, sqlCommand);
     while (res.next()) {
       results.add(res.getString(column));
     }
     res.close();
     return results;
-  }
-
-  @Override
-  public Set<String> validateDataBaseNames(List<String> fromConfig, List<String> fromMySql)
-      throws FileNotFoundException, IOException {
-    Set<String> validNames = new HashSet<>();
-
-    fromConfig.forEach(
-        conf -> {
-          fromMySql.forEach(
-              mysql -> {
-                if (conf.equals(mysql)) {
-                  validNames.add(conf);
-                }
-              });
-        });
-
-    return validNames;
   }
 
   private Boolean executeMySQLStatement(Connection conn, String statement) throws SQLException {
@@ -86,11 +58,11 @@ public class DataBaseServiceImpl implements DataBaseService {
   }
 
   @Override
-  public boolean testConnection(MySQLProps mySQLProps, boolean throwConnectionException)
+  public boolean testConnection(DatabaseProps databaseProps, boolean throwConnectionException)
       throws SettingsException {
     Boolean results = false;
     try {
-      results = executeMySQLStatement(getConnection(mySQLProps), "select 1");
+      results = executeMySQLStatement(getConnection(databaseProps), "select 1");
     } catch (Exception e) {
       if (throwConnectionException) {
         throw new SettingsException(e);
@@ -99,47 +71,46 @@ public class DataBaseServiceImpl implements DataBaseService {
     return results != null ? results : false;
   }
 
-  private Connection getConnection(MySQLProps mySQLProps) throws SQLException {
+  private Connection getConnection(DatabaseProps databaseProps) throws SQLException {
     return DriverManager.getConnection(
-        String.format(
-            "jdbc:mysql://%s:%s/%s",
-            mySQLProps.getHost(),
-            mySQLProps.getPort(),
-            StringUtils.isNotBlank(mySQLProps.getDb()) ? mySQLProps.getDb() : ""),
-        mySQLProps.getUsername(),
-        mySQLProps.getPassword());
+        DbEngine.MYSQL.equals(databaseProps.getEngine())
+            ? String.format(
+                "jdbc:mysql://%s:%s/%s",
+                databaseProps.getHost(),
+                databaseProps.getPort(),
+                StringUtils.isNotBlank(databaseProps.getDb()) ? databaseProps.getDb() : "")
+            : databaseProps.getUrl(),
+        databaseProps.getUsername(),
+        databaseProps.getPassword());
   }
 
-  @Override
-  public void loadDatabaseBackups(MySQLProps mySQLProps, String[] databases, File backupsFolder)
+  private void loadDatabase(File dbPath, DatabaseProps databaseProps)
       throws SQLException, IOException {
-    for (String db : databases) {
-      File dbPath = new File(backupsFolder.getAbsolutePath() + File.separator + db + ".sql");
-      loadDatabase(dbPath, mySQLProps);
-    }
-  }
-
-  private void loadDatabase(File dbPath, MySQLProps mySQLProps) throws SQLException, IOException {
     if (dbPath.exists()) {
-      String db = mySQLProps.getDb();
-      mySQLProps.setDb(null);
-      runSQLUpdate(mySQLProps, String.format("CREATE DATABASE IF NOT EXISTS %s", db));
-      mySQLProps.setDb(db);
-      ScriptRunner sr = new ScriptRunner(getConnection(mySQLProps), false, false);
+      String db = databaseProps.getDb();
+      databaseProps.setDb(null);
+      runSQLUpdate(
+          databaseProps,
+          String.format(
+              DbEngine.H2.equals(databaseProps.getEngine())
+                  ? "CREATE SCHEMA %s"
+                  : "CREATE DATABASE IF NOT EXISTS %s",
+              db));
+      databaseProps.setDb(db);
+      ScriptRunner sr = new ScriptRunner(getConnection(databaseProps), false, false);
       Reader reader = new BufferedReader(new FileReader(dbPath));
       sr.runScript(reader);
     }
   }
 
-  private void runSQLUpdate(MySQLProps mySQLProps, String sql) throws SQLException {
-    Statement statement = getConnection(mySQLProps).createStatement();
+  private void runSQLUpdate(DatabaseProps databaseProps, String sql) throws SQLException {
+    Statement statement = getConnection(databaseProps).createStatement();
     statement.executeUpdate(sql);
     statement.close();
   }
 
-  private ResultSet runExecuteSQL(MySQLProps mySQLProps, String sql) throws SQLException {
-    Statement statement = getConnection(mySQLProps).createStatement();
-    statement.executeUpdate(sql);
+  private ResultSet runExecuteSQL(DatabaseProps databaseProps, String sql) throws SQLException {
+    Statement statement = getConnection(databaseProps).createStatement();
     return statement.executeQuery(sql);
   }
 }
