@@ -19,7 +19,6 @@ configurations {
 	implementation {
 		exclude group: 'org.slf4j', module: 'slf4j-log4j12'
 	}
-	pdiPlugin
 }
 
 repositories {
@@ -35,7 +34,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'pentaho-kettle:kettle-core:8.2.0.7-719'
 	implementation 'pentaho-kettle:kettle-engine:8.2.0.7-719'
-	pdiPlugin 'org.pentaho.di.plugins:pdi-core-plugins-impl:8.2.0.7-719'
+	implementation 'org.pentaho.di.plugins:pdi-core-plugins-impl:8.2.0.7-719'
 	implementation 'mysql:mysql-connector-java:5.1.28'
 	compile 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
 	compile 'com.google.googlejavaformat:google-java-format:1.7'
@@ -63,10 +62,3 @@ jacocoTestReport {
 		html.enabled = true
 	}
 }
-
-task copyPlugins(type: Copy) {
-	from configurations.pdiPlugin
-	into "${buildDir}/resources/main/plugins"
-}
-
-build.dependsOn(copyPlugins)

@@ -80,6 +80,16 @@ public class SettingsServiceImpl implements SettingsService {
       String pass = props.getProperty(SettingsService.DB_PASS);
       DatabaseProps mysqlOpts = new DatabaseProps(host, port, user, pass, db);
       if ("false".equals(testConnection) || dataBaseService.testConnection(mysqlOpts, true)) {
+
+        String plugins =
+            String.join(
+                ",",
+                "org.pentaho.di.trans.steps.abort.AbortMeta",
+                "org.pentaho.di.trans.steps.blockingstep.BlockingStepMeta");
+
+        // Register plugins here
+        System.setProperty("KETTLE_PLUGIN_CLASSES", plugins);
+
         // initialize kettle environment
         KettleEnvironment.init();
 
