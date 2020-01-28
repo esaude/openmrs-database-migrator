@@ -259,19 +259,20 @@ public class FileIOUtilities {
 
   public boolean isSettingsFilesMissingSomeValue() throws IOException {
 
-    BufferedReader br = new BufferedReader(new FileReader(new File("settings.properties")));
-    String line = null;
-    while ((line = br.readLine()) != null) {
-      String[] prop = line.split("=");
-      if (prop.length == 1
-          || (("ETL_DATABASE_HOST".equals(prop[0])
-                  || "ETL_DATABASE_PORT".equals(prop[0])
-                  || "ETL_DATABASE_USER".equals(prop[0])
-                  || "ETL_DATABASE_PASSWORD".equals(prop[0])
-                  || "ETL_SOURCE_DATABASE".equals(prop[0]))
-              && (StringUtils.isBlank(prop[1].trim())))) {
-        return true;
-      }
+    try(BufferedReader br = new BufferedReader(new FileReader(new File("settings.properties")))){
+	    String line = null;
+	    while ((line = br.readLine()) != null) {
+	      String[] prop = line.split("=");
+	      if (prop.length == 1
+	          || (("ETL_DATABASE_HOST".equals(prop[0])
+	                  || "ETL_DATABASE_PORT".equals(prop[0])
+	                  || "ETL_DATABASE_USER".equals(prop[0])
+	                  || "ETL_DATABASE_PASSWORD".equals(prop[0])
+	                  || "ETL_SOURCE_DATABASE".equals(prop[0]))
+	              && (StringUtils.isBlank(prop[1].trim())))) {
+	        return true;
+	      }
+	    }
     }
     return false;
   }
