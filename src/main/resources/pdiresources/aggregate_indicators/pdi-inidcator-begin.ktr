@@ -1725,7 +1725,7 @@ where c.concept_id=6274;</sql>
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>CREATE TABLE pdi_indicator (
+    <sql>CREATE TABLE IF NOT EXISTS pdi_indicator (
   indicator_id int(11) NOT NULL AUTO_INCREMENT,
   indicator_description varchar(255) not null,
   before_results int(11) ,

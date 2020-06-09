@@ -1366,7 +1366,7 @@
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>CREATE TABLE `old_concept` (
+    <sql>CREATE TABLE IF NOT EXISTS `old_concept` (
   `concept_id` int(11) NOT NULL AUTO_INCREMENT,
   `retired` tinyint(1) NOT NULL DEFAULT '0',
   `short_name` varchar(255) DEFAULT NULL,

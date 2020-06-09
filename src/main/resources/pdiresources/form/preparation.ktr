@@ -656,7 +656,7 @@
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>CREATE TABLE `old_form` (
+    <sql>CREATE TABLE IF NOT EXISTS`old_form` (
   `form_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL DEFAULT '',
   `version` varchar(50) NOT NULL DEFAULT '',

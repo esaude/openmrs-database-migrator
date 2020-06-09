@@ -775,7 +775,7 @@ FROM program_workflow_state
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>CREATE TABLE old_program_workflow_state LIKE program_workflow_state;</sql>
+    <sql>CREATE TABLE IF NOT EXISTS old_program_workflow_state LIKE program_workflow_state;</sql>
     <set_params>N</set_params>
     <insert_field/>
     <update_field/>

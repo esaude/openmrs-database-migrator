@@ -732,7 +732,7 @@ FROM visit_type
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>CREATE TABLE visit_type_backup LIKE visit_type; </sql>
+    <sql>CREATE TABLE IF NOT EXISTS visit_type_backup LIKE visit_type; </sql>
     <set_params>N</set_params>
     <insert_field/>
     <update_field/>

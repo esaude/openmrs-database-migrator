@@ -772,7 +772,7 @@ FROM program_workflow
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>CREATE TABLE old_program_workflow (
+    <sql>CREATE TABLE IF NOT EXISTS old_program_workflow (
   program_workflow_id int(11) NOT NULL AUTO_INCREMENT,
   program_id int(11) NOT NULL DEFAULT '0',
   concept_id int(11) NOT NULL DEFAULT '0',

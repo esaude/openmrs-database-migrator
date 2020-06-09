@@ -692,7 +692,7 @@
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>CREATE TABLE  old_program  (
+    <sql>CREATE TABLE IF NOT EXISTS  old_program  (
    program_id  int(11) NOT NULL AUTO_INCREMENT,
    concept_id  int(11) NOT NULL DEFAULT '0',
    creator  int(11) NOT NULL DEFAULT '0',

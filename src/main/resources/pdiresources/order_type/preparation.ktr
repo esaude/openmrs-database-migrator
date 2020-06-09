@@ -821,7 +821,7 @@ FROM order_type
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>CREATE TABLE `old_order_type` (
+    <sql>CREATE TABLE IF NOT EXISTS `old_order_type` (
   `order_type_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL DEFAULT '',
   `description` text,
