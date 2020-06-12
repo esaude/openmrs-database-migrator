@@ -539,6 +539,9 @@
       <argumentField>
         <argumentFieldName>form_dump_file</argumentFieldName>
       </argumentField>
+      <argumentField>
+        <argumentFieldName>host</argumentFieldName>
+      </argumentField>
     </argumentFields>
     <attributes/>
     <cluster_schema/>
@@ -594,6 +597,18 @@
         <name>database</name>
         <variable>${ETL_SOURCE_DATABASE}</variable>
         <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <length>-1</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>host</name>
+        <variable>${ETL_DATABASE_HOST}</variable>
+        <type>None</type>
         <format/>
         <currency/>
         <decimal/>
