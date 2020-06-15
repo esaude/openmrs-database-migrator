@@ -645,7 +645,7 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>1104</xloc>
+      <xloc>992</xloc>
       <yloc>256</yloc>
       <attributes_kjc/>
     </entry>
@@ -706,8 +706,8 @@
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>patient-identifier-type</from>
-      <to>encounter_type</to>
+      <from>encounter_type</from>
+      <to>form</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -715,8 +715,8 @@
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>encounter_type</from>
-      <to>form</to>
+      <from>patient-identifier-type</from>
+      <to>encounter_type</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
