@@ -534,7 +534,7 @@
     </partitioning>
     <connection>source</connection>
     <schema/>
-    <table>patient_identifier_type</table>
+    <table>patient_identifier_type_backup</table>
     <commit>1000</commit>
     <truncate>N</truncate>
     <ignore_errors>N</ignore_errors>

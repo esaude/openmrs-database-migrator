@@ -537,7 +537,7 @@
       <attributes/>
       <specification_method>filename</specification_method>
       <job_object_id/>
-      <filename>pdiresources/program-workflow-state/migration.kjb</filename>
+      <filename>pdiresources/program-workflow-state/migration-job.kjb</filename>
       <jobname/>
       <directory/>
       <arg_from_previous>N</arg_from_previous>
@@ -574,7 +574,7 @@
       <attributes/>
       <specification_method>filename</specification_method>
       <job_object_id/>
-      <filename>/home/yassin/Projects/openmrs-database-migrator/src/main/resources/pdiresources/program-workflow/migration.kjb</filename>
+      <filename>pdiresources/program-workflow/migration-workflow.kjb</filename>
       <jobname/>
       <directory/>
       <arg_from_previous>N</arg_from_previous>
@@ -611,7 +611,7 @@
       <attributes/>
       <specification_method>filename</specification_method>
       <trans_object_id/>
-      <filename>/home/yassin/Projects/openmrs-database-migrator/src/main/resources/pdiresources/encounter_type/migration.ktr</filename>
+      <filename>pdiresources/encounter_type/migration.ktr</filename>
       <transname/>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>

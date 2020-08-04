@@ -12,8 +12,6 @@ public interface SettingsService {
 
   String PDI_RESOURCES_DIR = "pdiresources";
 
-  String PDI_PLUGINS_DIR = "plugins";
-
   String PDI_CONFIG = "config";
 
   // settings keys
