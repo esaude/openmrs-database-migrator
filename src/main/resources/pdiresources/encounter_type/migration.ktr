@@ -703,7 +703,7 @@ WHERE system_id = 'harmonization';</sql>
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <filename>config/encounter_type.csv</filename>
+    <filename>config/encounter_types.csv</filename>
     <filename_field/>
     <rownum_field/>
     <include_filename>N</include_filename>
