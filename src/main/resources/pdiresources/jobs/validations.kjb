@@ -316,7 +316,7 @@
       <attributes/>
       <specification_method>filename</specification_method>
       <trans_object_id/>
-      <filename>/home/cfaife/jembi_dev/openmrs-database-migrator/src/main/resources/pdiresources/encounter_type/validation.ktr</filename>
+      <filename>pdiresources/encounter_type/validation.ktr</filename>
       <transname/>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
@@ -354,7 +354,7 @@
       <attributes/>
       <specification_method>filename</specification_method>
       <trans_object_id/>
-      <filename>/home/cfaife/jembi_dev/openmrs-database-migrator/src/main/resources/pdiresources/program/validation.ktr</filename>
+      <filename>pdiresources/program/validation.ktr</filename>
       <transname/>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
@@ -392,7 +392,7 @@
       <attributes/>
       <specification_method>filename</specification_method>
       <trans_object_id/>
-      <filename>/home/cfaife/jembi_dev/openmrs-database-migrator/src/main/resources/pdiresources/program-workflow-state/validation.ktr</filename>
+      <filename>pdiresources/program-workflow-state/validation.ktr</filename>
       <transname/>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
@@ -430,7 +430,7 @@
       <attributes/>
       <specification_method>filename</specification_method>
       <trans_object_id/>
-      <filename>/home/cfaife/jembi_dev/openmrs-database-migrator/src/main/resources/pdiresources/visit-type/validation.ktr</filename>
+      <filename>pdiresources/visit-type/validation.ktr</filename>
       <transname/>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
@@ -468,7 +468,7 @@
       <attributes/>
       <specification_method>filename</specification_method>
       <trans_object_id/>
-      <filename>/home/cfaife/jembi_dev/openmrs-database-migrator/src/main/resources/pdiresources/patient-identifier-type/validation.ktr</filename>
+      <filename>pdiresources/patient-identifier-type/validation.ktr</filename>
       <transname/>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
@@ -506,7 +506,7 @@
       <attributes/>
       <specification_method>filename</specification_method>
       <trans_object_id/>
-      <filename>/home/cfaife/jembi_dev/openmrs-database-migrator/src/main/resources/pdiresources/program-workflow/validation.ktr</filename>
+      <filename>pdiresources/program-workflow/validation.ktr</filename>
       <transname/>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
@@ -544,7 +544,7 @@
       <attributes/>
       <specification_method>filename</specification_method>
       <trans_object_id/>
-      <filename>/home/cfaife/jembi_dev/openmrs-database-migrator/src/main/resources/pdiresources/form/validation.ktr</filename>
+      <filename>pdiresources/form/validation.ktr</filename>
       <transname/>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
@@ -582,7 +582,7 @@
       <attributes/>
       <specification_method>filename</specification_method>
       <trans_object_id/>
-      <filename>/home/cfaife/jembi_dev/openmrs-database-migrator/src/main/resources/pdiresources/validation/check_validation.ktr</filename>
+      <filename>pdiresources/validation/check_validation.ktr</filename>
       <transname/>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
@@ -620,7 +620,7 @@
       <attributes/>
       <specification_method>filename</specification_method>
       <trans_object_id/>
-      <filename>/home/cfaife/jembi_dev/openmrs-database-migrator/src/main/resources/pdiresources/validation/create-validation-table.ktr</filename>
+      <filename>pdiresources/validation/create-validation-table.ktr</filename>
       <transname/>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
@@ -658,7 +658,7 @@
       <attributes/>
       <specification_method>filename</specification_method>
       <trans_object_id/>
-      <filename>/home/cfaife/jembi_dev/openmrs-database-migrator/src/main/resources/pdiresources/validation/drop-validation-table.ktr</filename>
+      <filename>pdiresources/validation/drop-validation-table.ktr</filename>
       <transname/>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
@@ -778,15 +778,6 @@
     </hop>
     <hop>
       <from>check_validation</from>
-      <to>Drop validation table</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>Y</unconditional>
-    </hop>
-    <hop>
-      <from>check_validation</from>
       <to>Abort job</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
@@ -797,6 +788,15 @@
     <hop>
       <from>Create validation table</from>
       <to>Validate Program Workflow States</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>check_validation</from>
+      <to>Drop validation table</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>

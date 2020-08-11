@@ -554,7 +554,7 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <filename>/home/cfaife/jembi_dev/openmrs-database-migrator/src/main/resources/config/program-workflows.csv</filename>
+    <filename>config/program-workflows.csv</filename>
     <filename_field/>
     <rownum_field/>
     <include_filename>N</include_filename>
