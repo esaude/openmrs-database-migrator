@@ -518,7 +518,7 @@
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>ALTER TABLE encounter DROP updated;</sql>
+    <sql>ALTER TABLE encounter DROP updated_encounter_type;</sql>
     <set_params>N</set_params>
     <insert_field/>
     <update_field/>
