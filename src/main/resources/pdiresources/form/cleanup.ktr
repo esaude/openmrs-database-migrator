@@ -567,7 +567,7 @@
     <single_statement>N</single_statement>
     <replace_variables>N</replace_variables>
     <quoteString>N</quoteString>
-    <sql>ALTER TABLE encounter drop column updated;
+    <sql>ALTER TABLE encounter drop column updated_form;
 </sql>
     <set_params>N</set_params>
     <insert_field/>

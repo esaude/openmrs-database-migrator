@@ -1578,7 +1578,7 @@ FROM htmlformentry_html_form where updated=1
 , changed_by updated_changed_by
 , date_changed updated_date_changed
 , visit_id updated_visit_id
-FROM encounter  where  updated=1;
+FROM encounter  where  updated_form=1;
  </sql>
     <limit>0</limit>
     <lookup/>
