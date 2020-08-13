@@ -517,12 +517,12 @@ related tables report generation
     <hop>
       <from>drop old_encounter_type</from>
       <to>drop flag from form</to>
-      <enabled>N</enabled>
+      <enabled>Y</enabled>
     </hop>
     <hop>
       <from>drop flag from form</from>
       <to>drop flag from encounter</to>
-      <enabled>N</enabled>
+      <enabled>Y</enabled>
     </hop>
     <hop>
       <from>Data grid</from>
