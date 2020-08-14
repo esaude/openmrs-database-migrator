@@ -499,7 +499,7 @@
     <hop>
       <from>read_harmonized_person_attribute_type</from>
       <to>write_person_attribute_type</to>
-      <enabled>N</enabled>
+      <enabled>Y</enabled>
     </hop>
     <hop>
       <from>true/false</from>
@@ -856,7 +856,7 @@ where uuid=?</sql>
       <field>
         <name>person_attribute_type_id</name>
         <type>Integer</type>
-        <format>#</format>
+        <format />
         <currency />
         <decimal />
         <group />
@@ -932,8 +932,8 @@ where uuid=?</sql>
       </field>
       <field>
         <name>date_created</name>
-        <type>Date</type>
-        <format>yyyy/MM/dd HH:mm:ss</format>
+        <type>Timestamp</type>
+        <format />
         <currency />
         <decimal />
         <group />
@@ -954,8 +954,8 @@ where uuid=?</sql>
       </field>
       <field>
         <name>date_changed</name>
-        <type>Date</type>
-        <format>yyyy/MM/dd HH:mm:ss</format>
+        <type>Timestamp</type>
+        <format />
         <currency />
         <decimal />
         <group />
@@ -976,7 +976,7 @@ where uuid=?</sql>
       </field>
       <field>
         <name>retired_by</name>
-        <type>String</type>
+        <type>Integer</type>
         <format />
         <currency />
         <decimal />
@@ -987,8 +987,8 @@ where uuid=?</sql>
       </field>
       <field>
         <name>date_retired</name>
-        <type>Date</type>
-        <format>yyyy/MM/dd HH:mm:ss</format>
+        <type>Timestamp</type>
+        <format />
         <currency />
         <decimal />
         <group />
