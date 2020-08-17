@@ -510,7 +510,7 @@
     <hop>
       <from>CSV file input</from>
       <to>Sort rows</to>
-      <enabled>N</enabled>
+      <enabled>Y</enabled>
     </hop>
     <hop>
       <from>Sort rows</from>
