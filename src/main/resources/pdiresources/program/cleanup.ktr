@@ -494,16 +494,16 @@
     <hop>
       <from>drop_old_program</from>
       <to>drop-flag-from-patient_program</to>
-      <enabled>N</enabled>
+      <enabled>Y</enabled>
     </hop>
     <hop>
       <from>drop-flag-from-patient_program</from>
       <to>drop-flag-from-program_workflow</to>
-      <enabled>N</enabled>
+      <enabled>Y</enabled>
     </hop>
     <hop>
       <from>Data grid</from>
-      <to>Delete program_before.csv</to>
+      <to>Delete programs_before.csv</to>
       <enabled>Y</enabled>
     </hop>
   </order>
@@ -647,10 +647,7 @@
     </fields>
     <data>
       <line>
-        <item>output/program_before.csv</item>
-      </line>
-      <line>
-        <item/>
+        <item>output/programs_before.csv</item>
       </line>
     </data>
     <attributes/>
@@ -662,13 +659,13 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>542</xloc>
-      <yloc>415</yloc>
+      <xloc>512</xloc>
+      <yloc>416</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Delete program_before.csv</name>
+    <name>Delete programs_before.csv</name>
     <type>ProcessFiles</type>
     <description/>
     <distribute>Y</distribute>
@@ -694,8 +691,8 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>798</xloc>
-      <yloc>415</yloc>
+      <xloc>800</xloc>
+      <yloc>416</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

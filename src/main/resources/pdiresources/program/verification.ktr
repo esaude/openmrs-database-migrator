@@ -563,6 +563,158 @@
     </hop>
   </order>
   <step>
+    <name>Memory group by</name>
+    <type>MemoryGroupBy</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <give_back_row>N</give_back_row>
+    <group>
+      <field>
+        <name>uuid</name>
+      </field>
+      <field>
+        <name>name</name>
+      </field>
+      <field>
+        <name>program_id</name>
+      </field>
+    </group>
+    <fields>
+      <field>
+        <aggregate>program_workflows</aggregate>
+        <subject>program_workflow_id</subject>
+        <type>COUNT_DISTINCT</type>
+        <valuefield/>
+      </field>
+      <field>
+        <aggregate>patient _programs</aggregate>
+        <subject>patient_program_id</subject>
+        <type>COUNT_DISTINCT</type>
+        <valuefield/>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>720</xloc>
+      <yloc>352</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Merge join</name>
+    <type>MergeJoin</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <join_type>INNER</join_type>
+    <step1>sort by uuid 2</step1>
+    <step2>sort by uuid</step2>
+    <keys_1>
+      <key>uuid</key>
+    </keys_1>
+    <keys_2>
+      <key>uuid</key>
+    </keys_2>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1088</xloc>
+      <yloc>416</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Multiway merge join</name>
+    <type>MultiwayMergeJoin</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <join_type>FULL OUTER</join_type>
+    <step0>Sort by program_id</step0>
+    <step1>Sort by program_id 2</step1>
+    <step2>Sort by program_id 3</step2>
+    <number_input>3</number_input>
+    <keys>
+      <key>program_id</key>
+      <key>program_id</key>
+      <key>program_id</key>
+    </keys>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>512</xloc>
+      <yloc>352</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Read Patient Program</name>
+    <type>TableInput</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>OpenMRS</connection>
+    <sql>SELECT program_id,patient_program_id FROM patient_program</sql>
+    <limit>0</limit>
+    <lookup/>
+    <execute_each_row>N</execute_each_row>
+    <variables_active>N</variables_active>
+    <lazy_conversion_active>N</lazy_conversion_active>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>128</xloc>
+      <yloc>448</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
     <name>Read Program Workflow</name>
     <type>TableInput</type>
     <description/>
@@ -595,6 +747,102 @@
     </GUI>
   </step>
   <step>
+    <name>Read program before migration</name>
+    <type>CsvInput</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <filename>output/programs_before.csv</filename>
+    <filename_field/>
+    <rownum_field/>
+    <include_filename>N</include_filename>
+    <separator>,</separator>
+    <enclosure>"</enclosure>
+    <header>Y</header>
+    <buffer_size>50000</buffer_size>
+    <lazy_conversion>Y</lazy_conversion>
+    <add_filename_result>N</add_filename_result>
+    <parallel>N</parallel>
+    <newline_possible>N</newline_possible>
+    <format/>
+    <encoding/>
+    <fields>
+      <field>
+        <name>uuid</name>
+        <type>String</type>
+        <format/>
+        <currency>$</currency>
+        <decimal>.</decimal>
+        <group>,</group>
+        <length>38</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>name</name>
+        <type>String</type>
+        <format/>
+        <currency>$</currency>
+        <decimal>.</decimal>
+        <group>,</group>
+        <length>50</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>programs_before</name>
+        <type>Integer</type>
+        <format>#</format>
+        <currency>$</currency>
+        <decimal>.</decimal>
+        <group>,</group>
+        <length>15</length>
+        <precision>0</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>program_workflows_before</name>
+        <type>Integer</type>
+        <format>#</format>
+        <currency>$</currency>
+        <decimal>.</decimal>
+        <group>,</group>
+        <length>15</length>
+        <precision>0</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>patient_programs_before</name>
+        <type>Integer</type>
+        <format>#</format>
+        <currency>$</currency>
+        <decimal>.</decimal>
+        <group>,</group>
+        <length>15</length>
+        <precision>0</precision>
+        <trim_type>none</trim_type>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>720</xloc>
+      <yloc>496</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
     <name>Read programs</name>
     <type>TableInput</type>
     <description/>
@@ -623,6 +871,66 @@
     <GUI>
       <xloc>128</xloc>
       <yloc>256</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Select values</name>
+    <type>SelectValues</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <fields>
+      <field>
+        <name>uuid</name>
+        <rename/>
+      </field>
+      <field>
+        <name>name</name>
+        <rename/>
+      </field>
+      <field>
+        <name>programs_before</name>
+        <rename/>
+      </field>
+      <field>
+        <name>program_workflows_before</name>
+        <rename/>
+      </field>
+      <field>
+        <name>patient_programs_before</name>
+        <rename/>
+      </field>
+      <field>
+        <name>program_id</name>
+        <rename>programs_after</rename>
+      </field>
+      <field>
+        <name>program_workflows</name>
+        <rename>program_workflows_after</rename>
+      </field>
+      <field>
+        <name>patient_programs</name>
+        <rename>patient_programs_after</rename>
+      </field>
+      <select_unspecified>N</select_unspecified>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1232</xloc>
+      <yloc>416</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -711,38 +1019,6 @@
     </GUI>
   </step>
   <step>
-    <name>Read Patient Program</name>
-    <type>TableInput</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <connection>OpenMRS</connection>
-    <sql>SELECT program_id,patient_program_id FROM patient_program</sql>
-    <limit>0</limit>
-    <lookup/>
-    <execute_each_row>N</execute_each_row>
-    <variables_active>N</variables_active>
-    <lazy_conversion_active>N</lazy_conversion_active>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>128</xloc>
-      <yloc>448</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
     <name>Sort by program_id 3</name>
     <type>SortRows</type>
     <description/>
@@ -785,8 +1061,8 @@
     </GUI>
   </step>
   <step>
-    <name>Multiway merge join</name>
-    <type>MultiwayMergeJoin</type>
+    <name>calculate diff</name>
+    <type>Calculator</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -795,16 +1071,52 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <join_type>FULL OUTER</join_type>
-    <step0>Sort by program_id</step0>
-    <step1>Sort by program_id 2</step1>
-    <step2>Sort by program_id 3</step2>
-    <number_input>3</number_input>
-    <keys>
-      <key>program_id</key>
-      <key>program_id</key>
-      <key>program_id</key>
-    </keys>
+    <failIfNoFile>Y</failIfNoFile>
+    <calculation>
+      <field_name>programs diff</field_name>
+      <calc_type>SUBTRACT</calc_type>
+      <field_a>programs_before</field_a>
+      <field_b>programs_after</field_b>
+      <field_c/>
+      <value_type>None</value_type>
+      <value_length>-1</value_length>
+      <value_precision>-1</value_precision>
+      <remove>N</remove>
+      <conversion_mask/>
+      <decimal_symbol/>
+      <grouping_symbol/>
+      <currency_symbol/>
+    </calculation>
+    <calculation>
+      <field_name>patient programs diff</field_name>
+      <calc_type>SUBTRACT</calc_type>
+      <field_a>patient_programs_before</field_a>
+      <field_b>patient_programs_after</field_b>
+      <field_c/>
+      <value_type>None</value_type>
+      <value_length>-1</value_length>
+      <value_precision>-1</value_precision>
+      <remove>N</remove>
+      <conversion_mask/>
+      <decimal_symbol/>
+      <grouping_symbol/>
+      <currency_symbol/>
+    </calculation>
+    <calculation>
+      <field_name>program workflows diffs</field_name>
+      <calc_type>SUBTRACT</calc_type>
+      <field_a>program_workflows_before</field_a>
+      <field_b>program_workflows_after</field_b>
+      <field_c/>
+      <value_type>None</value_type>
+      <value_length>-1</value_length>
+      <value_precision>-1</value_precision>
+      <remove>N</remove>
+      <conversion_mask/>
+      <decimal_symbol/>
+      <grouping_symbol/>
+      <currency_symbol/>
+    </calculation>
     <attributes/>
     <cluster_schema/>
     <remotesteps>
@@ -814,155 +1126,8 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>512</xloc>
-      <yloc>352</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Memory group by</name>
-    <type>MemoryGroupBy</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <give_back_row>N</give_back_row>
-    <group>
-      <field>
-        <name>uuid</name>
-      </field>
-      <field>
-        <name>name</name>
-      </field>
-      <field>
-        <name>program_id</name>
-      </field>
-    </group>
-    <fields>
-      <field>
-        <aggregate>program_workflows</aggregate>
-        <subject>program_workflow_id</subject>
-        <type>COUNT_DISTINCT</type>
-        <valuefield/>
-      </field>
-      <field>
-        <aggregate>patient _programs</aggregate>
-        <subject>patient_program_id</subject>
-        <type>COUNT_DISTINCT</type>
-        <valuefield/>
-      </field>
-    </fields>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>720</xloc>
-      <yloc>352</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Read program before migration</name>
-    <type>CsvInput</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <filename>output/program_before.csv</filename>
-    <filename_field/>
-    <rownum_field/>
-    <include_filename>N</include_filename>
-    <separator>,</separator>
-    <enclosure>"</enclosure>
-    <header>Y</header>
-    <buffer_size>50000</buffer_size>
-    <lazy_conversion>Y</lazy_conversion>
-    <add_filename_result>N</add_filename_result>
-    <parallel>N</parallel>
-    <newline_possible>N</newline_possible>
-    <format/>
-    <encoding/>
-    <fields>
-      <field>
-        <name>uuid</name>
-        <type>String</type>
-        <format/>
-        <currency>$</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>38</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>name</name>
-        <type>String</type>
-        <format/>
-        <currency>$</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>50</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>programs_before</name>
-        <type>Integer</type>
-        <format>#</format>
-        <currency>$</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>15</length>
-        <precision>0</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>program_workflows_before</name>
-        <type>Integer</type>
-        <format>#</format>
-        <currency>$</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>15</length>
-        <precision>0</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>patient_programs_before</name>
-        <type>Integer</type>
-        <format>#</format>
-        <currency>$</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>15</length>
-        <precision>0</precision>
-        <trim_type>none</trim_type>
-      </field>
-    </fields>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>720</xloc>
-      <yloc>496</yloc>
+      <xloc>1376</xloc>
+      <yloc>416</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1047,175 +1212,6 @@
     <GUI>
       <xloc>880</xloc>
       <yloc>352</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Merge join</name>
-    <type>MergeJoin</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <join_type>INNER</join_type>
-    <step1>sort by uuid 2</step1>
-    <step2>sort by uuid</step2>
-    <keys_1>
-      <key>uuid</key>
-    </keys_1>
-    <keys_2>
-      <key>uuid</key>
-    </keys_2>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>1088</xloc>
-      <yloc>416</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Select values</name>
-    <type>SelectValues</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <fields>
-      <field>
-        <name>uuid</name>
-        <rename/>
-      </field>
-      <field>
-        <name>name</name>
-        <rename/>
-      </field>
-      <field>
-        <name>encounters before</name>
-        <rename/>
-      </field>
-      <field>
-        <name>programs_before</name>
-        <rename/>
-      </field>
-      <field>
-        <name>program_workflows_before</name>
-        <rename/>
-      </field>
-      <field>
-        <name>patient_programs_before</name>
-        <rename/>
-      </field>
-      <field>
-        <name>program_id</name>
-        <rename>programs_after</rename>
-      </field>
-      <field>
-        <name>program_workflows</name>
-        <rename>program_workflows_after</rename>
-      </field>
-      <field>
-        <name>patient_programs</name>
-        <rename>patient_programs_after</rename>
-      </field>
-      <select_unspecified>N</select_unspecified>
-    </fields>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>1232</xloc>
-      <yloc>416</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>calculate diff</name>
-    <type>Calculator</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <failIfNoFile>Y</failIfNoFile>
-    <calculation>
-      <field_name>programs diff</field_name>
-      <calc_type>SUBTRACT</calc_type>
-      <field_a>programs_before</field_a>
-      <field_b>programs_after</field_b>
-      <field_c/>
-      <value_type>None</value_type>
-      <value_length>-1</value_length>
-      <value_precision>-1</value_precision>
-      <remove>N</remove>
-      <conversion_mask/>
-      <decimal_symbol/>
-      <grouping_symbol/>
-      <currency_symbol/>
-    </calculation>
-    <calculation>
-      <field_name>patient programs diff</field_name>
-      <calc_type>SUBTRACT</calc_type>
-      <field_a>patient_programs_before</field_a>
-      <field_b>patient_programs_after</field_b>
-      <field_c/>
-      <value_type>None</value_type>
-      <value_length>-1</value_length>
-      <value_precision>-1</value_precision>
-      <remove>N</remove>
-      <conversion_mask/>
-      <decimal_symbol/>
-      <grouping_symbol/>
-      <currency_symbol/>
-    </calculation>
-    <calculation>
-      <field_name>program workflows diffs</field_name>
-      <calc_type>SUBTRACT</calc_type>
-      <field_a>program_workflows_before</field_a>
-      <field_b>program_workflows_after</field_b>
-      <field_c/>
-      <value_type>None</value_type>
-      <value_length>-1</value_length>
-      <value_precision>-1</value_precision>
-      <remove>N</remove>
-      <conversion_mask/>
-      <decimal_symbol/>
-      <grouping_symbol/>
-      <currency_symbol/>
-    </calculation>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>1376</xloc>
-      <yloc>416</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
