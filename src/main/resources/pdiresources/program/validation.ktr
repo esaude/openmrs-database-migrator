@@ -1195,9 +1195,11 @@
     <fields>
       <field>
         <name>uuid</name>
+        <rename/>
       </field>
       <field>
         <name>name</name>
+        <rename/>
       </field>
       <field>
         <name>program_id</name>

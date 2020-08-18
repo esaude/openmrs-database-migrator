@@ -1133,9 +1133,11 @@ Saves data in output/encounter_type_before.csv</note>
     <fields>
       <field>
         <name>uuid</name>
+        <rename/>
       </field>
       <field>
         <name>name</name>
+        <rename/>
       </field>
       <field>
         <name>encounters</name>
@@ -1553,7 +1555,7 @@ Saves data in output/encounter_type_before.csv</note>
       <servlet_output>N</servlet_output>
       <do_not_open_new_file_init>N</do_not_open_new_file_init>
       <extention>csv</extention>
-      <append>N</append>
+      <append>Y</append>
       <split>N</split>
       <haspartno>N</haspartno>
       <add_date>N</add_date>
