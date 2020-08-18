@@ -444,7 +444,7 @@
     <database>${ETL_SOURCE_DATABASE}</database>
     <port>${ETL_DATABASE_PORT}</port>
     <username>${ETL_DATABASE_USER}</username>
-    <password>Encrypted 2be98afc86aa7f2e4cb79ce10bef2cfdb</password>
+    <password>${ETL_DATABASE_PASSWORD}</password>
     <servername />
     <data_tablespace />
     <index_tablespace />
