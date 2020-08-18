@@ -925,7 +925,7 @@ Saves data in output/encounter_type_before.csv</note>
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <filename>/home/yassin/Projects/openmrs-database-migrator/src/main/resources/config/encounter_types.csv</filename>
+    <filename>config/encounter_types.csv</filename>
     <filename_field/>
     <rownum_field/>
     <include_filename>N</include_filename>
