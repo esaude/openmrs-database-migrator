@@ -2,9 +2,9 @@
 <transformation>
   <info>
     <name>log-for-person_attribute_type-references</name>
-    <description />
-    <extended_description />
-    <trans_version />
+    <description/>
+    <extended_description/>
+    <trans_version/>
     <trans_type>Normal</trans_type>
     <trans_status>0</trans_status>
     <directory>/</directory>
@@ -12,12 +12,12 @@
     </parameters>
     <log>
       <trans-log-table>
-        <connection />
-        <schema />
-        <table />
-        <size_limit_lines />
-        <interval />
-        <timeout_days />
+        <connection/>
+        <schema/>
+        <table/>
+        <size_limit_lines/>
+        <interval/>
+        <timeout_days/>
         <field>
           <id>ID_BATCH</id>
           <enabled>Y</enabled>
@@ -42,37 +42,37 @@
           <id>LINES_READ</id>
           <enabled>Y</enabled>
           <name>LINES_READ</name>
-          <subject />
+          <subject/>
         </field>
         <field>
           <id>LINES_WRITTEN</id>
           <enabled>Y</enabled>
           <name>LINES_WRITTEN</name>
-          <subject />
+          <subject/>
         </field>
         <field>
           <id>LINES_UPDATED</id>
           <enabled>Y</enabled>
           <name>LINES_UPDATED</name>
-          <subject />
+          <subject/>
         </field>
         <field>
           <id>LINES_INPUT</id>
           <enabled>Y</enabled>
           <name>LINES_INPUT</name>
-          <subject />
+          <subject/>
         </field>
         <field>
           <id>LINES_OUTPUT</id>
           <enabled>Y</enabled>
           <name>LINES_OUTPUT</name>
-          <subject />
+          <subject/>
         </field>
         <field>
           <id>LINES_REJECTED</id>
           <enabled>Y</enabled>
           <name>LINES_REJECTED</name>
-          <subject />
+          <subject/>
         </field>
         <field>
           <id>ERRORS</id>
@@ -126,11 +126,11 @@
         </field>
       </trans-log-table>
       <perf-log-table>
-        <connection />
-        <schema />
-        <table />
-        <interval />
-        <timeout_days />
+        <connection/>
+        <schema/>
+        <table/>
+        <interval/>
+        <timeout_days/>
         <field>
           <id>ID_BATCH</id>
           <enabled>Y</enabled>
@@ -208,10 +208,10 @@
         </field>
       </perf-log-table>
       <channel-log-table>
-        <connection />
-        <schema />
-        <table />
-        <timeout_days />
+        <connection/>
+        <schema/>
+        <table/>
+        <timeout_days/>
         <field>
           <id>ID_BATCH</id>
           <enabled>Y</enabled>
@@ -274,10 +274,10 @@
         </field>
       </channel-log-table>
       <step-log-table>
-        <connection />
-        <schema />
-        <table />
-        <timeout_days />
+        <connection/>
+        <schema/>
+        <table/>
+        <timeout_days/>
         <field>
           <id>ID_BATCH</id>
           <enabled>Y</enabled>
@@ -350,10 +350,10 @@
         </field>
       </step-log-table>
       <metrics-log-table>
-        <connection />
-        <schema />
-        <table />
-        <timeout_days />
+        <connection/>
+        <schema/>
+        <table/>
+        <timeout_days/>
         <field>
           <id>ID_BATCH</id>
           <enabled>Y</enabled>
@@ -402,9 +402,9 @@
       </metrics-log-table>
     </log>
     <maxdate>
-      <connection />
-      <table />
-      <field />
+      <connection/>
+      <table/>
+      <field/>
       <offset>0.0</offset>
       <maxdiff>0.0</maxdiff>
     </maxdate>
@@ -415,7 +415,7 @@
     <feedback_shown>Y</feedback_shown>
     <feedback_size>50000</feedback_size>
     <using_thread_priorities>Y</using_thread_priorities>
-    <shared_objects_file />
+    <shared_objects_file/>
     <capture_step_performance>N</capture_step_performance>
     <step_performance_capturing_delay>1000</step_performance_capturing_delay>
     <step_performance_capturing_size_limit>100</step_performance_capturing_size_limit>
@@ -445,9 +445,9 @@
     <port>${ETL_DATABASE_PORT}</port>
     <username>${ETL_DATABASE_USER}</username>
     <password>${ETL_DATABASE_PASSWORD}</password>
-    <servername />
-    <data_tablespace />
-    <index_tablespace />
+    <servername/>
+    <data_tablespace/>
+    <index_tablespace/>
     <attributes>
       <attribute>
         <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
@@ -550,16 +550,16 @@
   <step>
     <name>Dummy (do nothing)</name>
     <type>Dummy</type>
-    <description />
+    <description/>
     <distribute>N</distribute>
-    <custom_distribution />
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
     </partitioning>
-    <attributes />
-    <cluster_schema />
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -575,13 +575,13 @@
   <step>
     <name>Join rows (cartesian product)</name>
     <type>JoinRows</type>
-    <description />
+    <description/>
     <distribute>Y</distribute>
-    <custom_distribution />
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
     </partitioning>
     <directory>%%java.io.tmpdir%%</directory>
     <prefix>out</prefix>
@@ -590,13 +590,13 @@
     <compare>
       <condition>
         <negated>N</negated>
-        <leftvalue>harmonized_program_id</leftvalue>
+        <leftvalue>harmonized_person_attribute_type_id</leftvalue>
         <function>=</function>
-        <rightvalue>updated_program_id</rightvalue>
+        <rightvalue>updated_person_attribute_type_id</rightvalue>
       </condition>
     </compare>
-    <attributes />
-    <cluster_schema />
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -612,13 +612,13 @@
   <step>
     <name>filter columns</name>
     <type>SelectValues</type>
-    <description />
+    <description/>
     <distribute>Y</distribute>
-    <custom_distribution />
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
     </partitioning>
     <fields>
       <field>
@@ -632,8 +632,8 @@
       </field>
       <select_unspecified>N</select_unspecified>
     </fields>
-    <attributes />
-    <cluster_schema />
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -649,16 +649,16 @@
   <step>
     <name>get diferences</name>
     <type>FilterRows</type>
-    <description />
+    <description/>
     <distribute>Y</distribute>
-    <custom_distribution />
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
     </partitioning>
     <send_true_to>Dummy (do nothing)</send_true_to>
-    <send_false_to />
+    <send_false_to/>
     <compare>
       <condition>
         <negated>N</negated>
@@ -667,8 +667,8 @@
         <rightvalue>harmonized_person_attribute_type_id</rightvalue>
       </condition>
     </compare>
-    <attributes />
-    <cluster_schema />
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -684,13 +684,13 @@
   <step>
     <name>get harmonized person_attribute_type</name>
     <type>TableInput</type>
-    <description />
+    <description/>
     <distribute>Y</distribute>
-    <custom_distribution />
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
     </partitioning>
     <connection>OpenMRS source DB</connection>
     <sql>SELECT
@@ -714,12 +714,12 @@
 FROM person_attribute_type;
 </sql>
     <limit>0</limit>
-    <lookup />
+    <lookup/>
     <execute_each_row>N</execute_each_row>
     <variables_active>N</variables_active>
     <lazy_conversion_active>N</lazy_conversion_active>
-    <attributes />
-    <cluster_schema />
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -735,13 +735,13 @@ FROM person_attribute_type;
   <step>
     <name>get old_person_attribute_type</name>
     <type>TableInput</type>
-    <description />
+    <description/>
     <distribute>Y</distribute>
-    <custom_distribution />
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
     </partitioning>
     <connection>OpenMRS source DB</connection>
     <sql>SELECT
@@ -765,12 +765,12 @@ FROM person_attribute_type;
 FROM old_person_attribute_type;
 </sql>
     <limit>0</limit>
-    <lookup />
+    <lookup/>
     <execute_each_row>N</execute_each_row>
     <variables_active>N</variables_active>
     <lazy_conversion_active>N</lazy_conversion_active>
-    <attributes />
-    <cluster_schema />
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -786,13 +786,13 @@ FROM old_person_attribute_type;
   <step>
     <name>merge_person_attribute_type_with_the same_uuid</name>
     <type>MergeJoin</type>
-    <description />
+    <description/>
     <distribute>Y</distribute>
-    <custom_distribution />
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
     </partitioning>
     <join_type>INNER</join_type>
     <step1>sort-horminized</step1>
@@ -803,8 +803,8 @@ FROM old_person_attribute_type;
     <keys_2>
       <key>old_uuid</key>
     </keys_2>
-    <attributes />
-    <cluster_schema />
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -820,13 +820,13 @@ FROM old_person_attribute_type;
   <step>
     <name>person-attribute-log</name>
     <type>TextFileOutput</type>
-    <description />
+    <description/>
     <distribute>Y</distribute>
-    <custom_distribution />
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
     </partitioning>
     <separator>;</separator>
     <enclosure>"</enclosure>
@@ -836,10 +836,10 @@ FROM old_person_attribute_type;
     <footer>N</footer>
     <format>UNIX</format>
     <compression>None</compression>
-    <encoding />
-    <endedLine />
+    <encoding/>
+    <endedLine/>
     <fileNameInField>N</fileNameInField>
-    <fileNameField />
+    <fileNameField/>
     <create_parent_folder>Y</create_parent_folder>
     <file>
       <name>output/person-attribute-log</name>
@@ -852,21 +852,21 @@ FROM old_person_attribute_type;
       <add_date>N</add_date>
       <add_time>N</add_time>
       <SpecifyFormat>N</SpecifyFormat>
-      <date_time_format />
+      <date_time_format/>
       <add_to_result_filenames>Y</add_to_result_filenames>
       <pad>N</pad>
       <fast_dump>N</fast_dump>
-      <splitevery />
+      <splitevery/>
     </file>
     <fields>
       <field>
         <name>updated_person_attribute_id</name>
         <type>None</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif />
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
         <trim_type>none</trim_type>
         <length>-1</length>
         <precision>-1</precision>
@@ -874,11 +874,11 @@ FROM old_person_attribute_type;
       <field>
         <name>old_person_attribute_type_id</name>
         <type>None</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif />
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
         <trim_type>none</trim_type>
         <length>-1</length>
         <precision>-1</precision>
@@ -886,11 +886,11 @@ FROM old_person_attribute_type;
       <field>
         <name>harmonized_person_attribute_type_id</name>
         <type>None</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif />
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
         <trim_type>none</trim_type>
         <length>-1</length>
         <precision>-1</precision>
@@ -898,11 +898,11 @@ FROM old_person_attribute_type;
       <field>
         <name>updated_date_changed</name>
         <type>None</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif />
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
         <trim_type>none</trim_type>
         <length>-1</length>
         <precision>-1</precision>
@@ -910,18 +910,18 @@ FROM old_person_attribute_type;
       <field>
         <name>updated_changed_by</name>
         <type>None</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif />
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
         <trim_type>none</trim_type>
         <length>-1</length>
         <precision>-1</precision>
       </field>
     </fields>
-    <attributes />
-    <cluster_schema />
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -937,20 +937,20 @@ FROM old_person_attribute_type;
   <step>
     <name>sort-horminized</name>
     <type>SortRows</type>
-    <description />
+    <description/>
     <distribute>Y</distribute>
-    <custom_distribution />
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
     </partitioning>
     <directory>%%java.io.tmpdir%%</directory>
     <prefix>out</prefix>
     <sort_size>1000000</sort_size>
-    <free_memory />
+    <free_memory/>
     <compress>N</compress>
-    <compress_variable />
+    <compress_variable/>
     <unique_rows>N</unique_rows>
     <fields>
       <field>
@@ -962,8 +962,8 @@ FROM old_person_attribute_type;
         <presorted>N</presorted>
       </field>
     </fields>
-    <attributes />
-    <cluster_schema />
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -979,20 +979,20 @@ FROM old_person_attribute_type;
   <step>
     <name>sort-old</name>
     <type>SortRows</type>
-    <description />
+    <description/>
     <distribute>Y</distribute>
-    <custom_distribution />
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
     </partitioning>
     <directory>%%java.io.tmpdir%%</directory>
     <prefix>out</prefix>
     <sort_size>1000000</sort_size>
-    <free_memory />
+    <free_memory/>
     <compress>N</compress>
-    <compress_variable />
+    <compress_variable/>
     <unique_rows>N</unique_rows>
     <fields>
       <field>
@@ -1004,8 +1004,8 @@ FROM old_person_attribute_type;
         <presorted>N</presorted>
       </field>
     </fields>
-    <attributes />
-    <cluster_schema />
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -1021,38 +1021,38 @@ FROM old_person_attribute_type;
   <step>
     <name>updated_person_attribute</name>
     <type>TableInput</type>
-    <description />
+    <description/>
     <distribute>Y</distribute>
-    <custom_distribution />
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
     </partitioning>
     <connection>OpenMRS source DB</connection>
     <sql>SELECT
-person_attribute_id update_person_attribute_id
-,person_id update_person_id
-,value update_value
-,person_attribute_type_id update_person_attribute_type_id
-,creator update_creator
-,date_created update_date_created
-,changed_by update_changed_by
-,date_changed update_date_changed
-,voided update_voided
-,voided_by update_voided_by
-,date_voided update_date_voided
-,void_reason update_void_reason
-,uuid update_uuid
+person_attribute_id updated_person_attribute_id
+,person_id updated_person_id
+,value updated_value
+,person_attribute_type_id updated_person_attribute_type_id
+,creator updated_creator
+,date_created updated_date_created
+,changed_by updated_changed_by
+,date_changed updated_date_changed
+,voided updated_voided
+,voided_by updated_voided_by
+,date_voided updated_date_voided
+,void_reason updated_void_reason
+,uuid updated_uuid
  FROM person_attribute WHERE updated = 1;
 </sql>
     <limit>0</limit>
-    <lookup />
+    <lookup/>
     <execute_each_row>N</execute_each_row>
     <variables_active>N</variables_active>
     <lazy_conversion_active>N</lazy_conversion_active>
-    <attributes />
-    <cluster_schema />
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -1070,5 +1070,5 @@ person_attribute_id update_person_attribute_id
   <slave-step-copy-partition-distribution>
   </slave-step-copy-partition-distribution>
   <slave_transformation>N</slave_transformation>
-  <attributes />
+  <attributes/>
 </transformation>
