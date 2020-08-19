@@ -2,9 +2,9 @@
 <transformation>
   <info>
     <name>Validate Person_Attribute_Type</name>
-    <description />
-    <extended_description />
-    <trans_version />
+    <description/>
+    <extended_description/>
+    <trans_version/>
     <trans_type>Normal</trans_type>
     <trans_status>0</trans_status>
     <directory>/</directory>
@@ -12,12 +12,12 @@
     </parameters>
     <log>
       <trans-log-table>
-        <connection />
-        <schema />
-        <table />
-        <size_limit_lines />
-        <interval />
-        <timeout_days />
+        <connection/>
+        <schema/>
+        <table/>
+        <size_limit_lines/>
+        <interval/>
+        <timeout_days/>
         <field>
           <id>ID_BATCH</id>
           <enabled>Y</enabled>
@@ -42,37 +42,37 @@
           <id>LINES_READ</id>
           <enabled>Y</enabled>
           <name>LINES_READ</name>
-          <subject />
+          <subject/>
         </field>
         <field>
           <id>LINES_WRITTEN</id>
           <enabled>Y</enabled>
           <name>LINES_WRITTEN</name>
-          <subject />
+          <subject/>
         </field>
         <field>
           <id>LINES_UPDATED</id>
           <enabled>Y</enabled>
           <name>LINES_UPDATED</name>
-          <subject />
+          <subject/>
         </field>
         <field>
           <id>LINES_INPUT</id>
           <enabled>Y</enabled>
           <name>LINES_INPUT</name>
-          <subject />
+          <subject/>
         </field>
         <field>
           <id>LINES_OUTPUT</id>
           <enabled>Y</enabled>
           <name>LINES_OUTPUT</name>
-          <subject />
+          <subject/>
         </field>
         <field>
           <id>LINES_REJECTED</id>
           <enabled>Y</enabled>
           <name>LINES_REJECTED</name>
-          <subject />
+          <subject/>
         </field>
         <field>
           <id>ERRORS</id>
@@ -126,11 +126,11 @@
         </field>
       </trans-log-table>
       <perf-log-table>
-        <connection />
-        <schema />
-        <table />
-        <interval />
-        <timeout_days />
+        <connection/>
+        <schema/>
+        <table/>
+        <interval/>
+        <timeout_days/>
         <field>
           <id>ID_BATCH</id>
           <enabled>Y</enabled>
@@ -208,10 +208,10 @@
         </field>
       </perf-log-table>
       <channel-log-table>
-        <connection />
-        <schema />
-        <table />
-        <timeout_days />
+        <connection/>
+        <schema/>
+        <table/>
+        <timeout_days/>
         <field>
           <id>ID_BATCH</id>
           <enabled>Y</enabled>
@@ -274,10 +274,10 @@
         </field>
       </channel-log-table>
       <step-log-table>
-        <connection />
-        <schema />
-        <table />
-        <timeout_days />
+        <connection/>
+        <schema/>
+        <table/>
+        <timeout_days/>
         <field>
           <id>ID_BATCH</id>
           <enabled>Y</enabled>
@@ -350,10 +350,10 @@
         </field>
       </step-log-table>
       <metrics-log-table>
-        <connection />
-        <schema />
-        <table />
-        <timeout_days />
+        <connection/>
+        <schema/>
+        <table/>
+        <timeout_days/>
         <field>
           <id>ID_BATCH</id>
           <enabled>Y</enabled>
@@ -402,9 +402,9 @@
       </metrics-log-table>
     </log>
     <maxdate>
-      <connection />
-      <table />
-      <field />
+      <connection/>
+      <table/>
+      <field/>
       <offset>0.0</offset>
       <maxdiff>0.0</maxdiff>
     </maxdate>
@@ -415,7 +415,7 @@
     <feedback_shown>Y</feedback_shown>
     <feedback_size>50000</feedback_size>
     <using_thread_priorities>Y</using_thread_priorities>
-    <shared_objects_file />
+    <shared_objects_file/>
     <capture_step_performance>N</capture_step_performance>
     <step_performance_capturing_delay>1000</step_performance_capturing_delay>
     <step_performance_capturing_size_limit>100</step_performance_capturing_size_limit>
@@ -445,9 +445,9 @@
     <port>${ETL_DATABASE_PORT}</port>
     <username>${ETL_DATABASE_USER}</username>
     <password>${ETL_DATABASE_PASSWORD}</password>
-    <servername />
-    <data_tablespace />
-    <index_tablespace />
+    <servername/>
+    <data_tablespace/>
+    <index_tablespace/>
     <attributes>
       <attribute>
         <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
@@ -521,17 +521,17 @@
   <step>
     <name>CSV file input</name>
     <type>CsvInput</type>
-    <description />
+    <description/>
     <distribute>Y</distribute>
-    <custom_distribution />
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
     </partitioning>
     <filename>config/person_attribute_type.csv</filename>
-    <filename_field />
-    <rownum_field />
+    <filename_field/>
+    <rownum_field/>
     <include_filename>N</include_filename>
     <separator>,</separator>
     <enclosure>"</enclosure>
@@ -541,16 +541,15 @@
     <add_filename_result>N</add_filename_result>
     <parallel>N</parallel>
     <newline_possible>N</newline_possible>
-    <format />
-    <encoding />
+    <encoding/>
     <fields>
       <field>
         <name>person_attribute_type_id</name>
         <type>Integer</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
         <length>-1</length>
         <precision>-1</precision>
         <trim_type>none</trim_type>
@@ -558,10 +557,10 @@
       <field>
         <name>name</name>
         <type>String</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
         <length>-1</length>
         <precision>-1</precision>
         <trim_type>none</trim_type>
@@ -569,10 +568,10 @@
       <field>
         <name>description</name>
         <type>String</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
         <length>-1</length>
         <precision>-1</precision>
         <trim_type>none</trim_type>
@@ -580,10 +579,10 @@
       <field>
         <name>format</name>
         <type>String</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
         <length>-1</length>
         <precision>-1</precision>
         <trim_type>none</trim_type>
@@ -591,10 +590,10 @@
       <field>
         <name>foreign_key</name>
         <type>Integer</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
         <length>-1</length>
         <precision>-1</precision>
         <trim_type>none</trim_type>
@@ -602,10 +601,10 @@
       <field>
         <name>searchable</name>
         <type>Integer</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
         <length>-1</length>
         <precision>-1</precision>
         <trim_type>none</trim_type>
@@ -613,43 +612,43 @@
       <field>
         <name>creator</name>
         <type>Integer</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
         <length>-1</length>
         <precision>-1</precision>
         <trim_type>none</trim_type>
       </field>
       <field>
         <name>date_created</name>
-        <type>Date</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
+        <type>Timestamp</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
         <length>-1</length>
         <precision>-1</precision>
         <trim_type>none</trim_type>
       </field>
       <field>
         <name>changed_by</name>
-        <type>Date</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
+        <type>Integer</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
         <length>-1</length>
         <precision>-1</precision>
         <trim_type>none</trim_type>
       </field>
       <field>
         <name>date_changed</name>
-        <type>Date</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
+        <type>Timestamp</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
         <length>-1</length>
         <precision>-1</precision>
         <trim_type>none</trim_type>
@@ -657,10 +656,10 @@
       <field>
         <name>retired</name>
         <type>Integer</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
         <length>-1</length>
         <precision>-1</precision>
         <trim_type>none</trim_type>
@@ -668,10 +667,10 @@
       <field>
         <name>retired_by</name>
         <type>Integer</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
         <length>-1</length>
         <precision>-1</precision>
         <trim_type>none</trim_type>
@@ -679,10 +678,10 @@
       <field>
         <name>date_retired</name>
         <type>Date</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
         <length>-1</length>
         <precision>-1</precision>
         <trim_type>none</trim_type>
@@ -690,10 +689,10 @@
       <field>
         <name>retire_reason</name>
         <type>String</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
         <length>-1</length>
         <precision>-1</precision>
         <trim_type>none</trim_type>
@@ -701,10 +700,10 @@
       <field>
         <name>edit_privilege</name>
         <type>String</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
         <length>-1</length>
         <precision>-1</precision>
         <trim_type>none</trim_type>
@@ -712,10 +711,10 @@
       <field>
         <name>uuid</name>
         <type>String</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
         <length>-1</length>
         <precision>-1</precision>
         <trim_type>none</trim_type>
@@ -723,17 +722,17 @@
       <field>
         <name>sort_weight</name>
         <type>Integer</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
         <length>-1</length>
         <precision>-1</precision>
         <trim_type>none</trim_type>
       </field>
     </fields>
-    <attributes />
-    <cluster_schema />
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -749,20 +748,20 @@
   <step>
     <name>Could not find on destination DB 2</name>
     <type>Abort</type>
-    <description />
+    <description/>
     <distribute>Y</distribute>
-    <custom_distribution />
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
     </partitioning>
     <row_threshold>0</row_threshold>
     <message>Could not find program on destination database ${ETL_MERGE_DATABASE}</message>
     <always_log_rows>Y</always_log_rows>
     <abort_option>ABORT_WITH_ERROR</abort_option>
-    <attributes />
-    <cluster_schema />
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -778,35 +777,35 @@
   <step>
     <name>Filter non existing 3</name>
     <type>FilterRows</type>
-    <description />
+    <description/>
     <distribute>Y</distribute>
-    <custom_distribution />
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
     </partitioning>
     <send_true_to>Could not find on destination DB 2</send_true_to>
-    <send_false_to />
+    <send_false_to/>
     <compare>
       <condition>
         <negated>N</negated>
         <leftvalue>source_uuid</leftvalue>
         <function>IS NULL</function>
-        <rightvalue />
+        <rightvalue/>
         <value>
           <name>constant</name>
           <type>String</type>
-          <text />
+          <text/>
           <length>-1</length>
           <precision>-1</precision>
           <isnull>Y</isnull>
-          <mask />
+          <mask/>
         </value>
       </condition>
     </compare>
-    <attributes />
-    <cluster_schema />
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -822,13 +821,13 @@
   <step>
     <name>Merge join</name>
     <type>MergeJoin</type>
-    <description />
+    <description/>
     <distribute>Y</distribute>
-    <custom_distribution />
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
     </partitioning>
     <join_type>LEFT OUTER</join_type>
     <step1>Read from source DB</step1>
@@ -839,8 +838,8 @@
     <keys_2>
       <key>uuid</key>
     </keys_2>
-    <attributes />
-    <cluster_schema />
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -856,23 +855,23 @@
   <step>
     <name>Read from source DB</name>
     <type>TableInput</type>
-    <description />
+    <description/>
     <distribute>Y</distribute>
-    <custom_distribution />
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
     </partitioning>
     <connection>OpenMRS source</connection>
     <sql>SELECT uuid source_uuid from person_attribute_type ORDER BY uuid</sql>
     <limit>0</limit>
-    <lookup />
+    <lookup/>
     <execute_each_row>N</execute_each_row>
     <variables_active>N</variables_active>
     <lazy_conversion_active>N</lazy_conversion_active>
-    <attributes />
-    <cluster_schema />
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -888,20 +887,20 @@
   <step>
     <name>Sort rows</name>
     <type>SortRows</type>
-    <description />
+    <description/>
     <distribute>Y</distribute>
-    <custom_distribution />
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
     </partitioning>
     <directory>%%java.io.tmpdir%%</directory>
     <prefix>out</prefix>
     <sort_size>1000000</sort_size>
-    <free_memory />
+    <free_memory/>
     <compress>N</compress>
-    <compress_variable />
+    <compress_variable/>
     <unique_rows>N</unique_rows>
     <fields>
       <field>
@@ -913,8 +912,8 @@
         <presorted>N</presorted>
       </field>
     </fields>
-    <attributes />
-    <cluster_schema />
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -932,5 +931,5 @@
   <slave-step-copy-partition-distribution>
   </slave-step-copy-partition-distribution>
   <slave_transformation>N</slave_transformation>
-  <attributes />
+  <attributes/>
 </transformation>
