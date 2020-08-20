@@ -1,0 +1,26 @@
+person_attribute_type_id,name,description,format,foreign_key,searchable,creator,date_created,changed_by,date_changed,retired,retired_by,date_retired,retire_reason,edit_privilege,uuid,sort_weight
+2,"Local de Nascimento","Location of persons birth",java.lang.String,,0,13,"2007-05-04 09:59:23",13,"2013-12-11 06:18:07",0,,,,,8d8718c2-c2cc-11de-8d13-0010c6dffd0f,0
+3,Nacionalidade,"Country of which this person is a member",java.lang.String,,0,13,"2007-05-04 09:59:23",13,"2013-12-11 06:18:18",0,,,,,8d871afc-c2cc-11de-8d13-0010c6dffd0f,1
+4,"Nome da Mae","First or last name of this person's mother",java.lang.String,,0,13,"2007-05-04 09:59:23",13,"2013-12-11 06:17:26",0,,,,,8d871d18-c2cc-11de-8d13-0010c6dffd0f,7
+5,"Estado Civil","Marriage status of this person",org.openmrs.Concept,1054,0,13,"2007-05-04 09:59:23",13,"2013-12-11 06:18:37",0,,,,,8d871f2a-c2cc-11de-8d13-0010c6dffd0f,2
+6,"Health District","District/region in which this patient' home health center resides",java.lang.String,,0,13,"2007-05-04 09:59:23",13,,0,,,,,8d872150-c2cc-11de-8d13-0010c6dffd0f,5
+7,"Health Center","Specific Location of this person's home health center.",org.openmrs.Location,,0,13,"2007-05-04 09:59:23",13,,0,,,,,8d87236c-c2cc-11de-8d13-0010c6dffd0f,4
+8,District,,java.lang.String,,0,2,"2008-10-14 03:32:10",9,"2008-10-16 13:41:21",0,,,,,e2e3fc10-1d5f-11e0-b929-000c29ad1d07,3
+9,"Numero de Telefone","Telefone de contacto do paciente",java.lang.String,,0,2,"2008-10-24 11:15:03",13,"2011-11-21 08:57:29",0,,,,,e2e3fd64-1d5f-11e0-b929-000c29ad1d07,9
+10,Organização,"affiliation, used for providers, social assistants",org.openmrs.Concept,1696,1,2,"2008-10-24 11:16:16",2,"2008-10-24 11:34:41",0,,,,,e2e3feae-1d5f-11e0-b929-000c29ad1d07,10
+11,"Local de Trabalho","Lugar onde a pessoa trabalha",java.lang.String,,0,13,"2009-05-08 09:54:26",,,0,,,,,e2e3fff8-1d5f-11e0-b929-000c29ad1d07,6
+12,"Número de Cartão","Número do cartão do paciente no serviço TARV ou outro serviço crónico",java.lang.String,,0,13,"2010-12-08 09:34:19",13,"2010-12-08 09:35:38",0,,,,,e2e40142-1d5f-11e0-b929-000c29ad1d07,8
+13,"Pessoa de referencia",,org.openmrs.Concept,1441,1,13,"2011-09-08 15:05:21",,,0,,,,"Add Patients",4d9d4863-6637-4aba-a907-f2e60f5be9c0,12
+14,givenNameLocal,givenNameLocal,java.lang.String,,0,1,"2015-06-12 09:51:36",,,0,,,,,9d38adf9-10e8-11e5-9009-0242ac110012,3
+15,familyNameLocal,familyNameLocal,java.lang.String,,0,1,"2015-06-12 09:51:36",,,0,,,,,9d3a324f-10e8-11e5-9009-0242ac110012,3
+16,middleNameLocal,middleNameLocal,java.lang.String,,0,1,"2015-06-12 09:51:36",,,0,,,,,9d3bbaa1-10e8-11e5-9009-0242ac110012,3
+26,"Identificador definido localmente 01",,java.lang.String,,0,1,"2019-03-25 15:12:06",1,"2019-03-26 12:52:28",0,,,,,c89c90eb-5b03-4899-ab9f-06fecd123511,13
+27,"Identificador definido localmente 02",,java.lang.String,,0,1,"2019-03-25 15:12:30",1,"2019-03-26 12:53:08",0,,,,,0eeed36f-ae3b-4fdc-95c1-d6ac6b246631,14
+28,"Identificador definido localmente 03",,java.lang.String,,0,1,"2019-03-25 15:12:47",1,"2019-03-26 12:53:29",0,,,,,c79d2ebc-1c3b-4634-9df3-44cc3b2bf218,15
+29,"Identificador definido localmente 04",,java.lang.String,,0,1,"2019-03-25 15:13:10",1,"2019-03-26 12:53:49",0,,,,,d0733f76-6da4-4ee7-93e7-87abca9837c8,16
+30,"Identificador definido localmente 05",,java.lang.String,,0,1,"2019-03-25 15:13:33",1,"2019-03-26 12:54:01",0,,,,,971aeb85-7f5d-44cf-a3ef-61571dd5c57f,17
+31,"Identificador definido localmente 06",,java.lang.String,,0,1,"2019-03-25 15:14:36",1,"2019-03-26 12:54:20",0,,,,,d140b1ad-4581-492e-8291-155abeafa070,18
+32,"Identificador definido localmente 07",,java.lang.String,,0,1,"2019-03-26 12:54:52",,,0,,,,,28f9794a-590f-4a25-b09a-5b44fa22c930,19
+33,"Identificador definido localmente 08",,java.lang.String,,0,1,"2019-03-26 12:55:11",,,0,,,,,8e57516d-775f-45ef-8ae1-6898d0055655,20
+34,"Identificador definido localmente 09",,java.lang.String,,0,1,"2019-03-26 12:55:30",,,0,,,,,2c1e4a1b-5724-4c2d-9ff5-68bda4802079,21
+35,"Identificador definido localmente 10",,java.lang.String,,0,1,"2019-03-26 12:55:56",,,0,,,,,c649dae9-13b6-4c0d-9edc-6b1d304b13f4,22
