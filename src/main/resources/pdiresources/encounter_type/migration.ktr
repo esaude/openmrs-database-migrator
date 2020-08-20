@@ -543,6 +543,41 @@
     </hop>
   </order>
   <step>
+    <name>Filter changed ids</name>
+    <type>FilterRows</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <send_true_to>Update encounter</send_true_to>
+    <send_false_to/>
+    <compare>
+      <condition>
+        <negated>Y</negated>
+        <leftvalue>old_encounter_type_id</leftvalue>
+        <function>=</function>
+        <rightvalue>encounter_type_id</rightvalue>
+      </condition>
+    </compare>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1200</xloc>
+      <yloc>336</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
     <name>Get current date</name>
     <type>SystemInfo</type>
     <description/>
@@ -892,7 +927,7 @@ WHERE system_id = 'harmonization';</sql>
       </key>
       <key>
         <name>false</name>
-        <field>updated</field>
+        <field>updated_encounter_type</field>
         <condition>=</condition>
         <name2/>
       </key>
@@ -901,7 +936,7 @@ WHERE system_id = 'harmonization';</sql>
         <rename>encounter_type_id</rename>
       </value>
       <value>
-        <name>updated</name>
+        <name>updated_encounter_type</name>
         <rename>true</rename>
       </value>
       <value>
@@ -1134,41 +1169,6 @@ WHERE system_id = 'harmonization';</sql>
     <GUI>
       <xloc>496</xloc>
       <yloc>208</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Filter changed ids</name>
-    <type>FilterRows</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <send_true_to>Update encounter</send_true_to>
-    <send_false_to/>
-    <compare>
-      <condition>
-        <negated>Y</negated>
-        <leftvalue>old_encounter_type_id</leftvalue>
-        <function>=</function>
-        <rightvalue>encounter_type_id</rightvalue>
-      </condition>
-    </compare>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>1200</xloc>
-      <yloc>336</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
