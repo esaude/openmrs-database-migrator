@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <transformation>
   <info>
-    <name>verify-program-workflow-state-update</name>
+    <name>verification</name>
     <description/>
     <extended_description/>
     <trans_version/>
@@ -427,16 +427,16 @@
     <clusterschemas>
     </clusterschemas>
     <created_user>-</created_user>
-    <created_date>2019/09/10 10:21:53.160</created_date>
+    <created_date>2019/09/26 16:56:07.533</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2019/09/10 10:21:53.160</modified_date>
+    <modified_date>2019/09/26 16:56:07.533</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
   </notepads>
   <connection>
-    <name>source</name>
+    <name>OpenMRS</name>
     <server>${ETL_DATABASE_HOST}</server>
     <type>MYSQL</type>
     <access>Native</access>
@@ -492,39 +492,69 @@
   </connection>
   <order>
     <hop>
-      <from>Miss-match 1</from>
-      <to>Abort</to>
+      <from>Multiway merge join 2</from>
+      <to>Memory group by 2</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Miss-match 2</from>
-      <to>Abort Miss-match2</to>
+      <from>Memory group by 2</from>
+      <to>sort by uuid</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Mis-Matched patient states</from>
-      <to>zero count 1</to>
+      <from>read before migration 2</from>
+      <to>sort by uuid 1</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>zero count 1</from>
-      <to>Miss-match 1</to>
+      <from>sort by uuid</from>
+      <to>Merge join 2</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Mis-Matched concept_state_conversion</from>
-      <to>zero count 2</to>
+      <from>sort by uuid 1</from>
+      <to>Merge join 2</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>zero count 2</from>
-      <to>Miss-match 2</to>
+      <from>Merge join 2</from>
+      <to>Select values 2</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Select values 2</from>
+      <to>calculate diff 2</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>calculate diff 2</from>
+      <to>write to csv 2</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>read program_workflow_states</from>
+      <to>sort by program_workflow_state</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>read patient_states</from>
+      <to>sort by state</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>sort by program_workflow_state</from>
+      <to>Multiway merge join 2</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>sort by state</from>
+      <to>Multiway merge join 2</to>
       <enabled>Y</enabled>
     </hop>
   </order>
   <step>
-    <name>Abort</name>
-    <type>Abort</type>
+    <name>Memory group by 2</name>
+    <type>MemoryGroupBy</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -533,10 +563,26 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <row_threshold>0</row_threshold>
-    <message/>
-    <always_log_rows>Y</always_log_rows>
-    <abort_option>ABORT</abort_option>
+    <give_back_row>N</give_back_row>
+    <group>
+      <field>
+        <name>uuid</name>
+      </field>
+      <field>
+        <name>program_workflow_state_id</name>
+      </field>
+      <field>
+        <name>name</name>
+      </field>
+    </group>
+    <fields>
+      <field>
+        <aggregate>patient_states</aggregate>
+        <subject>patient_state_id</subject>
+        <type>COUNT_DISTINCT</type>
+        <valuefield/>
+      </field>
+    </fields>
     <attributes/>
     <cluster_schema/>
     <remotesteps>
@@ -546,42 +592,280 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>768</xloc>
-      <yloc>96</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Abort Miss-match2</name>
-    <type>Abort</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <row_threshold>0</row_threshold>
-    <message/>
-    <always_log_rows>Y</always_log_rows>
-    <abort_option>ABORT</abort_option>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>784</xloc>
+      <xloc>720</xloc>
       <yloc>320</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Mis-Matched concept_state_conversion</name>
+    <name>Merge join 2</name>
+    <type>MergeJoin</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <join_type>INNER</join_type>
+    <step1>sort by uuid</step1>
+    <step2>sort by uuid 1</step2>
+    <keys_1>
+      <key>uuid</key>
+    </keys_1>
+    <keys_2>
+      <key>uuid</key>
+    </keys_2>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1056</xloc>
+      <yloc>368</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Multiway merge join 2</name>
+    <type>MultiwayMergeJoin</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <join_type>FULL OUTER</join_type>
+    <step0>sort by program_workflow_state</step0>
+    <step1>sort by state</step1>
+    <number_input>2</number_input>
+    <keys>
+      <key>program_workflow_state_id</key>
+      <key>state</key>
+    </keys>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>544</xloc>
+      <yloc>320</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Select values 2</name>
+    <type>SelectValues</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <fields>
+      <field>
+        <name>uuid</name>
+      </field>
+      <field>
+        <name>name</name>
+      </field>
+      <field>
+        <name>program_workflow_states_before</name>
+      </field>
+      <field>
+        <name>patient_states_before</name>
+      </field>
+      <field>
+        <name>program_workflow_state_id</name>
+        <rename>program_workflow_states_after</rename>
+      </field>
+      <field>
+        <name>patient_states</name>
+        <rename>patient_states_after</rename>
+      </field>
+      <select_unspecified>N</select_unspecified>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1216</xloc>
+      <yloc>368</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>calculate diff 2</name>
+    <type>Calculator</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <failIfNoFile>Y</failIfNoFile>
+    <calculation>
+      <field_name>patient_states diff</field_name>
+      <calc_type>SUBTRACT</calc_type>
+      <field_a>patient_states_before</field_a>
+      <field_b>patient_states_after</field_b>
+      <field_c/>
+      <value_type>None</value_type>
+      <value_length>-1</value_length>
+      <value_precision>-1</value_precision>
+      <remove>N</remove>
+      <conversion_mask/>
+      <decimal_symbol/>
+      <grouping_symbol/>
+      <currency_symbol/>
+    </calculation>
+    <calculation>
+      <field_name>program_workflow_states diff</field_name>
+      <calc_type>SUBTRACT</calc_type>
+      <field_a>program_workflow_states_before</field_a>
+      <field_b>program_workflow_states_after</field_b>
+      <field_c/>
+      <value_type>None</value_type>
+      <value_length>-1</value_length>
+      <value_precision>-1</value_precision>
+      <remove>N</remove>
+      <conversion_mask/>
+      <decimal_symbol/>
+      <grouping_symbol/>
+      <currency_symbol/>
+    </calculation>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1344</xloc>
+      <yloc>368</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>read before migration 2</name>
+    <type>CsvInput</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <filename>output/program_workflow_states_before.csv</filename>
+    <filename_field/>
+    <rownum_field/>
+    <include_filename>N</include_filename>
+    <separator>,</separator>
+    <enclosure>"</enclosure>
+    <header>Y</header>
+    <buffer_size>50000</buffer_size>
+    <lazy_conversion>Y</lazy_conversion>
+    <add_filename_result>N</add_filename_result>
+    <parallel>N</parallel>
+    <newline_possible>N</newline_possible>
+    <format/>
+    <encoding/>
+    <fields>
+      <field>
+        <name>uuid</name>
+        <type>String</type>
+        <format/>
+        <currency>$</currency>
+        <decimal>.</decimal>
+        <group>,</group>
+        <length>38</length>
+        <precision>-1</precision>
+        <trim_type>both</trim_type>
+      </field>
+      <field>
+        <name>name</name>
+        <type>String</type>
+        <format/>
+        <currency>$</currency>
+        <decimal>.</decimal>
+        <group>,</group>
+        <length>255</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>program_workflow_states_before</name>
+        <type>Integer</type>
+        <format>#</format>
+        <currency>$</currency>
+        <decimal>.</decimal>
+        <group>,</group>
+        <length>15</length>
+        <precision>0</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>patient_states_before</name>
+        <type>Integer</type>
+        <format>#</format>
+        <currency>$</currency>
+        <decimal>.</decimal>
+        <group>,</group>
+        <length>15</length>
+        <precision>0</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>program_workflows_before</name>
+        <type>Integer</type>
+        <format>#</format>
+        <currency>$</currency>
+        <decimal>.</decimal>
+        <group>,</group>
+        <length>15</length>
+        <precision>0</precision>
+        <trim_type>none</trim_type>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>736</xloc>
+      <yloc>432</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>read patient_states</name>
     <type>TableInput</type>
     <description/>
     <distribute>Y</distribute>
@@ -591,12 +875,8 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <connection>source</connection>
-    <sql>SELECT COUNT(cs.program_workflow_state_id) as miss_matched_concept_state_conversions FROM concept_state_conversion cs
-INNER JOIN program_workflow_state pws ON cs.program_workflow_state_id = pws.program_workflow_state_id 
-INNER JOIN old_program_workflow_state psb ON psb.uuid = cs.uuid
-WHERE cs.program_workflow_state_id != psb.program_workflow_state_id
-AND cs.program_workflow_state_updated = 0;</sql>
+    <connection>OpenMRS</connection>
+    <sql>SELECT patient_state_id, state FROM patient_state;</sql>
     <limit>0</limit>
     <lookup/>
     <execute_each_row>N</execute_each_row>
@@ -611,13 +891,13 @@ AND cs.program_workflow_state_updated = 0;</sql>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>112</xloc>
-      <yloc>320</yloc>
+      <xloc>96</xloc>
+      <yloc>384</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Mis-Matched patient states</name>
+    <name>read program_workflow_states</name>
     <type>TableInput</type>
     <description/>
     <distribute>Y</distribute>
@@ -627,12 +907,9 @@ AND cs.program_workflow_state_updated = 0;</sql>
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <connection>source</connection>
-    <sql>SELECT COUNT(ps.state) as miss_matched_patient_states FROM patient_state ps
-INNER JOIN program_workflow_state pws ON ps.state = pws.program_workflow_state_id 
-INNER JOIN old_program_workflow_state psb ON psb.uuid = pws.uuid 
-WHERE ps.state != psb.program_workflow_state_id
-AND ps.updated = 0;</sql>
+    <connection>OpenMRS</connection>
+    <sql>SELECT pws.uuid as uuid , pws.program_workflow_state_id as program_workflow_state_id,cn.name as name FROM program_workflow_state pws JOIN concept_name cn ON cn.concept_id = pws.concept_id
+AND cn.locale = 'en' AND concept_name_type = 'FULLY_SPECIFIED';</sql>
     <limit>0</limit>
     <lookup/>
     <execute_each_row>N</execute_each_row>
@@ -647,14 +924,14 @@ AND ps.updated = 0;</sql>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>112</xloc>
-      <yloc>96</yloc>
+      <xloc>96</xloc>
+      <yloc>272</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Miss-match 1</name>
-    <type>FilterRows</type>
+    <name>sort by program_workflow_state</name>
+    <type>SortRows</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -663,16 +940,23 @@ AND ps.updated = 0;</sql>
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <send_true_to>Abort</send_true_to>
-    <send_false_to/>
-    <compare>
-      <condition>
-        <negated>Y</negated>
-        <leftvalue>miss_matched_patient_states</leftvalue>
-        <function>=</function>
-        <rightvalue>zero_count</rightvalue>
-      </condition>
-    </compare>
+    <directory>%%java.io.tmpdir%%</directory>
+    <prefix>out</prefix>
+    <sort_size>1000000</sort_size>
+    <free_memory/>
+    <compress>N</compress>
+    <compress_variable/>
+    <unique_rows>N</unique_rows>
+    <fields>
+      <field>
+        <name>program_workflow_state_id</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
+      </field>
+    </fields>
     <attributes/>
     <cluster_schema/>
     <remotesteps>
@@ -682,14 +966,14 @@ AND ps.updated = 0;</sql>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>592</xloc>
-      <yloc>96</yloc>
+      <xloc>336</xloc>
+      <yloc>272</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Miss-match 2</name>
-    <type>FilterRows</type>
+    <name>sort by state</name>
+    <type>SortRows</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -698,16 +982,23 @@ AND ps.updated = 0;</sql>
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <send_true_to>Abort Miss-match2</send_true_to>
-    <send_false_to/>
-    <compare>
-      <condition>
-        <negated>Y</negated>
-        <leftvalue>miss_matched_concept_state_conversions</leftvalue>
-        <function>=</function>
-        <rightvalue>zero_count</rightvalue>
-      </condition>
-    </compare>
+    <directory>%%java.io.tmpdir%%</directory>
+    <prefix>out</prefix>
+    <sort_size>1000000</sort_size>
+    <free_memory/>
+    <compress>N</compress>
+    <compress_variable/>
+    <unique_rows>N</unique_rows>
+    <fields>
+      <field>
+        <name>state</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
+      </field>
+    </fields>
     <attributes/>
     <cluster_schema/>
     <remotesteps>
@@ -717,14 +1008,56 @@ AND ps.updated = 0;</sql>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>592</xloc>
+      <xloc>336</xloc>
+      <yloc>384</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>sort by uuid</name>
+    <type>SortRows</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <directory>%%java.io.tmpdir%%</directory>
+    <prefix>out</prefix>
+    <sort_size>1000000</sort_size>
+    <free_memory/>
+    <compress>N</compress>
+    <compress_variable/>
+    <unique_rows>N</unique_rows>
+    <fields>
+      <field>
+        <name>uuid</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>880</xloc>
       <yloc>320</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>zero count 1</name>
-    <type>DBJoin</type>
+    <name>sort by uuid 1</name>
+    <type>SortRows</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -733,13 +1066,23 @@ AND ps.updated = 0;</sql>
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <connection>source</connection>
-    <rowlimit>0</rowlimit>
-    <sql>select 0 as zero_count;</sql>
-    <outer_join>N</outer_join>
-    <replace_vars>N</replace_vars>
-    <parameter>
-    </parameter>
+    <directory>%%java.io.tmpdir%%</directory>
+    <prefix>out</prefix>
+    <sort_size>1000000</sort_size>
+    <free_memory/>
+    <compress>N</compress>
+    <compress_variable/>
+    <unique_rows>N</unique_rows>
+    <fields>
+      <field>
+        <name>uuid</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
+      </field>
+    </fields>
     <attributes/>
     <cluster_schema/>
     <remotesteps>
@@ -749,14 +1092,14 @@ AND ps.updated = 0;</sql>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>352</xloc>
-      <yloc>96</yloc>
+      <xloc>880</xloc>
+      <yloc>432</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>zero count 2</name>
-    <type>DBJoin</type>
+    <name>write to csv 2</name>
+    <type>TextFileOutput</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -765,13 +1108,134 @@ AND ps.updated = 0;</sql>
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <connection>source</connection>
-    <rowlimit>0</rowlimit>
-    <sql>select 0 as zero_count;</sql>
-    <outer_join>N</outer_join>
-    <replace_vars>N</replace_vars>
-    <parameter>
-    </parameter>
+    <separator>,</separator>
+    <enclosure>"</enclosure>
+    <enclosure_forced>N</enclosure_forced>
+    <enclosure_fix_disabled>N</enclosure_fix_disabled>
+    <header>Y</header>
+    <footer>N</footer>
+    <format>DOS</format>
+    <compression>None</compression>
+    <encoding/>
+    <endedLine/>
+    <fileNameInField>N</fileNameInField>
+    <fileNameField/>
+    <create_parent_folder>Y</create_parent_folder>
+    <file>
+      <name>output/program_workflow_states</name>
+      <servlet_output>N</servlet_output>
+      <do_not_open_new_file_init>N</do_not_open_new_file_init>
+      <extention>csv</extention>
+      <append>N</append>
+      <split>N</split>
+      <haspartno>N</haspartno>
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <SpecifyFormat>N</SpecifyFormat>
+      <date_time_format/>
+      <add_to_result_filenames>Y</add_to_result_filenames>
+      <pad>N</pad>
+      <fast_dump>N</fast_dump>
+      <splitevery/>
+    </file>
+    <fields>
+      <field>
+        <name>uuid</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <trim_type>none</trim_type>
+        <length>38</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>name</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <trim_type>none</trim_type>
+        <length>255</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>program_workflow_states_before</name>
+        <type>Integer</type>
+        <format>#</format>
+        <currency>$</currency>
+        <decimal>.</decimal>
+        <group>,</group>
+        <nullif/>
+        <trim_type>none</trim_type>
+        <length>15</length>
+        <precision>0</precision>
+      </field>
+      <field>
+        <name>patient_states_before</name>
+        <type>Integer</type>
+        <format>#</format>
+        <currency>$</currency>
+        <decimal>.</decimal>
+        <group>,</group>
+        <nullif/>
+        <trim_type>none</trim_type>
+        <length>15</length>
+        <precision>0</precision>
+      </field>
+      <field>
+        <name>program_workflow_states_after</name>
+        <type>Integer</type>
+        <format>####0;-####0</format>
+        <currency/>
+        <decimal>.</decimal>
+        <group>,</group>
+        <nullif/>
+        <trim_type>none</trim_type>
+        <length>9</length>
+        <precision>0</precision>
+      </field>
+      <field>
+        <name>patient_states_after</name>
+        <type>Integer</type>
+        <format>####0;-####0</format>
+        <currency/>
+        <decimal>.</decimal>
+        <group>,</group>
+        <nullif/>
+        <trim_type>none</trim_type>
+        <length>10</length>
+        <precision>0</precision>
+      </field>
+      <field>
+        <name>patient_states diff</name>
+        <type>Number</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <trim_type>none</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>program_workflow_states diff</name>
+        <type>Number</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <trim_type>none</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+    </fields>
     <attributes/>
     <cluster_schema/>
     <remotesteps>
@@ -781,8 +1245,8 @@ AND ps.updated = 0;</sql>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>352</xloc>
-      <yloc>320</yloc>
+      <xloc>1488</xloc>
+      <yloc>368</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
