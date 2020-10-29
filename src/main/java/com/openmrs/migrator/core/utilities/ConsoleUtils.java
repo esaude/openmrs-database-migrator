@@ -37,21 +37,12 @@ public class ConsoleUtils {
     }
   }
 
-  public static int startMigrationAproach(Console console) {
+  public static void startMigrationAproach(Console console) {
 
     checkConsoleAvailability(console);
     console
         .writer()
-        .println("1 - Provide source and merge database name for existing db in MySQL Server");
-    console.writer().println("2 - Load sql dump files into MySQL Server");
-    int choice;
-    try {
-      choice = Integer.parseInt(console.readLine());
-      return choice;
-    } catch (NumberFormatException e) {
-      console.writer().println("Select one of the listed options");
-      return 0;
-    }
+        .println("Provide source and merge database name for existing db in MySQL Server: ");
   }
 
   public static void sendMessage(Console console, String message) {

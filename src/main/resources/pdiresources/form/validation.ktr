@@ -611,7 +611,6 @@
     <add_filename_result>N</add_filename_result>
     <parallel>N</parallel>
     <newline_possible>N</newline_possible>
-    <format/>
     <encoding/>
     <fields>
       <field>

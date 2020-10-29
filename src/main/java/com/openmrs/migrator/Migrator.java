@@ -29,7 +29,6 @@ import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import picocli.CommandLine;
@@ -154,51 +153,16 @@ public class Migrator implements Callable<Optional<Void>> {
   }
 
   private void chooseDatabase(DatabaseProps databaseProps) throws IOException, SQLException {
-    int choice = ConsoleUtils.startMigrationAproach(console);
+    ConsoleUtils.startMigrationAproach(console);
     List<String> alreadyLoadedDataBases =
         dataBaseService.oneColumnSQLSelectorCommand(databaseProps, "show databases", "Database");
-    switch (choice) {
-      case 1:
-        {
-          selectExistingSourceAndMergeDatabase(alreadyLoadedDataBases);
-          break;
-        }
-      case 2:
-        {
-          String sqlDumpFile = readAndValidateBackupsFolder();
-          while (StringUtils.isBlank(sqlDumpFile)
-              || alreadyLoadedDataBases.contains(
-                  FilenameUtils.removeExtension(new File(sqlDumpFile).getName()))) {
-            sqlDumpFile = readAndValidateBackupsFolder();
-          }
 
-          // import database if it doesn't exist in mysql
-          DatabaseProps db =
-              new DatabaseProps(
-                  databaseProps.getHost(),
-                  databaseProps.getPort(),
-                  databaseProps.getUsername(),
-                  databaseProps.getPassword(),
-                  FilenameUtils.removeExtension(new File(sqlDumpFile).getName()));
-          dataBaseService.importDatabaseFile(sqlDumpFile, db);
-          alreadyLoadedDataBases =
-              dataBaseService.oneColumnSQLSelectorCommand(
-                  databaseProps, "show databases", "Database");
-          selectExistingSourceAndMergeDatabase(alreadyLoadedDataBases);
-          break;
-        }
-      default:
-        {
-          ConsoleUtils.sendMessage(console, "Unavailable Option");
-          break;
-        }
-    }
+    selectExistingSourceAndMergeDatabase(alreadyLoadedDataBases);
   }
 
   private void selectExistingSourceAndMergeDatabase(List<String> alreadyLoadedDataBases)
       throws IOException {
     selectDbFromExistingDatabase(alreadyLoadedDataBases, SettingsService.SOURCE_DB, 2);
-    selectDbFromExistingDatabase(alreadyLoadedDataBases, SettingsService.MERGE_DB, 3);
   }
 
   private String readAndValidateBackupsFolder() throws IOException {
